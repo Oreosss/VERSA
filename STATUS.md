@@ -1,5 +1,5 @@
 # STATUS.md
-_Generated from repo inspection -- 2026-07-08. Do not hand-edit; re-run the inspection command._
+_Generated from repo inspection -- 2026-07-22. Do not hand-edit; re-run the inspection command._
 
 ---
 
@@ -12,9 +12,11 @@ _Generated from repo inspection -- 2026-07-08. Do not hand-edit; re-run the insp
 | 3. Enrich (KEV + EPSS join) | DONE -- `data/rag_corpus_enriched.jsonl` (12,000 records, 2026-06-23) |
 | 4. Eval sample selection | DONE -- `data/eval_sample.jsonl` (24 CVEs), `data/rag_corpus_final.jsonl` (11,976 records) |
 | 5. ChromaDB (embed + ingest) | DONE -- `data/chroma_db/` (11,976 records, 2026-07-08) |
-| 6. RAG + LLM summary | NOT STARTED |
+| 6. RAG + LLM summary | DONE -- retrieval validated (`src/retrieval_validation.py`, 2026-07-14) and both prompt arms generated (`src/generate_summaries.py`, `summaries.json`, 48 records, 2026-07-20) |
 | 7. Dashboard (Plotly Dash) | NOT STARTED |
-| 8. Evaluation | NOT STARTED |
+| 8. Evaluation | IN PROGRESS -- automated metrics (ROUGE/BERTScore/Flesch-Kincaid) done 2026-07-22; LLM-as-judge, questionnaire, and participant sessions not started |
+
+_Hand-added 2026-07-27 (no inspection script found to regenerate this file): prompt format changed from prose to bullet points on supervisor advice. Prose (v1) summaries, prompts, and metrics frozen and filed under `v1_prose/` as read-only history. Bullet (v2) generation not yet started; `v2_bullet/` created empty pending that work._
 
 ---
 
@@ -66,6 +68,9 @@ _Generated from repo inspection -- 2026-07-08. Do not hand-edit; re-run the insp
 | `notebooks/RAG_Corpus_Sampling.ipynb` | Proportional stratified sample across all severities; distribution + attack vector + CVSS + description length analysis; saves `data/rag_corpus.jsonl` | Yes -- completed 2026-06-23 |
 | `notebooks/RAG_Corpus_Enrichment.ipynb` | Joins KEV and EPSS onto `rag_corpus.jsonl`; adds `kev_listed`, `epss_score`, `epss_percentile`; saves `data/rag_corpus_enriched.jsonl` | Not yet run |
 | `src/chroma_ingest.py` | Embeds `rag_corpus_final.jsonl` descriptions with `all-MiniLM-L6-v2` (sentence-transformers), ingests into persistent ChromaDB collection `rag_corpus` at `data/chroma_db/` with CVSS/severity/attack-vector/KEV/EPSS/year metadata | Yes -- completed 2026-07-08 |
+| `src/retrieval_validation.py` | Queries `rag_corpus` ChromaDB collection for each of the 24 eval CVEs, checks corpus/eval-set distinctness and nearest-neighbour distance distribution; writes `data/retrieval_validation.json`, `RETRIEVAL_VALIDATION.md` | Yes -- completed 2026-07-14 |
+| `src/generate_summaries.py` | Generates three-part LLM summaries for all 24 eval CVEs under both frozen prompt templates (`prompt-baseline_v1.txt`, `prompt-persona_v1.txt`), reusing saved retrieval neighbours; model `claude-opus-4-6`, temperature 0; writes `summaries.json` (48 records) | Yes -- completed 2026-07-20 |
+| `src/compute_metrics.py` | Computes ROUGE-1/2/L, BERTScore (P/R/F1, `roberta-large`), and Flesch-Kincaid grade level for all 48 summaries against the raw NVD description, plus FK for the 24 NVD descriptions as baseline; writes `metrics_per_summary.csv`/`.json`, `PROMPT_COMPARISON.md`, `figures/`, appends to `METHODOLOGY_LOG.md` | Yes -- completed 2026-07-22 |
 
 ---
 
@@ -73,10 +78,10 @@ _Generated from repo inspection -- 2026-07-08. Do not hand-edit; re-run the insp
 
 - **KEV/EPSS/CWE enrichment** -- files downloaded; no enrichment notebook yet
 - **Two overlapping CRITICAL/HIGH collections** -- `cves_critical.jsonl` / `cves_high.jsonl` (5k capped, API) superseded by `cves_all_*` files; safe to drop
-- **`requirements.txt` incomplete** -- missing: `plotly`, `dash`, `anthropic`, `rouge-score`, `bert-score` (`chromadb`, `sentence-transformers` added 2026-07-08)
-- **No LLM integration** -- no prompt templates, no summarisation pipeline, no three-part summary logic
+- **`requirements.txt` still missing `plotly`, `dash`** -- everything else added (`chromadb`, `sentence-transformers` 2026-07-08; `anthropic` by 2026-07-20; `rouge-score`, `bert-score`, `textstat`, `matplotlib`, `scipy` 2026-07-22)
 - **No dashboard code** -- no Plotly Dash app
-- **No evaluation code** -- no ROUGE/BERTScore/Flesch-Kincaid/LLM-as-judge scripts
+- **LLM-as-judge not implemented** -- deliberately deferred to a later evaluation stage (see `METHODOLOGY_LOG.md`, "Automated evaluation metrics")
+- **No user questionnaire yet** -- design, participant recruitment, and evaluation sessions not started
 
 ---
 
@@ -86,7 +91,15 @@ None.
 
 ## Next task
 
-ChromaDB is ingested and query-verified. Proceed to RAG + LLM summary: add `anthropic` to `requirements.txt`, write the three-part prompt template, and write the retrieval pipeline that queries the `rag_corpus` collection for similar CVEs as context.
+Automated metrics (ROUGE, BERTScore, Flesch-Kincaid) are computed and written up. Proceed with either: (a) the Plotly Dash dashboard (CVE selector, summary-vs-raw-NVD comparison view), or (b) LLM-as-judge scoring, or (c) the user questionnaire design -- ask which before starting.
+
+## Recent change (2026-07-22, documentation pass)
+
+Documentation-only pass, no metrics recomputed and no script logic touched. Added a subsection to `FINDINGS_NOTES.md` Section 7 analysing the three Dale-Chall disagreement cases (CVE-2024-1781, CVE-2021-42013, CVE-2022-3062): both source description is already-simple cases converge with the same pattern already documented for Flesch-Kincaid, framed as a scope condition on the readability claim, and confirmed as non-overlapping with the two weakly-grounded retrieval CVEs (CVE-2023-29119, CVE-2023-43661). Audited `METHODOLOGY_LOG.md` for undocumented Stage 6b/6c decisions and added: model/temperature selection rationale, generation count, the dev-iteration-vs-lock separation, the retrieval-freeze rationale, the reference-URL label limitation, the KEV/EPSS display-only decision, the summary text extraction rule for metrics, and an explicit statistical-approach note. See conversation record for the full before/after audit list.
+
+## Recent change (2026-07-22)
+
+Wrote `src/compute_metrics.py` and computed ROUGE-1/2/L, BERTScore (precision/recall/F1, `roberta-large`), and Flesch-Kincaid grade level for all 48 generated summaries (`summaries.json`) against the raw NVD description for each eval CVE (`data/eval_sample.jsonl`), plus Flesch-Kincaid for the 24 raw NVD descriptions as a readability baseline. Reference-text choice (NVD description, for all three text-comparison metrics) and the per-metric favourable direction (FK: lower is better; BERTScore: closeness is evidence of grounding, not the goal; ROUGE: low is expected, not a failure) were confirmed with the user before implementation and documented in `METHODOLOGY_LOG.md`. `summaries.json` output text carries a trailing `Reference` URL section (and one record uses `**bold**` headers instead of `##`); both are stripped/normalised before scoring per user confirmation. Wrote per-summary results (`metrics_per_summary.csv`/`.json`), a paired small-N analysis with effect sizes reported as evidence not verdict (`PROMPT_COMPARISON.md`), four publication-quality figures at `figures/` (PNG 300dpi + SVG), and an "Automated evaluation metrics" section in `METHODOLOGY_LOG.md` covering all four metric families (LLM-as-judge noted as deferred) with pinned library/model versions for reproducibility. LLM-as-judge was explicitly out of scope for this task.
 
 ## Recent change (2026-07-08)
 
@@ -115,10 +128,10 @@ Eval sample exploitability threshold raised from EPSS >= 0.1 to EPSS >= 0.5 ("mo
 - [x] Ingest RAG corpus -- `data/chroma_db/`, collection `rag_corpus`, 11,976 records
 
 **RAG + LLM summary**
-- [ ] Add LLM SDK (`anthropic`) to `requirements.txt`
-- [ ] Write prompt template -- three-part structure (what's vulnerable / how exploited / remediation)
-- [ ] Write retrieval pipeline -- query ChromaDB for similar CVEs, feed as context
-- [ ] Wire retrieval + generation end-to-end
+- [x] Add LLM SDK (`anthropic`) to `requirements.txt`
+- [x] Write prompt template -- three-part structure (what's vulnerable / how exploited / remediation) (`prompt-baseline_v1.txt`, `prompt-persona_v1.txt`)
+- [x] Write retrieval pipeline -- query ChromaDB for similar CVEs, feed as context (`src/retrieval_validation.py`)
+- [x] Wire retrieval + generation end-to-end -- `src/generate_summaries.py`, `summaries.json` (48 records, 2026-07-20)
 
 **Dashboard**
 - [ ] Add `plotly`, `dash` to `requirements.txt`
@@ -127,8 +140,9 @@ Eval sample exploitability threshold raised from EPSS >= 0.1 to EPSS >= 0.5 ("mo
 - [ ] Manual smoke test -- golden path + edge cases
 
 **Evaluation**
-- [ ] Add `rouge-score`, `bert-score` to `requirements.txt`
-- [ ] Write automated metrics script -- ROUGE, BERTScore, Flesch-Kincaid readability, LLM-as-judge
+- [x] Add `rouge-score`, `bert-score` to `requirements.txt` (also `textstat`, `matplotlib`, `scipy`)
+- [x] Write automated metrics script -- ROUGE, BERTScore, Flesch-Kincaid readability (`src/compute_metrics.py`, `metrics_per_summary.csv`/`.json`, `PROMPT_COMPARISON.md`, `figures/`, 2026-07-22)
+- [ ] LLM-as-judge -- deliberately deferred, not yet started
 - [ ] Design user questionnaire
 - [ ] Recruit participants (developers + CS students, purposive sampling, BSREC approved)
 - [ ] Run evaluation sessions

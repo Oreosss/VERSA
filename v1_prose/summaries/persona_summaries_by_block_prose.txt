@@ -1,0 +1,313 @@
+Block 1
+=======
+
+CVE-2020-8010
+-------------
+## What is vulnerable
+
+CA Unified Infrastructure Management (also known as Nimsoft or UIM), in versions 20.1, 20.3.x, and 9.20 and below, has a vulnerability in its **robot (controller) component**. The robot component is the agent that runs on monitored systems to manage and communicate with the rest of the UIM infrastructure.
+
+The flaw is an **improper ACL handling** issue. ACL stands for Access Control List — it's the mechanism that decides who is allowed to do what on a system. When ACLs are not enforced correctly, actions that should be restricted to authorized users become available to anyone who can reach the service.
+
+## How it can be exploited
+
+Because the attack vector is **NETWORK** with **no privileges required** and **no user interaction needed**, a remote attacker can reach the vulnerable robot component over the network without logging in and without needing anyone on the target system to do anything. Once they reach it, they can execute commands on the target system, read data from it, or write data to it.
+
+The impact ratings are **HIGH across confidentiality, integrity, and availability**, which reflects the breadth of what an attacker can do: read sensitive information, modify data or system state, and potentially disrupt the service. The CVSS score of 9.8 (Critical) is consistent with this — it represents a remotely exploitable flaw that requires no authentication and can fully compromise the affected system.
+
+## What action to take
+
+Check whether any CA Unified Infrastructure Management (Nimsoft/UIM) deployment in your environment is running version 20.1, 20.3.x, or 9.20 and below. If so, consult the Broadcom security advisory linked below for remediation guidance, including any available patches or updated versions. The advisory from Broadcom (which acquired CA Technologies) is the primary source for the fix.
+
+The Packet Storm reference below provides additional technical context about the vulnerability but should be treated as supplementary information rather than a remediation source.
+
+## Reference
+
+- Broadcom security advisory for CA Unified Infrastructure Management: https://support.broadcom.com/external/content/security-advisories/CA20200205-01-Security-Notice-for-CA-Unified-Infrastructure-Management/7832
+- Broadcom technical documentation for the security notice: https://techdocs.broadcom.com/us/product-content/status/announcement-documents/2019/ca20200205-01-security-notice-for-ca-unified-infrastructure-management.html
+- Packet Storm Security, third-party technical reference: http://packetstormsecurity.com/files/158693/CA-Unified-Infrastructure-Management-Nimsoft-7.80-Buffer-Overflow.html
+
+CVE-2021-21974
+--------------
+## What is vulnerable
+
+VMware ESXi, a hypervisor used to run virtual machines on physical servers, has a heap-overflow vulnerability in its OpenSLP service. OpenSLP is a service that runs on port 427 and implements the Service Location Protocol, which lets devices on a network discover available services automatically. A heap overflow means the program writes data beyond the boundaries of a block of memory it was allocated, which can corrupt nearby memory and potentially let an attacker take control of program execution.
+
+The affected versions are:
+
+- ESXi 7.0 before update ESXi70U1c-17325551
+- ESXi 6.7 before update ESXi670-202102401-SG
+- ESXi 6.5 before update ESXi650-202102101-SG
+
+## How it can be exploited
+
+The attack vector is ADJACENT_NETWORK, which means the attacker needs to be on the same network segment as the ESXi host — not just anywhere on the internet, but on the local network where they can reach port 427 directly. No login credentials are needed (privileges required is NONE) and no one has to click or do anything for the attack to work (user interaction is NONE).
+
+If an attacker on the same network segment can reach port 427 on a vulnerable ESXi host, they may be able to trigger the heap overflow in the OpenSLP service and achieve remote code execution, meaning they could run their own code on the ESXi host. The impact ratings are HIGH across confidentiality, integrity, and availability, which reflects that successful exploitation could give the attacker broad control — reading data, modifying it, or disrupting the host and the virtual machines it runs.
+
+## What action to take
+
+Check whether any ESXi hosts in your environment are running the affected versions listed above. If so, apply the patches specified in VMware's security advisory (VMSA-2021-0002), which is linked in the references below. The advisory identifies the exact build numbers that contain the fix for each ESXi version.
+
+If patching is not immediately possible, consider whether the OpenSLP service on port 427 can be disabled on affected hosts as a mitigation, and restrict network access to that port. Consult the VMware advisory for vendor-supported guidance on both the patch and any interim steps.
+
+## Reference
+
+- VMware security advisory (vendor): https://www.vmware.com/security/advisories/VMSA-2021-0002.html
+- Zero Day Initiative advisory (researcher): https://www.zerodayinitiative.com/advisories/ZDI-21-250/
+- Packet Storm Security (third-party technical writeup): http://packetstormsecurity.com/files/162957/VMware-ESXi-OpenSLP-Heap-Overflow.html
+
+CVE-2022-3062
+-------------
+## What is vulnerable
+
+The **Simple File List** plugin for WordPress, in versions before 4.4.12, has a reflected cross-site scripting (XSS) vulnerability. Cross-site scripting is a class of flaw where an application takes input from a user and includes it in a web page without properly neutralising it first. In this case, certain parameters are not escaped — meaning special characters that could be interpreted as code are not converted to safe equivalents — before being placed back into HTML attributes in the page output. "Reflected" means the malicious input is not stored on the server; it travels in a request (typically a crafted URL) and is immediately echoed back in the response.
+
+## How it can be exploited
+
+Because the attack vector is **NETWORK** with **no privileges required**, anyone on the internet can attempt this without needing an account on the WordPress site. However, **user interaction is REQUIRED**: a victim has to click a specially crafted link or visit a page that triggers the malicious request. When they do, the attacker's script runs in the victim's browser in the context of the WordPress site, which could allow the attacker to read limited page content or make small changes to what the user sees or submits on that page. This lines up with the **LOW** ratings for both confidentiality and integrity, and the **NONE** rating for availability — the flaw does not take the site down or give deep access on its own, but it can be used to trick a logged-in user or steal session-related information.
+
+## What action to take
+
+Update the Simple File List plugin to **version 4.4.12 or later**, which addresses this issue. If you manage WordPress sites, check whether this plugin is installed and at what version. The WPScan advisory linked below has further detail on the vulnerability and confirmation of the fixed version.
+
+## Reference
+
+- WPScan advisory for CVE-2022-3062: https://wpscan.com/vulnerability/2e829bbe-1843-496d-a852-4150fa6d1f7a
+
+CVE-2023-21608
+--------------
+## What is vulnerable
+
+Adobe Acrobat Reader has a vulnerability in versions 22.003.20282 and earlier, 22.003.20281 and earlier, and 20.005.30418 and earlier. The flaw is a **Use After Free** bug — this is a type of memory error where the software frees (releases) a block of memory but then continues to reference it afterward. Because that memory may now hold different data or be reused by another part of the program, an attacker can manipulate what ends up there and use it to run their own code.
+
+## How it can be exploited
+
+To trigger this vulnerability, a victim must open a malicious file, such as a crafted PDF. That is why the user interaction field is marked REQUIRED — the attack cannot happen without someone opening the file. The attack vector is LOCAL, meaning the attacker needs to get the file onto the victim's machine (for example, via email attachment or download) rather than attacking over the network directly.
+
+No special privileges are required on the victim's part; simply opening the file as a normal user is enough. If exploitation succeeds, the attacker can run arbitrary code — meaning any commands they choose — with the same permissions as the user who opened the file. The HIGH ratings across confidentiality, integrity, and availability reflect this: an attacker could read data, modify files, or disrupt the system, all within the scope of what that user account is allowed to do.
+
+This vulnerability has been observed in real-world exploitation, which is worth factoring into how quickly you prioritise it.
+
+## What action to take
+
+Update Adobe Acrobat Reader to a version newer than those listed above. Adobe's security bulletin (linked below) covers the specific fixed versions and update instructions. If you manage Acrobat Reader through a deployment tool or enterprise update process, confirm the patched version has actually been applied rather than assuming auto-update has handled it.
+
+If updating immediately is not possible, advise users to exercise caution with PDF files from untrusted sources, though updating remains the proper remediation.
+
+## Reference
+
+- Adobe security bulletin for this vulnerability: https://helpx.adobe.com/security/products/acrobat/apsb23-01.html
+- CISA Known Exploited Vulnerabilities catalog entry: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2023-21608
+
+
+Block 2
+=======
+
+CVE-2023-29119
+--------------
+## What is vulnerable
+
+The Waybox Enel X, an electric vehicle charging station, has a vulnerability in its web management application. Specifically, the endpoint `/admin/dbstore.php` allows arbitrary requests to be executed against the device's internal database. This means that someone who can reach the web management interface can send crafted requests through that page to read, modify, or delete data in the database without proper authorization checks stopping them.
+
+## How it can be exploited
+
+The attack vector is ADJACENT_NETWORK, which means the attacker needs to be on the same local network segment as the Waybox device — they cannot exploit this from the open internet unless the management interface has been exposed beyond the local network. No privileges are required and no user interaction is needed, so an attacker on the local network does not need to log in or trick anyone into clicking something. They can simply send requests directly to the vulnerable endpoint.
+
+The impact ratings are HIGH across confidentiality, integrity, and availability, which means a successful attack could let someone read sensitive data stored in the database, alter that data, or disrupt the device's operation. Given that this is a charging station management interface, that could affect configuration, usage records, or device availability.
+
+## What action to take
+
+Check whether any Waybox Enel X units are deployed in your environment and whether their web management interfaces are reachable on the network. The vendor has published a security bulletin (linked below) that covers this issue — consult it for specific firmware updates or configuration guidance to remediate the vulnerability. If the management interface does not need to be network-accessible, restricting access to it at the network level would reduce exposure while a fix is applied.
+
+## Reference
+
+Vendor security bulletin from Enel X:
+https://support-emobility.enelx.com/content/dam/enelxmobility/italia/documenti/manuali-schede-tecniche/Waybox-3-Security-Bulletin-06-2024-V1.pdf
+
+CVE-2023-43661
+--------------
+## What is vulnerable
+
+Cachet, an open-source status page system used to communicate service uptime and incidents, has a server-side template injection vulnerability in versions prior to the 2.4 branch. The problem is in a feature that lets users create templates. Due to inadequate filtering of user input combined with an old version of Twig (Twig is the templating engine Cachet uses to render pages), a user who can create templates can inject code that the server then executes. This means the attacker's code runs directly on the server hosting Cachet, not just in a browser.
+
+## How it can be exploited
+
+The attack vector is NETWORK, so this can be reached remotely over the network. Privileges required is LOW, meaning the attacker needs some level of authenticated access to Cachet — specifically, enough access to use the template creation feature — but does not need administrative privileges. No user interaction is required, so no one else needs to click or do anything for the attack to work.
+
+Because the injected template code runs on the server, the impact across confidentiality, integrity, and availability is all rated HIGH. In practical terms, an attacker who exploits this could read sensitive data on the server, modify data or system files, or disrupt the service entirely. The scope of what they can do depends on the permissions the Cachet application runs with on the host system.
+
+## What action to take
+
+Check whether you are running a version of Cachet prior to the 2.4 branch. If so, apply the patch contained in commit `6fb043e109d2a262ce3974e863c54e9e5f5e0587` on the 2.4 branch, or update to a version of the 2.4 branch that includes this commit. The commit and the security advisory linked below provide the specific code change and further context. If you cannot update immediately, consider restricting which users have access to the template creation feature as an interim measure, though the sources do not explicitly list this as a workaround.
+
+## Reference
+
+- Patch commit on GitHub: https://github.com/cachethq/cachet/commit/6fb043e109d2a262ce3974e863c54e9e5f5e0587
+- GitHub security advisory from the Cachet project: https://github.com/cachethq/cachet/security/advisories/GHSA-hv79-p62r-wg3p
+
+CVE-2021-30970
+--------------
+## What is vulnerable
+
+macOS has a logic flaw in how it manages certain internal state related to Privacy preferences — the system-level controls that govern which apps can access sensitive resources like the camera, microphone, contacts, or files. The affected versions are macOS Monterey before 12.1 and macOS Big Sur before 11.6.2. Because of this flaw, a malicious application can bypass those Privacy preferences, meaning it could access protected data or resources that the user never granted it permission to reach.
+
+## How it can be exploited
+
+The attack vector is LOCAL, so an attacker cannot reach this over the network directly; they need to get a malicious application running on the target Mac. The user interaction field is REQUIRED, which means the user has to take some action — most likely opening or installing the malicious app — for the flaw to be triggered. No special privileges are needed beyond what a normal user has. Once the app is running, it can sidestep the Privacy preference checks and gain access to data that should be off-limits. The impact fields reflect this: confidentiality is rated HIGH (the app can read protected information), while integrity and availability are both NONE (it does not alter data or disrupt the system).
+
+## What action to take
+
+Update to macOS Monterey 12.1 or macOS Big Sur 11.6.2 (or any later release), which contain the fix for this issue. If your Mac is already on a version at or above those, no action is needed for this specific flaw. The Apple support pages linked below describe the security content of each update and confirm the fix.
+
+## Reference
+
+Apple security update for macOS Monterey 12.1: https://support.apple.com/en-us/HT212978
+Apple security update for macOS Big Sur 11.6.2: https://support.apple.com/en-us/HT212979
+
+CVE-2024-21887
+--------------
+## What is vulnerable
+
+Ivanti Connect Secure (versions 9.x and 22.x) and Ivanti Policy Secure (versions 9.x and 22.x) contain a command injection vulnerability in their web components. These are VPN and network access control appliances that organisations use to let remote users connect securely to internal resources. Command injection means that an attacker can insert operating system commands into a request sent to the appliance, and the system will execute those commands as though they were legitimate instructions. In this case, the flaw is in the web-based management interface of the appliance.
+
+## How it can be exploited
+
+The attack is carried out over the network (the attack vector is NETWORK), and no user interaction is needed — nobody has to click a link or take any action for the attack to work. However, the attacker does need to be authenticated as an administrator on the appliance (privileges required is HIGH), meaning they need valid admin-level credentials to send the specially crafted requests that trigger the vulnerability.
+
+Once exploited, the attacker can execute arbitrary commands on the appliance itself, which means they can run whatever operating system commands they choose. The impact ratings are HIGH across confidentiality, integrity, and availability, reflecting that an attacker could read sensitive data on the appliance, modify its configuration or stored data, and disrupt its operation.
+
+It is worth noting that this vulnerability has been observed in active exploitation in the wild, and a separate public write-up describes a chain combining this flaw with an authentication bypass (CVE-2023-46805), which would remove the requirement for valid admin credentials entirely. That combination would allow an unauthenticated remote attacker to achieve the same outcome.
+
+## What action to take
+
+Check whether any Ivanti Connect Secure or Ivanti Policy Secure appliances in the 9.x or 22.x version ranges are deployed in your environment. Ivanti has published an advisory with remediation guidance — consult the vendor article linked below for the specific patches and mitigation steps. Given that this vulnerability has been actively exploited, prioritise reviewing and applying the vendor's recommended actions promptly. CISA's Known Exploited Vulnerabilities catalog entry (also linked below) may carry additional guidance on timelines and expectations for federal or regulated environments.
+
+## Reference
+
+- Ivanti vendor advisory: https://forums.ivanti.com/s/article/CVE-2023-46805-Authentication-Bypass-CVE-2024-21887-Command-Injection-for-Ivanti-Connect-Secure-and-Ivanti-Policy-Secure-Gateways?language=en_US
+- CISA Known Exploited Vulnerabilities catalog entry: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2024-21887
+- Packet Storm Security write-up (third-party technical detail): http://packetstormsecurity.com/files/176668/Ivanti-Connect-Secure-Unauthenticated-Remote-Code-Execution.html
+
+
+Block 3
+=======
+
+CVE-2021-42013
+--------------
+## What is vulnerable
+
+Apache HTTP Server versions 2.4.49 and 2.4.50 contain a path traversal vulnerability. Path traversal means an attacker can craft a URL that tricks the server into accessing files outside the directories the server is supposed to serve — essentially escaping the intended folder structure by manipulating the file path in the request.
+
+This vulnerability exists specifically in how the server resolves URLs mapped through "Alias-like directives," which are configuration options that map a URL path to a specific directory on disk. A previous fix for a related flaw (CVE-2021-41773) was shipped in version 2.4.50, but that fix was incomplete, and this vulnerability is the result of that gap. No versions earlier than 2.4.49 are affected.
+
+## How it can be exploited
+
+Because the attack vector is NETWORK with no privileges required and no user interaction needed, an attacker can exploit this remotely over the internet without logging in and without anyone at the target needing to do anything.
+
+There are two levels of impact depending on the server's configuration:
+
+1. **File disclosure:** If files outside the aliased directories are not protected by the default configuration setting `require all denied` (which blocks access to everything not explicitly allowed), an attacker can read files they should not have access to — such as configuration files or other sensitive data on the server.
+
+2. **Remote code execution:** If CGI scripts are also enabled for the affected aliased paths — CGI being a mechanism that lets the web server run programs in response to requests — then the attacker can potentially execute arbitrary code on the server. This is the more serious outcome and is reflected in the CRITICAL CVSS score of 9.8, with HIGH impact across confidentiality, integrity, and availability, meaning an attacker could read data, modify it, and disrupt the service.
+
+## What action to take
+
+Check whether any Apache HTTP Server instances are running version 2.4.49 or 2.4.50. If so, upgrade to a later version. The Apache project's own security page for the 2.4 branch (linked below) documents this issue and the versions that address it.
+
+While waiting to upgrade, review your configuration to confirm that directories outside your intended document root have `require all denied` set, and that CGI execution is not enabled on aliased paths where it is not needed. These are mitigating factors described in the vulnerability, not full fixes.
+
+Given the number of public exploit references available for this vulnerability, treat exposed instances as a priority for patching.
+
+## Reference
+
+- Apache HTTP Server vendor security page: https://httpd.apache.org/security/vulnerabilities_24.html
+- CISA Known Exploited Vulnerabilities catalog entry: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2021-42013
+- JVN advisory: http://jvn.jp/en/jp/JVN51106450/index.html
+- Cisco advisory: https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-apache-httpd-pathtrv-LAzg68cZ
+- Gentoo advisory: https://security.gentoo.org/glsa/202208-20
+- NetApp advisory: https://security.netapp.com/advisory/ntap-20211029-0009/
+- Oracle advisory (January 2022): https://www.oracle.com/security-alerts/cpujan2022.html
+- Oracle advisory (April 2022): https://www.oracle.com/security-alerts/cpuapr2022.html
+- oss-security mailing list discussion: http://www.openwall.com/lists/oss-security/2021/10/07/6
+- Packet Storm exploit references: http://packetstormsecurity.com/files/164501/Apache-HTTP-Server-2.4.50-Path-Traversal-Code-Execution.html
+- Fedora package announcements: https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/RMIIEFINL6FUIOPD2A3M5XC6DH45Y3CC/
+
+CVE-2023-44221
+--------------
+## What is vulnerable
+
+SonicWall SMA100, a secure remote access appliance that provides SSL-VPN connectivity, has a command injection vulnerability in its management interface. The flaw is in how the management interface handles special characters in input — it does not properly neutralize them before passing them to the underlying operating system. This is called OS command injection: when an application builds a system command using input it received without cleaning that input first, an attacker can slip in extra commands that the operating system then runs.
+
+The vulnerability affects the SMA100 SSL-VPN management interface specifically.
+
+## How it can be exploited
+
+To exploit this, an attacker needs network access to the management interface and must already be authenticated with administrative privileges (the privileges required field is HIGH). No user interaction is needed — no one has to click a link or take any action for the attack to work. So the practical scenario is: someone who already has or has obtained an admin account on the SMA100 management interface can inject arbitrary operating system commands through it.
+
+The injected commands run as the "nobody" user, which is a low-privilege account on the appliance's operating system, rather than as root. Even so, the impact ratings are HIGH across confidentiality, integrity, and availability, meaning a successful exploit could let the attacker read sensitive data, modify the system, or disrupt its operation. Running OS commands on the appliance, even as a limited user, opens a wide range of possible actions depending on the appliance's configuration.
+
+This vulnerability is listed in CISA's Known Exploited Vulnerabilities catalog, which means it has been observed in use in real attacks.
+
+## What action to take
+
+Check whether any SMA100 appliances are deployed in your environment and whether their management interfaces are exposed to the network. Consult SonicWall's advisory (linked below) for the specific affected firmware versions and the patched versions to update to. Since this has been exploited in the wild, treat remediation as a priority. If immediate patching is not possible, review who has administrative access to the management interface and restrict network-level access to it as a temporary measure.
+
+## Reference
+
+- SonicWall advisory (vendor): https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2023-0018
+- CISA Known Exploited Vulnerabilities catalog entry: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2023-44221
+
+CVE-2021-22204
+--------------
+## What is vulnerable
+
+ExifTool, a widely used command-line utility for reading and writing metadata in image and other media files, has a code execution vulnerability in versions 7.44 and later. The flaw is in how ExifTool processes DjVu files, a file format commonly used for scanned documents and images. When ExifTool parses a DjVu file, it does not properly sanitize (clean or neutralize) user-controlled data embedded in the file before processing it. Because ExifTool is written in Perl, this unsanitized data can be interpreted as Perl code and executed — meaning a specially crafted DjVu file can cause arbitrary commands to run on the machine processing it.
+
+ExifTool is not only used as a standalone tool; it is also embedded in other software and services (notably GitLab, as several of the references indicate), so the reach of this vulnerability extends beyond direct ExifTool users.
+
+## How it can be exploited
+
+The attack vector is LOCAL, meaning the malicious DjVu file needs to reach the system where ExifTool runs — for example, by being uploaded to a service that automatically processes image metadata. Importantly, no privileges are required and no user interaction is needed: once the file is on a system where ExifTool processes it, the code execution happens automatically during parsing, without anyone needing to click or approve anything.
+
+The CVSS impact ratings are LOW across confidentiality, integrity, and availability, which reflects limited direct damage per exploitation. However, the core issue — arbitrary code execution — means an attacker who triggers this can run commands on the host system, and the practical consequences depend on the context in which ExifTool runs (e.g., as part of a web application processing user uploads, the attacker could potentially pivot further). This vulnerability is listed in CISA's Known Exploited Vulnerabilities catalog, confirming it has been exploited in real-world attacks.
+
+## What action to take
+
+Check whether ExifTool version 7.44 or later is installed on any of your systems, either as a standalone tool or as a dependency of another application (GitLab being a prominent example). The fix is available in the ExifTool source repository — the commit referenced below addresses the issue. Update ExifTool to a version that includes this fix. If you are running a Linux distribution, check the Debian and Fedora advisories listed below for packaged updates.
+
+If ExifTool is embedded in another product you use, check with that product's vendor for their patched release. For GitLab specifically, several of the references describe how this vulnerability was exploitable through GitLab's image processing pipeline.
+
+## Reference
+
+- ExifTool fix commit on GitHub: https://github.com/exiftool/exiftool/commit/cf0f4e7dcd024ca99615bfd1102a841a25dde031#diff-fa0d652d10dbcd246e6b1df16c1e992931d3bb717a7e36157596b76bdadb3800
+- GitLab CVE record: https://gitlab.com/gitlab-org/cves/-/blob/master/2021/CVE-2021-22204.json
+- HackerOne report: https://hackerone.com/reports/1154542
+- Debian Security Advisory: https://www.debian.org/security/2021/dsa-4910
+- Debian LTS Advisory: https://lists.debian.org/debian-lts-announce/2021/05/msg00018.html
+- Fedora package announcements: https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/DDKDLJLBTBBR66OOPXSXCG2PQRM5KCZL/ , https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/F6UOBPU3LSHAPRRJNISNVXZ5DSUIALLV/ , https://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/U4RF6PJCJ6NQOVJJJF6HN6BORUQVIXY6/
+- CISA Known Exploited Vulnerabilities entry: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2021-22204
+- Openwall security mailing list discussions: http://www.openwall.com/lists/oss-security/2021/05/09/1 , http://www.openwall.com/lists/oss-security/2021/05/10/5
+- Packet Storm exploit and advisory references: http://packetstormsecurity.com/files/162558/ExifTool-DjVu-ANT-Perl-Injection.html , http://packetstormsecurity.com/files/164768/GitLab-Unauthenticated-Remote-ExifTool-Command-Injection.html , http://packetstormsecurity.com/files/164994/GitLab-13.10.2-Remote-Code-Execution.html , http://packetstormsecurity.com/files/167038/ExifTool-12.23-Arbitrary-Code-Execution.html
+
+CVE-2022-40765
+--------------
+## What is vulnerable
+
+Mitel MiVoice Connect, a business communications platform, has a vulnerability in its **Edge Gateway** component in versions through 19.3 (build 22.22.6100.0). The flaw is a **command injection** issue, which means that an attacker can insert operating system commands into input that the system then runs as though they were legitimate instructions. The root cause is that the Edge Gateway does not sufficiently restrict or validate URL parameters — the values passed in web addresses — before processing them.
+
+## How it can be exploited
+
+To exploit this, an attacker needs two things. First, they need to be **authenticated**, meaning they must already have valid credentials with a high-privilege account on the system (the privileges required field is HIGH). Second, the attack vector is **ADJACENT_NETWORK**, which means the attacker needs access to the same local or internal network segment as the Edge Gateway — this is not something that can be reached directly from the open internet without first being on that network.
+
+No user interaction is required: no one needs to click a link or take any action for the attack to work. Once the attacker has network access and valid credentials, they can craft URL parameters that inject commands into the system. The impact ratings are HIGH across confidentiality, integrity, and availability, meaning a successful attack could let the attacker read sensitive data, modify system behaviour, and disrupt service.
+
+## What action to take
+
+Check whether any Mitel MiVoice Connect deployment in your environment is running version 19.3 (build 22.22.6100.0) or earlier, and whether the Edge Gateway component is in use. Mitel has published a security advisory for this issue; consult the advisory linked below for specific remediation steps, including any available patches or updated versions. This vulnerability is also listed in CISA's Known Exploited Vulnerabilities catalog, which means it has been observed in active exploitation, so treat remediation as a priority.
+
+## Reference
+
+- Mitel security advisories (vendor, general page): [https://www.mitel.com/support/security-advisories](https://www.mitel.com/support/security-advisories)
+- Mitel product security advisory 22-0007 (vendor, specific advisory): [https://www.mitel.com/support/security-advisories/mitel-product-security-advisory-22-0007](https://www.mitel.com/support/security-advisories/mitel-product-security-advisory-22-0007)
+- CISA Known Exploited Vulnerabilities catalog entry: [https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2022-40765](https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2022-40765)
