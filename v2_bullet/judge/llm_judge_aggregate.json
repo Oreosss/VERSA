@@ -1,0 +1,115 @@
+{
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0,
+  "n_passes": 3,
+  "rubric_hashes": {
+    "comprehension": "2ec3864652eb026778d13f9d2077a83f371c967a628de7bf5adb48d5c0e46bd7",
+    "faithfulness": "b06ddc055f39ad0b9508dec92bd218f1e7fbfc69922c7db4c08c0185d0422d69"
+  },
+  "descriptive": [
+    {
+      "metric": "persona -- comprehension",
+      "n": 24,
+      "mean": 5.0,
+      "median": 5.0,
+      "sd": 0.0,
+      "min": 5.0,
+      "max": 5.0
+    },
+    {
+      "metric": "baseline -- comprehension",
+      "n": 24,
+      "mean": 5.0,
+      "median": 5.0,
+      "sd": 0.0,
+      "min": 5.0,
+      "max": 5.0
+    },
+    {
+      "metric": "nvd -- comprehension",
+      "n": 24,
+      "mean": 4.013888888888889,
+      "median": 4.0,
+      "sd": 0.7516755304382212,
+      "min": 3.0,
+      "max": 5.0
+    },
+    {
+      "metric": "persona -- faithfulness",
+      "n": 24,
+      "mean": 3.180555555555556,
+      "median": 3.0,
+      "sd": 0.48133436374961636,
+      "min": 3.0,
+      "max": 5.0
+    },
+    {
+      "metric": "baseline -- faithfulness",
+      "n": 24,
+      "mean": 3.0416666666666665,
+      "median": 3.0,
+      "sd": 0.2658047665355975,
+      "min": 2.6666666666666665,
+      "max": 4.0
+    },
+    {
+      "metric": "nvd -- faithfulness",
+      "n": 24,
+      "mean": 5.0,
+      "median": 5.0,
+      "sd": 0.0,
+      "min": 5.0,
+      "max": 5.0
+    }
+  ],
+  "paired_comparisons": [
+    {
+      "label": "Persona comprehension - NVD comprehension",
+      "n": 24,
+      "mean_diff": 0.986111111111111,
+      "sd_diff": 0.7516755304382212,
+      "median_diff": 1.0,
+      "cohens_dz": 1.3118840126885807
+    },
+    {
+      "label": "Baseline comprehension - NVD comprehension",
+      "n": 24,
+      "mean_diff": 0.986111111111111,
+      "sd_diff": 0.7516755304382212,
+      "median_diff": 1.0,
+      "cohens_dz": 1.3118840126885807
+    },
+    {
+      "label": "Persona comprehension - Baseline comprehension",
+      "n": 24,
+      "mean_diff": 0.0,
+      "sd_diff": 0.0,
+      "median_diff": 0.0,
+      "cohens_dz": NaN
+    },
+    {
+      "label": "Persona faithfulness - NVD faithfulness",
+      "n": 24,
+      "mean_diff": -1.8194444444444444,
+      "sd_diff": 0.48133436374961636,
+      "median_diff": -2.0,
+      "cohens_dz": -3.7800011415575865
+    },
+    {
+      "label": "Baseline faithfulness - NVD faithfulness",
+      "n": 24,
+      "mean_diff": -1.9583333333333333,
+      "sd_diff": 0.2658047665355975,
+      "median_diff": -2.0,
+      "cohens_dz": -7.3675628878200214
+    },
+    {
+      "label": "Persona faithfulness - Baseline faithfulness",
+      "n": 24,
+      "mean_diff": 0.13888888888888892,
+      "sd_diff": 0.3393182518027011,
+      "median_diff": 0.0,
+      "cohens_dz": 0.40931747158018134
+    }
+  ]
+}

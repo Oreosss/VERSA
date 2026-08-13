@@ -1,0 +1,98 @@
+{
+  "CVE-2020-8010": {
+    "A": "baseline",
+    "B": "persona"
+  },
+  "CVE-2020-8260": {
+    "A": "persona",
+    "B": "baseline"
+  },
+  "CVE-2020-8655": {
+    "A": "persona",
+    "B": "baseline"
+  },
+  "CVE-2020-8958": {
+    "A": "persona",
+    "B": "baseline"
+  },
+  "CVE-2021-21974": {
+    "A": "baseline",
+    "B": "persona"
+  },
+  "CVE-2021-22204": {
+    "A": "baseline",
+    "B": "persona"
+  },
+  "CVE-2021-22717": {
+    "A": "baseline",
+    "B": "persona"
+  },
+  "CVE-2021-23894": {
+    "A": "persona",
+    "B": "baseline"
+  },
+  "CVE-2021-26084": {
+    "A": "persona",
+    "B": "baseline"
+  },
+  "CVE-2021-30970": {
+    "A": "persona",
+    "B": "baseline"
+  },
+  "CVE-2021-37976": {
+    "A": "persona",
+    "B": "baseline"
+  },
+  "CVE-2021-42013": {
+    "A": "baseline",
+    "B": "persona"
+  },
+  "CVE-2022-28810": {
+    "A": "persona",
+    "B": "baseline"
+  },
+  "CVE-2022-3062": {
+    "A": "persona",
+    "B": "baseline"
+  },
+  "CVE-2022-40765": {
+    "A": "baseline",
+    "B": "persona"
+  },
+  "CVE-2023-0157": {
+    "A": "baseline",
+    "B": "persona"
+  },
+  "CVE-2023-21608": {
+    "A": "persona",
+    "B": "baseline"
+  },
+  "CVE-2023-29119": {
+    "A": "baseline",
+    "B": "persona"
+  },
+  "CVE-2023-43661": {
+    "A": "baseline",
+    "B": "persona"
+  },
+  "CVE-2023-44221": {
+    "A": "persona",
+    "B": "baseline"
+  },
+  "CVE-2023-50919": {
+    "A": "baseline",
+    "B": "persona"
+  },
+  "CVE-2024-1781": {
+    "A": "baseline",
+    "B": "persona"
+  },
+  "CVE-2024-21887": {
+    "A": "persona",
+    "B": "baseline"
+  },
+  "CVE-2024-3400": {
+    "A": "persona",
+    "B": "baseline"
+  }
+}

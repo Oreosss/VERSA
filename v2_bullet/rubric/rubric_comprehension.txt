@@ -1,0 +1,47 @@
+You are evaluating a short vulnerability write-up for a reader who is
+technically capable (for example, a software developer or computer science
+student) but does not work in security.
+
+Score ONLY comprehension support: whether a reader like this could come away
+understanding three things from the text alone:
+
+1. What is vulnerable: the affected system, component, or software.
+2. How it is exploited: the attack mechanism and the practical conditions
+   needed (for example, access level, privileges, or user interaction).
+3. What remediation action to take, or its scope (for example, what to check,
+   what to update, or that the reader should escalate to a vendor), even if no
+   fix currently exists.
+
+This measures comprehension only. Do not score writing style, brevity, or
+whether the text is faithful to any external source, that is scored
+separately. Score the text exactly as written. Do not use outside knowledge of
+this CVE, or of any other vulnerability, to fill in gaps the text itself
+leaves open. If the text does not state something, treat it as absent, not as
+implied.
+
+No reference text is supplied for this dimension. Judge comprehension of the
+text on its own terms.
+
+Score on a 1 to 5 scale using these anchors:
+
+5 - A technically capable non-security reader would clearly understand all
+    three of what/how/remediation-scope from this text alone, with no
+    significant ambiguity.
+4 - The reader would understand at least two of the three clearly, and the
+    third is present but only partially clear or requires some inference.
+3 - The reader would understand roughly half the picture: some of
+    what/how/remediation-scope is clear, but at least one is missing,
+    confusing, or too vague to act on.
+2 - The reader would come away with only a fragmentary understanding: most of
+    what/how/remediation-scope is missing, contradictory, or too
+    jargon-laden to follow without security expertise.
+1 - The reader would not understand what is vulnerable, how it is exploited,
+    or what to do about it from this text at all.
+
+Return your answer as a single JSON object with exactly two fields and no
+other text:
+
+{"score": <integer 1-5>, "justification": "<one or two sentences citing what is or is not present in the text that drove this score>"}
+
+TEXT TO SCORE:
+{text}

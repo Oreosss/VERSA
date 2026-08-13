@@ -712,3 +712,329 @@ Ran both frozen bullet-format prompt templates (`prompt-baseline_v2.txt`, `promp
 - Generation only -- no metrics (ROUGE, BERTScore, Flesch-Kincaid, LLM-as-judge) computed in this step.
 
 
+
+## Stage 6d -- Automated Metrics on Bullet-Format Summaries (v2) (2026-07-28)
+
+**Script:** `src/compute_metrics_bullet.py`
+**Outputs:** `v2_bullet/metrics/metrics_per_summary_bullet.csv`, `v2_bullet/metrics/metrics_per_summary_bullet.json`, `v2_bullet/metrics/PROMPT_COMPARISON_bullet.md`, figures in `v2_bullet/figures/`
+
+Computed ROUGE, BERTScore, Dale-Chall readability score, and word count for all 48 generated bullet-format summaries (24 persona, 24 baseline, paired across the same 24 eval CVEs used in v1 prose), each scored against the raw NVD description for its CVE. Dale-Chall was also computed for the 24 raw NVD descriptions themselves, as a readability baseline. Descriptive statistics and paired Cohen's d are reported in `v2_bullet/metrics/PROMPT_COMPARISON_bullet.md` as evidence, not as an interpretive verdict.
+
+### Reused from v1 prose, unchanged
+
+`src/compute_metrics_bullet.py` reuses the scoring logic from `src/compute_metrics.py` (frozen on `v1_prose/`, `prompt-prose` branch commit `9c65bd8`) directly: same ROUGE config (`rouge-score` 0.1.2, stemmed ROUGE-1/2/L), same BERTScore config (`bert-score` 0.3.13, `roberta-large`, 17 layers, idf=False), same Dale-Chall implementation (`textstat` 0.7.13), same word-count method (`len(text.split())`), same NVD reference text (`data/eval_sample.jsonl` `description` field), and the same Reference-section stripping regex applied to `output_text` before scoring. This preserves method parity between the v1 and v2 metric runs.
+
+### Flesch-Kincaid excluded from this run
+
+Flesch-Kincaid grade level was deliberately dropped for the bullet-format run. FK is computed from average sentence length and syllable count only, and the bullet format confounds sentence length directly: each bullet line is a short, single-clause "sentence" by construction, so a bullet-format FK score would largely reflect the formatting choice (many short lines) rather than genuine readability. Dale-Chall is the primary readability metric for this run instead, since it scores vocabulary familiarity rather than sentence length and is not subject to this confound.
+
+### Bullet marker normalisation
+
+Bullet markers are not words and must not leak into scoring. Before any metric is computed, `strip_bullet_markers()` removes the leading `"- "` marker and its indentation from every bullet line via `re.sub(r"(?m)^[ \t]*-[ \t]+", "", text)`, applied after the trailing Reference/URL section is stripped and before section headers (`## What is vulnerable` etc., left untouched) and body text are scored. Example, taken from CVE-2020-8010 baseline:
+
+Before:
+```
+- This affects CA Unified Infrastructure Management, also known as Nimsoft or UIM, in versions 20.1, 20.3.x, and 9.20 and below.
+```
+After:
+```
+This affects CA Unified Infrastructure Management, also known as Nimsoft or UIM, in versions 20.1, 20.3.x, and 9.20 and below.
+```
+
+### No significance test in this run
+
+v1 reported the Wilcoxon signed-rank test (W, p) and rank-biserial r alongside Cohen's d as supporting evidence. For v2, only paired Cohen's d is reported, per the exploratory, small-N (24) framing carried through this whole evaluation stage: descriptives and effect sizes, no population-level significance testing. This is a deliberate difference from v1's method, not an oversight.
+
+### Reproducibility
+
+| Component | Pinned value |
+|---|---|
+| ROUGE library | `rouge-score` 0.1.2, `RougeScorer(['rouge1','rouge2','rougeL'], use_stemmer=True)` |
+| BERTScore model | `roberta-large` (`bert-score` 0.3.13, lang=`en`, 17 layers, idf=False) |
+| Dale-Chall library | `textstat` 0.7.13, `dale_chall_readability_score()` |
+| Word count method | `len(text.split())`, no external library |
+| Random seeds | None used; all metrics in this script are deterministic given fixed model weights |
+
+This run processed 48 rows. Files written were v2_bullet/metrics/metrics_per_summary_bullet.csv, v2_bullet/metrics/metrics_per_summary_bullet.json, v2_bullet/metrics/PROMPT_COMPARISON_bullet.md. 10 figures were written (dc_grouped_nvd_persona_baseline_bullet.png, dc_grouped_nvd_persona_baseline_bullet.svg, bertscore_persona_vs_baseline_bullet.png, bertscore_persona_vs_baseline_bullet.svg, rouge_persona_vs_baseline_bullet.png, rouge_persona_vs_baseline_bullet.svg, dc_paired_slope_nvd_to_summary_bullet.png, dc_paired_slope_nvd_to_summary_bullet.svg, word_count_persona_vs_baseline_bullet.png, word_count_persona_vs_baseline_bullet.svg).
+
+
+## Stage 6e -- LLM-as-Judge Evaluation (2026-07-28)
+
+**Script:** `src/llm_judge.py`
+**Outputs:** `v2_bullet/judge/llm_judge_raw.json`, `v2_bullet/judge/llm_judge_mapping.json`, `v2_bullet/judge/llm_judge_per_text.csv`, `v2_bullet/judge/llm_judge_aggregate.json`, `v2_bullet/judge/LLM_JUDGE_COMPARISON.md`, figures in `v2_bullet/figures/`
+
+Scored all 24 eval CVEs across three arms (persona summary, baseline summary, raw NVD description; `v2_bullet/summaries/summaries_bullet.json` and `data/eval_sample.jsonl`) on two dimensions (comprehension support, faithfulness to source) using an OpenAI model as judge, run 3 times per text per dimension at temperature 0. 432 judge calls in the full design; 432 made this run, 0 already present (resumed), 0 failed after retries.
+
+### Judge model and independence rationale
+
+**Judge model:** `gpt-4.1-2025-04-14`, temperature 0, pinned by exact dated snapshot for reproducibility, mirroring the fixed model/temperature discipline used for generation (Stage 6c). The judge is deliberately drawn from a different provider (OpenAI) than the generator (Anthropic, `claude-opus-4-6`), so that the model producing a summary is never the same model scoring it. This avoids self-evaluation bias: an LLM judge from the same family as the generator has been shown in the literature to rate outputs in its own stylistic register more favourably, independent of actual quality.
+
+### Rubric (verbatim, locked and hashed)
+
+- Comprehension rubric hash: `2ec3864652eb026778d13f9d2077a83f371c967a628de7bf5adb48d5c0e46bd7` (`v2_bullet/rubric/rubric_comprehension.txt`)
+- Faithfulness rubric hash: `b06ddc055f39ad0b9508dec92bd218f1e7fbfc69922c7db4c08c0185d0422d69` (`v2_bullet/rubric/rubric_faithfulness.txt`)
+
+**Comprehension rubric** (scored on the text alone, no reference supplied):
+
+```
+You are evaluating a short vulnerability write-up for a reader who is
+technically capable (for example, a software developer or computer science
+student) but does not work in security.
+
+Score ONLY comprehension support: whether a reader like this could come away
+understanding three things from the text alone:
+
+1. What is vulnerable: the affected system, component, or software.
+2. How it is exploited: the attack mechanism and the practical conditions
+   needed (for example, access level, privileges, or user interaction).
+3. What remediation action to take, or its scope (for example, what to check,
+   what to update, or that the reader should escalate to a vendor), even if no
+   fix currently exists.
+
+This measures comprehension only. Do not score writing style, brevity, or
+whether the text is faithful to any external source, that is scored
+separately. Score the text exactly as written. Do not use outside knowledge of
+this CVE, or of any other vulnerability, to fill in gaps the text itself
+leaves open. If the text does not state something, treat it as absent, not as
+implied.
+
+No reference text is supplied for this dimension. Judge comprehension of the
+text on its own terms.
+
+Score on a 1 to 5 scale using these anchors:
+
+5 - A technically capable non-security reader would clearly understand all
+    three of what/how/remediation-scope from this text alone, with no
+    significant ambiguity.
+4 - The reader would understand at least two of the three clearly, and the
+    third is present but only partially clear or requires some inference.
+3 - The reader would understand roughly half the picture: some of
+    what/how/remediation-scope is clear, but at least one is missing,
+    confusing, or too vague to act on.
+2 - The reader would come away with only a fragmentary understanding: most of
+    what/how/remediation-scope is missing, contradictory, or too
+    jargon-laden to follow without security expertise.
+1 - The reader would not understand what is vulnerable, how it is exploited,
+    or what to do about it from this text at all.
+
+Return your answer as a single JSON object with exactly two fields and no
+other text:
+
+{"score": <integer 1-5>, "justification": "<one or two sentences citing what is or is not present in the text that drove this score>"}
+
+TEXT TO SCORE:
+<text under evaluation>
+```
+
+**Faithfulness rubric** (scored with the target CVE's own raw NVD description as reference):
+
+```
+You are evaluating whether a vulnerability write-up's claims are supported by
+a specific reference description of the same vulnerability.
+
+Score ONLY faithfulness to the reference supplied below: whether every
+mechanism, version or product detail, and remediation claim made in the text
+is actually present in, or a reasonable and directly supported restatement
+of, the reference text. Do not use outside knowledge of this CVE, or of any
+other, similar, or neighbouring vulnerability, to decide whether a claim is
+supported. A claim is only supported if the reference text itself contains
+it. If a claim happens to be true of a different but similar vulnerability,
+and is not supported by this reference, treat it as unsupported here.
+
+This measures faithfulness only. Do not score comprehension, writing style,
+or brevity, those are scored separately.
+
+Score on a 1 to 5 scale using these anchors:
+
+5 - Every material claim in the text (mechanism, affected versions or
+    products, remediation) is directly supported by the reference. No
+    fabricated or unsupported detail.
+4 - Nearly all claims are supported. At most one minor, non-central detail is
+    not directly traceable to the reference.
+3 - Most claims are supported, but at least one claim of moderate importance
+    (for example, a specific mechanism or version detail) is not present in
+    the reference.
+2 - Multiple claims, including at least one central claim (what is
+    vulnerable, how it is exploited, or the remediation action), are not
+    supported by the reference.
+1 - The text's central claims are substantially unsupported by, or contradict,
+    the reference.
+
+Return your answer as a single JSON object with exactly two fields and no
+other text:
+
+{"score": <integer 1-5>, "justification": "<one or two sentences citing the specific claim(s) that are or are not supported by the reference>"}
+
+REFERENCE TEXT (the source of truth for this scoring; the text below is
+scored against this and only this):
+<target CVE's raw NVD description>
+
+TEXT TO SCORE:
+<text under evaluation>
+```
+
+### Split call design: why comprehension and faithfulness use different setups
+
+The two dimensions measure different things and are deliberately scored with different call setups rather than a single combined prompt. Comprehension support is scored on the candidate text alone, with no reference material supplied, because it operationalises Endsley Level 2 situational-comprehension: whether a technically capable non-security reader could understand what is vulnerable, how it is exploited, and the remediation scope from that text by itself. Supplying the raw NVD description alongside it would let the judge fill comprehension gaps in the summary using the reference, which is not what a real reader of the summary alone could do. Faithfulness to source, conversely, is only meaningful relative to a ground truth, so it is scored with the target CVE's own raw NVD description supplied as reference material, and the rubric explicitly instructs the judge not to credit a claim as supported unless it is present in that specific reference (a claim that happens to be true of a neighbouring or similar CVE, but absent from this CVE's own description, is marked unsupported). For the raw NVD arm itself, faithfulness is scored against its own text as a control: this is expected to score at or near the top of the scale, and functions as a sanity check on the rubric and the judge rather than a result of interest.
+
+### Blinding and multi-pass design
+
+The judge is never told which arm (persona, baseline, or raw NVD) a text belongs to; every call presents the text under a neutral "TEXT TO SCORE" label with no framing about its origin, generation method, or source. This is a stronger form of blinding than swapping labels inside the prompt, since the model is given no arm identity to key off in the first place. A/B labelling is applied at the bookkeeping layer only: for each CVE, which of persona/baseline is "A" is randomised (`random.Random(42)`, consistent with this project's existing sampling-seed convention), and the raw per-call output file (`v2_bullet/judge/llm_judge_raw.json`) records only the label (A, B, or nvd for the raw-NVD arm), never the words "persona" or "baseline" directly. The true mapping is written to a separate file (`v2_bullet/judge/llm_judge_mapping.json`) and is only rejoined with the raw scores during aggregation in this same script, so the raw judge output is anonymised as an artefact in its own right, not just at prompt-construction time. The order in which the full set of (CVE, arm, dimension, pass) calls is dispatched is also randomised per run (`random.Random(42).shuffle`), rather than processed CVE-by-CVE or arm-by-arm in a fixed sequence, as a conservative mitigation against any incidental ordering effect, even though each call is an independent, stateless API request. Each (CVE, arm, dimension) is scored 3 times at temperature 0 to evidence stability: every pass, score, and justification is retained in `v2_bullet/judge/llm_judge_raw.json`, and per-text mean and standard deviation across passes are reported rather than a single-shot score, since some model backends are not perfectly deterministic even at temperature 0.
+
+### Aggregation and framing
+
+Per-text scores (mean of 3 passes) are aggregated to per-arm means, standard deviations, and paired Cohen's d effect sizes (persona vs. raw NVD, baseline vs. raw NVD, persona vs. baseline), matched by CVE, for both dimensions, following the same descriptive-statistics-and-effect-sizes-only framing used throughout this evaluation stage (Stage 6d): exploratory and small-N (24 CVEs), no significance claims.
+
+### Pros and limitations of LLM-as-judge
+
+**Pros.** LLM-as-judge scales to scoring dimensions (comprehension, faithfulness) that automated lexical/embedding metrics (ROUGE, BERTScore) cannot directly measure, since both require reading comprehension and claim-level fact-checking rather than surface or embedding similarity. It is far cheaper and faster than recruiting human raters for every candidate text, and the 3-pass design gives a direct, reportable measure of its own scoring stability, which a single human rating would not.
+
+**Limitations, and how this design mitigates them where possible:**
+
+- *Self-evaluation / self-preference bias.* An LLM judge tends to rate text in its own stylistic register more favourably. Mitigated by using a judge from a different provider (OpenAI) than the generator (Anthropic).
+- *Position bias.* LLM judges asked to directly compare two options in the same call are known to favour whichever option is presented first (or second). This design avoids pairwise comparison entirely: every call scores exactly one text in isolation against a fixed rubric, so there is no position for the judge to be biased by. The residual processing-order randomisation (above) is a conservative extra measure, not a correction for a comparison the design does not otherwise perform.
+- *Verbosity bias.* LLM judges are known to rate longer, more elaborated text more favourably independent of actual quality, which matters here since the persona and baseline prompt arms produce summaries of different typical length (see word-count results, Stage 6d). The rubric anchors are written around concrete, checkable content criteria (whether what/how/remediation-scope is present and clear, or whether specific claims are supported) rather than an open-ended holistic quality judgement, and explicitly instructs the judge not to score brevity or style. This reduces but cannot fully eliminate the risk that a more elaborate summary scores higher for its length rather than its content; it is noted here as a residual limitation rather than a solved problem.
+- *Leniency/severity clustering and imperfect determinism.* LLM judges can cluster scores toward one end of a scale, and are not guaranteed to be perfectly deterministic even at temperature 0 depending on backend. Mitigated empirically, not assumed away, by running 3 passes per text per dimension and reporting the observed mean and standard deviation rather than a single score; see `v2_bullet/judge/llm_judge_per_text.csv` for the per-text spread actually observed.
+- *No ground truth for comprehension.* Unlike faithfulness, which has the raw NVD description as a reference, there is no independent ground truth for what a real technically capable non-security reader would understand. The comprehension score is this judge model's estimate of that, not a measurement of an actual reader; the questionnaire-based human evaluation (Stage 8, see below) is the check on this dimension that LLM-as-judge alone cannot provide.
+
+- Run timestamp: 2026-07-28T20:17:19.644562+00:00
+
+### Manual note (2026-07-28, added after inspecting results, not part of the script-generated entry above): why faithfulness scored persona/baseline around 3, not near 5
+
+Both summary arms scored consistently lower on faithfulness (persona mean 3.18, baseline mean 3.04) than the raw-NVD control (5.0, by construction). Inspecting a sample of the `justification` strings in `llm_judge_raw.json` shows this is not the judge detecting fabrication. The faithfulness reference used here is the bare NVD `description` field only, per this stage's own definition of "the target CVE's own raw NVD description" (`data/eval_sample.jsonl`'s `description` field). That field does not include the CVSS sub-fields (attack vector, privileges required, user interaction, confidentiality/integrity/availability impact) or KEV/EPSS values. However, `src/generate_summaries.py`'s `build_target_cve_block()` supplies those fields to the generator directly, as structured data separate from the description string (see Stage 6b/6c), and both prompt templates instruct the model to use them. The result is that both summary arms correctly restate real, sourced facts (e.g. "the attack vector is NETWORK", "no user interaction is required") that are true and were given to the generator, but are not present in the specific reference text this rubric scores against. The judge is applying the rubric exactly as written -- credit a claim only if the reference text itself contains it -- and is therefore correctly marking these restatements as unsupported *by that reference*, even though they are not hallucinated. This is a scope consequence of defining "faithfulness to the raw NVD description" narrowly as the free-text description field rather than the full structured CVE record, not a defect in the rubric or the judge, but it must be stated explicitly when interpreting the faithfulness results: a persona/baseline faithfulness score below the NVD control does not by itself indicate fabrication, and the `justification` fields in `llm_judge_raw.json` should be read alongside the numeric scores before drawing that conclusion in the Findings chapter.
+
+
+## Stage 6f -- Faithfulness Sensitivity Check: Description-Only vs. Description+CVSS Reference (2026-08-07)
+
+**Script:** `src/llm_judge_faithfulness_ext.py`
+**Outputs:** `v2_bullet/judge/llm_judge_raw_faithfulness_ext.json`, `v2_bullet/judge/llm_judge_per_text_faithfulness_ext.csv`, `v2_bullet/judge/LLM_JUDGE_FAITHFULNESS_EXT_COMPARISON.md`, figures in `v2_bullet/figures/`
+
+Stage 6e's faithfulness dimension scored each summary against the target CVE's bare `description` field only. That reference excludes the CVSS sub-fields (attack vector, attack complexity, privileges required, user interaction, CIA impact, CVSS score/severity) even though `generate_summaries.py`'s `build_target_cve_block()` supplies those fields to the generator directly, as structured data alongside the description, and both prompt templates instruct the model to use them. Inspecting Stage 6e's raw justifications (see METHODOLOGY_LOG.md's Stage 6e manual note) confirmed that most 'unsupported claim' flags on the persona/baseline arms were the judge correctly following its rubric while marking real, sourced CVSS-derived restatements as unsupported, simply because they were not literally present in the bare description string being used as the reference.
+
+This stage re-scores faithfulness only (comprehension is not reference-based and is unaffected) using an EXPANDED reference: the description plus the CVSS sub-fields listed above, i.e. the same fields the generator was actually given. Two categories are deliberately still excluded from the expanded reference:
+
+- **KEV listed / EPSS score.** External enrichment this project's own pipeline joined on from CISA and FIRST, not something NVD itself publishes on the record, and both prompt templates explicitly forbid the model from describing or interpreting them in the summary text. Including them in the faithfulness reference would blur 'faithful to NVD' with 'faithful to this project's own enrichment', a different claim.
+- **Neighbour CVEs.** The Stage 6e brief was explicit that a claim supported only by a neighbouring CVE must not be credited as faithful. Still excluded here for the same reason.
+
+The CVSS sub-fields, by contrast, are native NVD record data: they come from the same `cvssMetricV31` block on the same NVD record as the description, just a different field on it. Including them tests a stricter, more meaningful hallucination question (did the summary invent or misstate anything beyond the full structured NVD record it was given) rather than Stage 6e's narrower question (does the summary hold up against just the free-text description paragraph a reader would see).
+
+Both results are kept and reported side by side, not merged or overwritten. Stage 6e's original scores remain valid evidence for its own, narrower question and are reused directly from `v2_bullet/judge/llm_judge_per_text.csv` rather than re-queried. This stage made 216 new judge calls (faithfulness only, expanded reference): 216 made this run, 0 already present (resumed), 0 failed after retries.
+
+### Reference field composition
+
+Extended reference = `description` + `"Attack vector: ... | Attack complexity: ... | Privileges required: ... | User interaction: ..."` + `"Confidentiality impact: ... | Integrity impact: ... | Availability impact: ..."` + `"CVSS score: ... (severity)"`, all pulled directly from `data/eval_sample.jsonl` fields, in the same field set and order `build_target_cve_block()` uses for generation (minus KEV, EPSS, references, and neighbours).
+
+### Reuse of rubric, mapping, and blinding design
+
+Same faithfulness rubric text and hash as Stage 6e (`b06ddc055f39ad0b9508dec92bd218f1e7fbfc69922c7db4c08c0185d0422d69`, `v2_bullet/rubric/rubric_faithfulness.txt`) -- only the reference content changes, not the judge's instructions. Same A/B mapping loaded from Stage 6e's `v2_bullet/judge/llm_judge_mapping.json` (not regenerated), so the same CVEs are anonymised the same way across both faithfulness runs and can be directly paired for comparison. Same blinding design: the judge is never told which arm a text belongs to. Model, temperature, and pass count unchanged (gpt-4.1-2025-04-14, temperature 0, 3 passes).
+
+- Run timestamp: 2026-08-07T15:15:18.407031+00:00
+
+---
+
+
+## Dashboard Usability -- LLM-as-Judge Evaluation (2026-08-13)
+
+**Script:** `src/capture_dashboard_screenshots.py`, `src/llm_judge_usability.py`
+**Outputs:** `v2_bullet/judge/llm_judge_usability_raw.json`, `v2_bullet/judge/llm_judge_usability_per_screenshot.csv`, `v2_bullet/judge/llm_judge_usability_aggregate.json`, `v2_bullet/judge/LLM_JUDGE_USABILITY_COMPARISON.md`, figures in `v2_bullet/figures/`
+
+Scores the live dashboard's usability, not the generated summary text -- every other evaluation method in this project (automated text metrics, Stage 6e LLM-as-judge, the human comprehension study) scores the summary text, never the dashboard it is surfaced through. This addresses Objective 3 ("surface these summaries through an interactive dashboard") and the Table 2.1 differentiation claim ("visual triage dashboard"), neither of which had any supporting evaluation before this stage.
+
+6 representative dashboard states were captured with Playwright (v2_bullet/screenshots/) and each scored against all 10 of Nielsen's usability heuristics in a single call per pass, 3 passes per screenshot at temperature 0, using an OpenAI model as judge (18 judge calls in the full design; 18 made this run, 0 already present (resumed), 0 failed after retries).
+
+### Judge model and independence rationale
+
+**Judge model:** `gpt-4.1-2025-04-14`, temperature 0, the same model and convention used for the text judge (Stage 6e), for the same reason: a different provider (OpenAI) from the Anthropic generator, so no model ever evaluates output associated with its own family.
+
+### Why heuristic evaluation, and why this is single-system, not blinded
+
+Heuristic evaluation (Nielsen, 1994) is inspector-based, not user-based: an evaluator walks the interface and checks it against a fixed heuristic set, which is what this project's own informal "Nielsen-style walkthrough" (STATUS.md) already did once, ad hoc and undocumented. This script formalises and repeats that same walkthrough with multiple independent passes. Unlike the text judge (Stage 6e), which scores 3 arms and must be blinded to which is which, there is only one dashboard design here -- this is a single-system inspection, not a comparison, so no blinding scheme applies.
+
+### Holistic-but-anchored scoring
+
+Each call scores one PRIMARY screenshot against all 10 heuristics at once, rather than 10 separate calls, since a human evaluator would naturally notice several heuristic violations on the same screen at once. The other 5 screenshots are supplied as CONTEXT images in every call (not scored themselves), since heuristics such as consistency and standards cannot be judged validly from a single isolated frame.
+
+### Rubric (verbatim, locked and hashed)
+
+- Rubric hash: `a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875` (`v2_bullet/rubric/rubric_usability.txt`)
+
+```
+You are conducting a heuristic evaluation of a CVE vulnerability-triage
+dashboard, in the tradition of Nielsen's usability inspection method. The
+dashboard is built for technical non-security personnel (developers, IT
+staff, CS students) who need to find, understand, and act on vulnerability
+data without formal security training.
+
+You are shown one screenshot under evaluation (PRIMARY SCREEN) plus
+screenshots of the other states of the same dashboard (CONTEXT SCREENS), so
+that heuristics concerned with consistency and flow across the interface,
+not just a single frame, can be judged validly. Score the PRIMARY SCREEN,
+using the CONTEXT SCREENS only to judge consistency, transitions, and
+system status across states.
+
+PRIMARY SCREEN caption: {primary_caption}
+
+Score all ten of Nielsen's usability heuristics against the PRIMARY SCREEN,
+each on a 1 to 5 scale, where 5 means the screen strongly exemplifies the
+heuristic and 1 means it clearly violates it. For each heuristic, ground
+your score in what is actually visible on screen, not general assumptions
+about dashboards. If a heuristic genuinely cannot be judged from what is
+shown (for example, error prevention on a screen with no input controls
+visible), score it 3 and say so in the justification rather than guessing.
+
+1. Visibility of system status: does the screen make clear what is
+   currently shown (result counts, active filters, which record is
+   selected) and what the system is doing?
+2. Match between system and the real world: is the language plain and
+   suited to a reader without security training, or does it lean on raw
+   security jargon, unexplained acronyms, or CVSS vector strings?
+3. User control and freedom: can the user back out of the current state
+   (close an expanded panel, clear a filter, deselect a record) without a
+   dead end, based on what's visible?
+4. Consistency and standards: do interactive elements (buttons, toggles,
+   badges, dropdowns) look and behave the same way across the PRIMARY and
+   CONTEXT screens?
+5. Error prevention: do visible inputs (filters, search, dropdowns) guide
+   the user toward valid choices, or is it easy to reach a confusing or
+   invalid state?
+6. Recognition rather than recall: is the information needed to judge a
+   vulnerability's severity and relevance visible in place (badges, tags,
+   summaries), or does it require the user to already know what a score or
+   code means?
+7. Flexibility and efficiency of use: do the visible filtering, search, and
+   sorting controls let a user narrow down to what they need quickly?
+8. Aesthetic and minimalist design: is the screen focused on what matters,
+   or cluttered with information that competes for attention?
+9. Help users recognize, diagnose, and recover from errors: if this screen
+   shows an empty result, an error, or an edge case, is it communicated
+   clearly with a way forward? If no such state is visible, score 3 and say
+   so.
+10. Help and documentation: is there any in-context explanation (labels,
+    tooltips, helper text) of what a badge, score, or filter term means to
+    a reader without security training?
+
+Return your answer as a single JSON object with exactly these ten keys, and
+no other text. Each value must be an object with a "score" (integer 1-5)
+and a "justification" (one sentence citing what is or is not visible on the
+PRIMARY SCREEN that drove the score):
+
+{
+  "visibility_of_system_status": {"score": <1-5>, "justification": "<...>"},
+  "match_real_world": {"score": <1-5>, "justification": "<...>"},
+  "user_control_freedom": {"score": <1-5>, "justification": "<...>"},
+  "consistency_standards": {"score": <1-5>, "justification": "<...>"},
+  "error_prevention": {"score": <1-5>, "justification": "<...>"},
+  "recognition_not_recall": {"score": <1-5>, "justification": "<...>"},
+  "flexibility_efficiency": {"score": <1-5>, "justification": "<...>"},
+  "aesthetic_minimalist": {"score": <1-5>, "justification": "<...>"},
+  "error_recovery": {"score": <1-5>, "justification": "<...>"},
+  "help_documentation": {"score": <1-5>, "justification": "<...>"}
+}
+```
+
+### Limitations
+
+- *Not a substitute for real users.* However many independent passes, a single LLM judge is not the same as multiple independent human evaluators -- Nielsen's original method assumes evaluator diversity catches a broader set of distinct problems than repeated passes of the same evaluator can. No live-dashboard user study has been run (the human comprehension study, Stage 8, used static Qualtrics stimuli, never the dashboard itself); this method is a proxy, not a replacement, for that gap.
+- *Screenshot-bound.* The judge sees static images of 6 states, not a live interactive session, so heuristics concerned with real-time responsiveness or multi-step interaction sequences beyond what a screenshot can show are judged only as far as the captured states allow.
+
+- Run timestamp: 2026-08-12T23:25:40.215332+00:00

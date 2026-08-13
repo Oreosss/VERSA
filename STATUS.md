@@ -127,8 +127,8 @@ Eval sample exploitability threshold raised from EPSS >= 0.1 to EPSS >= 0.5 ("mo
 - [x] Manual smoke test -- golden path + edge cases (Playwright headless-browser run, see note below)
 
 **Evaluation**
-- [ ] Add `rouge-score`, `bert-score` to `requirements.txt`
-- [ ] Write automated metrics script -- ROUGE, BERTScore, Flesch-Kincaid readability, LLM-as-judge
+- [x] Add `rouge-score`, `bert-score` to `requirements.txt`
+- [x] Write automated metrics script -- ROUGE, BERTScore, Flesch-Kincaid readability, LLM-as-judge
 - [ ] Design user questionnaire
 - [ ] Recruit participants (developers + CS students, purposive sampling, BSREC approved)
 - [ ] Run evaluation sessions
@@ -883,3 +883,152 @@ entry rather than this one.
 since been built; the questionnaire-based human evaluation (Stage 8) is the
 remaining item.
 
+
+## Note (2026-07-28, not part of the generated inspection above)
+
+Metrics computation for the bullet arm (v2) is now done. Added
+`src/compute_metrics_bullet.py`, reusing the v1 prose scoring logic
+(`src/compute_metrics.py`, frozen on `prompt-prose` branch commit `9c65bd8`) for
+method parity. Computes ROUGE, BERTScore, Dale-Chall, and word count over all 48
+bullet summaries against the raw NVD description; Flesch-Kincaid is excluded for
+this run (sentence-length driven, confounded by the bullet format) and no
+significance test is reported (descriptives + Cohen's d only, matching this
+stage's exploratory small-N framing). Outputs: `v2_bullet/metrics/metrics_per_summary_bullet.csv`,
+`v2_bullet/metrics/metrics_per_summary_bullet.json`, `v2_bullet/metrics/PROMPT_COMPARISON_bullet.md`,
+5 figures (PNG+SVG) in `v2_bullet/figures/`. Details in `METHODOLOGY_LOG.md` ("Stage 6d").
+v1_prose was not touched (it doesn't exist on this branch).
+
+## Note (2026-07-28, evening, not part of the generated inspection above)
+
+LLM-as-judge evaluation for the bullet arm (v2) is now done. Added
+`src/llm_judge.py` and the locked rubric pair `v2_bullet/rubric/rubric_comprehension.txt`
+/ `rubric_faithfulness.txt` (sha256-hashed, verbatim in `METHODOLOGY_LOG.md`).
+Judge: OpenAI `gpt-4.1-2025-04-14`, temperature 0 -- a different provider from
+the generator (`claude-opus-4-6`) to avoid self-evaluation bias. Scored all 24
+eval CVEs x 3 arms (persona, baseline, raw NVD) x 2 dimensions (comprehension
+support, faithfulness to source) x 3 passes = 432 calls, 0 failures. The judge
+is never told which arm a text belongs to (no A/B labels appear in the prompt
+at all); A/B labelling and a separate de-anonymisation mapping
+(`v2_bullet/judge/llm_judge_mapping.json`) exist only so the raw per-call
+output file (`v2_bullet/judge/llm_judge_raw.json`) itself stays anonymised as
+an artefact. Outputs: `llm_judge_raw.json`, `llm_judge_mapping.json`,
+`llm_judge_per_text.csv`, `llm_judge_aggregate.json`, `LLM_JUDGE_COMPARISON.md`
+(all in `v2_bullet/judge/`), figure `llm_judge_scores_bullet` (PNG+SVG) in
+`v2_bullet/figures/`. Details, rubric verbatim, and bias/mitigation discussion
+in `METHODOLOGY_LOG.md` ("Stage 6e").
+
+
+**Notable result requiring commentary in the write-up:** comprehension scores
+show a ceiling effect -- both persona and baseline summaries scored a flat
+5.0/5.0 (SD 0.0) across all 24 CVEs, while the raw NVD description averaged
+4.01 (SD 0.75, range 3-5). Faithfulness showed the opposite pattern: the raw
+NVD control (scored against itself) was a flat 5.0 as expected, while persona
+(mean 3.18) and baseline (mean 3.04) summaries scored consistently lower.
+Checked a sample of the `justification` strings in `llm_judge_raw.json` to
+understand why: this is **not** the judge catching fabrication. The
+faithfulness reference is the bare NVD `description` field only (per this
+stage's own definition of "raw NVD description"), which does not include the
+CVSS sub-fields (attack vector, privileges required, user interaction, CIA
+impact) or KEV/EPSS -- but `generate_summaries.py`'s `build_target_cve_block`
+feeds those to the generator as separate structured fields alongside the
+description, so both summary arms correctly restate real, sourced CVSS/KEV/
+EPSS facts that simply are not present in the free-text description string.
+The judge is behaving exactly as instructed (only credit a claim if it is in
+the supplied reference) and is correctly marking those restatements as
+unsupported *by that specific reference text*, even though they are not
+fabricated. This is a foreseeable consequence of scoping "faithfulness to the
+raw NVD description" narrowly to the free-text field rather than the full
+structured CVE record, and needs to be stated explicitly as a scope
+definition in the dissertation methodology, not read as a finding that the
+summaries hallucinate.
+
+
+## Recent change (2026-08-13, dashboard usability LLM-as-judge)
+
+Closed a gap flagged repeatedly in this file and in `DISCUSSION_SOURCE_PACK.md`:
+every existing evaluation method (automated metrics, `src/llm_judge.py`, the
+human comprehension study) scores the generated *summary text*, never the
+dashboard it's surfaced through, even though Objective 3 and Table 2.1 both
+lean on the dashboard as part of the tool's contribution.
+
+Added `src/capture_dashboard_screenshots.py` (Playwright; new dependency,
+added to `requirements.txt`) capturing 6 representative states of the live
+dashboard with real corpus data into `v2_bullet/screenshots/`: initial load,
+a filtered/search state, the generated-summary detail view, the raw-NVD
+disclosure toggle expanded, every disclosure section expanded at once, and a
+zero-result filter combination. Had to hide the Dash dev-tools overlay
+(`debug=True` in `app.py`) via injected CSS, since it was covering real
+content (the vendor filter) in one state -- it's debug-only chrome a real
+user would never see, not part of what's being evaluated.
+
+Added `v2_bullet/rubric/rubric_usability.txt` (Nielsen's 10 heuristics,
+each tied to a specific dashboard element rather than left abstract) and
+`src/llm_judge_usability.py`, mirroring `src/llm_judge.py`'s conventions:
+OpenAI (`gpt-4.1-2025-04-14`) as judge, temperature 0, 3 passes per
+screenshot for stability (18/18 calls succeeded, one transient 429 retried
+automatically). Not blinded, unlike the text judge -- there's only one
+dashboard design being inspected, not multiple arms. Each call scores one
+screenshot against all 10 heuristics at once, with the other 5 screenshots
+supplied as context so cross-screen heuristics (consistency) can be judged
+validly.
+
+Result: consistency and standards scored a flat 5.00 (SD 0.00). Aesthetic
+and minimalist design scored 5.00 on every screen except the
+fully-expanded one (4.00) -- a one-point cost for opening everything at
+once, which is the progressive-disclosure hypothesis actually showing up
+in the data rather than being asserted. The two weakest heuristics were
+help and documentation and error recovery (3.17 each): the judge
+consistently flagged no in-context explanation of terms like EPSS or CISA
+KEV, and no explicit "reset filters" path out of a zero-result state. Full
+numbers in `v2_bullet/judge/LLM_JUDGE_USABILITY_COMPARISON.md`, figure in
+`v2_bullet/figures/llm_judge_usability_bullet.png`, full method + rubric +
+limitations logged in `METHODOLOGY_LOG.md` under "Dashboard Usability --
+LLM-as-Judge Evaluation".
+
+Drop-in dissertation content (methodology §3.4.5, findings §4.6, a §3.5
+reliability/validity paragraph, and a Chapter 5 discussion subsection) is
+in `DASHBOARD_USABILITY_WRITEUP.md`, not yet merged into
+`oreoluwaThesisDraft_v8` -- that merge is a manual step, done outside this
+repo. That file also flags a correction: Table 2.1 describes the raw-NVD
+comparison as a "summary-vs-raw view", but `build_raw_comparison()`
+(`app.py:623-631`) is a sequential disclosure toggle, not a side-by-side
+view -- worth rewording before submission.
+
+**Next task:** the questionnaire-based human evaluation (Stage 8) still
+never touched the live dashboard, only static Qualtrics stimuli -- this
+usability judge is a proxy for, not a replacement of, a live-dashboard
+user study, and Chapter 5 as a whole is still unwritten beyond the
+drop-in subsection above.
+
+## Recent change (2026-08-13, quick fixes from the usability judge findings)
+
+Three small `app.py` fixes addressing the two lowest-scoring heuristics from the usability
+judge run above (help and documentation, error recovery, 3.17/5 each), after checking each
+gap was real rather than an artefact of the screenshot-based evaluation method:
+
+1. **Tooltips on the technical-details table headers** (`build_technical_context_table`,
+   `app.py:568-591`). These headers (Attack vector, Privileges required, Attack complexity,
+   etc.) had no explanation, unlike the CVSS/KEV/EPSS badges and CWE tags, which already had
+   a working `data-tooltip` hover mechanism (`assets/style.css:299-320`) with real text
+   (`KEV_TOOLTIP`, `EPSS_TOOLTIP`) -- a static screenshot can't show a `:hover` state, so the
+   judge's low score was partly method artefact, partly this real gap. Added a
+   `TECH_FIELD_TOOLTIPS` dict and applied it to each header, reusing the existing CSS.
+2. **Tooltips on the "More filters" panel labels** (same mechanism, `FILTER_LABEL_TOOLTIPS`
+   dict), covering Privileges, User interaction, Operating system, Vendor, Attack complexity,
+   the three CVSS impact fields, and Published within.
+3. **"Clear all filters" button on the zero-result empty state** (`build_list`, `app.py:611-616`,
+   plus a new `clear_all_filters` callback resetting all 12 filter dropdowns, the KEV checklist,
+   and the search box). Each filter already had its own per-field `X`, but there was no
+   single-click way out of a zero-result combination.
+
+All three verified against the running dashboard with Playwright (tooltips render with the
+intended text; zero-result -> click "Clear all filters" -> back to the full 11,976-record
+list, every control visibly cleared).
+
+**Also corrected two stale notes in this file** (search "Correction (2026-08-13)" above and
+the large-vendor/OS dropdown note near the Stage 7 dashboard build): investigated the
+"~3,600/~10,000 unvirtualized options" claim directly with Playwright before building a fix
+for it, and it doesn't hold up -- opening the OS dropdown renders only ~7 DOM nodes at a time
+regardless of the 10,239 underlying options, real mouse-wheel scrolling swaps which rows
+render (genuine virtualisation/windowing, not a DOM dump), and typing to search works
+correctly. No code change made for this one; there's no confirmed bug.
