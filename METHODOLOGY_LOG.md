@@ -1038,3 +1038,56 @@ PRIMARY SCREEN that drove the score):
 - *Screenshot-bound.* The judge sees static images of 6 states, not a live interactive session, so heuristics concerned with real-time responsiveness or multi-step interaction sequences beyond what a screenshot can show are judged only as far as the captured states allow.
 
 - Run timestamp: 2026-08-12T23:25:40.215332+00:00
+
+## Stage 8 -- Human Comprehension Study (2026-08-10)
+
+**Script:** `src/analyze_human_study.py`
+**Inputs:** `data/human_study/survey_source.txt` (Qualtrics import file, verbatim), `data/human_study/answer_key.txt`, `data/human_study/qualtrics_export_recorded.csv`, `data/human_study/qualtrics_export_inprogress.csv`
+**Outputs:** `data/human_study/response_summary.csv`, `comprehension_long.csv`, `likert_long.csv`, `answer_key_check.csv`
+**Report:** `HUMAN_STUDY_FINDINGS.md` (full results; this section is method only)
+
+Previously recorded in this file (Stage 6e's limitations note, above) as "not yet run" -- Section 4.3 of `DISCUSSION_SOURCE_PACK.md` independently confirmed the same as of its own writing. This stage supersedes both.
+
+### Design
+
+Qualtrics survey. Three fixed CVE "quads" (4 CVEs each), drawn from different severity x exploitability cells of the 24-CVE eval sample (Section 6, above), each with two counterbalanced presentation orders (six blocks total, A-F):
+
+| Quad | Blocks | CVEs (slot 1-4) |
+|---|---|---|
+| 1 | A / B | CVE-2020-8010, CVE-2021-21974, CVE-2022-3062, CVE-2023-21608 |
+| 2 | C / D | CVE-2023-29119, CVE-2023-43661, CVE-2021-30970, CVE-2024-21887 |
+| 3 | E / F | CVE-2021-42013, CVE-2023-44221, CVE-2021-22204, CVE-2022-40765 |
+
+Each participant is randomly assigned to exactly one block and sees 4 CVEs only. Within a block, presentation condition (raw NVD paragraph vs. the persona-arm LLM summary, rendered as prose under three headers -- "What is vulnerable" / "How it can be exploited" / "What action to take") alternates by slot; the paired block flips it (A/C/E: NVD, Summary, NVD, Summary; B/D/F: the reverse). After each of the 4 entries, participants answer 3 multiple-choice comprehension questions and 2 five-point Likert items ("clear and easy to understand", "confident I understood").
+
+**Both conditions display identical structured metadata.** A technical-context table (CVE ID, severity, attack vector, privileges required, user interaction, C/I/A impact, KEV status, EPSS score) appears above the stimulus text in both conditions -- confirmed directly from `survey_source.txt`, not assumed. This is a materially narrower manipulation than it might first appear: the study isolates the prose narrative specifically (raw description vs. three-part LLM summary), not the structured CVSS/KEV/EPSS data, which both conditions have equal access to. This differs in scope from Stage 6e's faithfulness evaluation, which scored the LLM summaries against the bare NVD `description` field only, excluding the CVSS sub-fields from the reference (see Stage 6e's manual note, above) -- the two evaluations are not measuring presentation of an equivalent underlying artefact, and this should be stated explicitly wherever the two are compared.
+
+**Instructions text (verbatim, from `survey_source.txt`), confirming the participant-facing framing and time estimate that Section 4.3 of `DISCUSSION_SOURCE_PACK.md` had previously found unrecorded anywhere in the repository:**
+
+> You will be shown four software vulnerability entries, one at a time. Some are presented in the form published by the National Vulnerability Database and some are presented as a generated plain-language summary. After each entry you will be asked three questions about what you have understood from it, followed by two short rating questions.
+>
+> There are no right or wrong answers attributed to you personally and your responses are anonymous. The purpose is to compare the two ways of presenting the information, not to assess you. Please answer based only on the entry in front of you rather than looking up the vulnerability elsewhere.
+>
+> The survey takes approximately 10 to 15 minutes.
+
+This confirms the four-CVE-per-participant design and the 10-15 minute time estimate as they were actually presented to participants. It does not, on its own, supply the *strategic rationale* for choosing four CVEs or an automated-only (rather than mixed automated + human) comparison design for persona vs. baseline -- that rationale, if it exists, is still not recorded anywhere in this repository, and `DISCUSSION_SOURCE_PACK.md` Section 4.3 has been annotated accordingly rather than treated as fully resolved by this stage.
+
+### Verification steps built into the analysis, not assumed
+
+- **Condition-pattern verification.** `analyze_human_study.py` classifies each of the 24 stimulus blocks in `survey_source.txt` as NVD (single plain paragraph) or Summary (three-header structure) directly from the HTML, and checks this against the block pattern above. All 24 slots match; zero mismatches.
+- **Block-assignment consistency.** For every recorded response that reached a block, the block inferred from which columns were answered is checked against the CSV's own `Version` embedded-data field. Matches for all 17 recorded responses; zero mismatches.
+- **Answer-key verification.** A supplied answer key (`answer_key.txt`, 72 items -- one correct answer per MC question) was **not** trusted as-is. Each entry was checked against the first-listed choice for that question in `survey_source.txt` (the source states the correct answer is always the first-listed choice). All 72 agree; zero discrepancies.
+
+### Sample and an exclusion decision
+
+24 raw response attempts across two Qualtrics exports (17 finalised, 7 in-progress/abandoned); 16 reached at least one CVE entry (15 complete 20-item blocks, 1 partial 10-item block). One respondent answered "No" to the technical-background screening question (`S1`) and was excluded from the main analysis: the thesis's target population (`CLAUDE.md`) is technical non-security personnel, so this respondent is outside scope rather than merely a low scorer. Their raw score is reported separately, not folded into any headline figure. This leaves **n=15** technical-background respondents in the analysis reported in `HUMAN_STUDY_FINDINGS.md`.
+
+### Known instrument limitation, self-reported by a participant
+
+One MC item (asked twice, for CVE-2021-22204 and the resolved-but-differently-numbered CVE-2021-42013 "which version resolves this" question) has a correct-answer text that names a fix version ("12.24") not present in either the raw-NVD or LLM-summary stimulus text shown to participants. A participant flagged this unprompted in the optional free-text field. This is a defect in the instrument, not a measurement of comprehension for that item, and is recommended for correction before any future run. Full detail in `HUMAN_STUDY_FINDINGS.md` Section 4.4.
+
+### Results
+
+Not reported here -- see `HUMAN_STUDY_FINDINGS.md` for comprehension accuracy, Likert ratings, demographic breakdowns (technical background, formal training, CVE/CVSS familiarity), qualitative comments, and the discussion-relevant flags this stage surfaced.
+
+

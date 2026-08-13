@@ -14,7 +14,7 @@ _Generated from repo inspection -- 2026-07-08. Do not hand-edit; re-run the insp
 | 5. ChromaDB (embed + ingest) | DONE -- `data/chroma_db/` (11,976 records, 2026-07-08) |
 | 6. RAG + LLM summary | DONE (eval-sample generation) -- `v2_bullet/summaries/summaries_bullet.json`; dashboard does its own on-demand generation for the rest of the corpus, see Stage 7 |
 | 7. Dashboard (Plotly Dash) | DONE -- `app.py`, `src/dashboard_data.py`, `src/dashboard_search.py`, `src/dashboard_generate.py` (2026-08-01) |
-| 8. Evaluation | NOT STARTED |
+| 8. Evaluation | DONE (pilot-scale) -- automated metrics, LLM-as-judge (text), human comprehension study (n=14), and dashboard usability LLM-as-judge all complete; see `HUMAN_STUDY_FINDINGS.md` and notes below |
 
 ---
 
@@ -129,10 +129,10 @@ Eval sample exploitability threshold raised from EPSS >= 0.1 to EPSS >= 0.5 ("mo
 **Evaluation**
 - [x] Add `rouge-score`, `bert-score` to `requirements.txt`
 - [x] Write automated metrics script -- ROUGE, BERTScore, Flesch-Kincaid readability, LLM-as-judge
-- [ ] Design user questionnaire
-- [ ] Recruit participants (developers + CS students, purposive sampling, BSREC approved)
-- [ ] Run evaluation sessions
-- [ ] Analyse results and write up
+- [x] Design user questionnaire -- Qualtrics, 6-block (A-F) counterbalanced NVD-vs-summary design, see `HUMAN_STUDY_FINDINGS.md` Section 2
+- [x] Recruit participants (developers + CS students, purposive sampling, BSREC approved) -- 24 raw attempts, 16 reached content
+- [x] Run evaluation sessions -- 15 complete + 1 partial response analysed (1 further respondent excluded as outside target population, see below)
+- [x] Analyse results and write up -- `HUMAN_STUDY_FINDINGS.md`, pilot-scale (n=15 technical-background respondents), see caveats therein re: rushed-response outlier and instrument fix needed before a larger run
 
 ## Note (2026-07-27, not part of the generated inspection above)
 
@@ -1032,3 +1032,74 @@ for it, and it doesn't hold up -- opening the OS dropdown renders only ~7 DOM no
 regardless of the 10,239 underlying options, real mouse-wheel scrolling swaps which rows
 render (genuine virtualisation/windowing, not a DOM dump), and typing to search works
 correctly. No code change made for this one; there's no confirmed bug.
+
+## Recent change (2026-08-11)
+
+Human comprehension study (Stage 8) grew from 17 to 18 recorded responses (one
+new response, `R_5Eznt1RPReTcuu0`, folded into
+`data/human_study/qualtrics_export_recorded.csv` via a fresh Qualtrics
+export; `src/analyze_human_study.py` re-run to regenerate the three derived
+CSVs). A separate, fresh analysis was then built independently of the
+n=15 write-up below: `src/analyze_human_study_18p.py` (new script, does not
+modify or depend on `HUMAN_STUDY_FINDINGS.md` / `HUMAN_STUDY_DEMOGRAPHICS.md`)
+reads only the derived CSVs and runs a wider probe set -- bootstrap CIs
+(resampling respondents, not items) on the condition gap overall and by
+question type, a primary-vs-contrast subgroup test (S1=Yes&S2=No vs
+S1=Yes&S2=Yes), felt-vs-demonstrated comprehension checks, and artefact/
+integrity checks (slot position, rushed-response flag, same-CVE paired
+comparison, defective-item detection). Full results in
+`HUMAN_STUDY_18P_FINDINGS.md`; tables in `data/human_study/18p_tables/`;
+figures in `figures/human_study_18p/`.
+
+**Headline (n=16 technical-background respondents who reached content, of
+18 recorded + 7 in-progress raw attempts; primary group S1=Yes&S2=No n=12,
+contrast group S1=Yes&S2=Yes n=4):** overall comprehension gap is small,
++3.2pp (NVD 82.8% vs Summary 86.0%), 95% CI [-5.2, +11.1]pp, not
+distinguishable from zero at this n. The notable new result is a reversal
+from the thesis's working hypothesis: the accuracy gain is near zero for the
+primary target population (+1.4pp, n=12) and larger for the security-trained
+contrast group (+9.5pp, n=4, CI lower bound exactly 0.0) -- the contrast
+group is too small (n=4) to treat this as settled, but the primary group's
+own CI is centred near zero, not merely wide. Felt-vs-demonstrated results
+remain consistent with the thesis direction: participants rate Summary
+clearer (10 of 16) and more confidence-inspiring than NVD, and Summary does
+not inflate confidence on wrong answers relative to NVD (16.1% vs 29.0%
+high-confidence-wrong). No comprehension item fails in both conditions
+(no format-independent defective items found). Full caveats in
+`HUMAN_STUDY_18P_FINDINGS.md`.
+
+## Recent change (2026-08-10)
+
+Human comprehension study (Stage 8) data collected and analysed for the first
+time -- previously "not started" per every prior record in this repo. Design:
+Qualtrics survey, 3 fixed CVE "quads" (4 CVEs each, drawn from different
+severity x exploitability cells of the 24-CVE eval sample), 6 counterbalanced
+blocks (A-F): within a block, NVD-raw and LLM-summary presentation alternates
+by slot, and the paired block (A/B, C/D, E/F) flips which slot gets which
+condition. Each participant sees one block (4 CVEs) only. Added
+`src/analyze_human_study.py`, which parses the raw Qualtrics export
+(`data/human_study/qualtrics_export_recorded.csv` +
+`qualtrics_export_inprogress.csv`), independently verifies the supplied
+answer key against the actual survey source text (`survey_source.txt`,
+72/72 items agree) rather than trusting it, scores the three MC comprehension
+questions per CVE entry, and aggregates Likert (clarity/confidence) results
+by condition. Full results, data-quality notes, and discussion-relevant
+flags in `HUMAN_STUDY_FINDINGS.md`.
+
+**Headline (pilot-scale, n=15 technical-background respondents of 24 raw
+attempts, 17 recorded + 7 in-progress):** the one respondent without a
+technical background was excluded from the main analysis as outside the
+thesis's target population (`CLAUDE.md`: "technical non-security
+personnel"), not averaged in as noise -- their raw 16.7% accuracy is
+recorded separately in `HUMAN_STUDY_FINDINGS.md` Section 3.1. On the
+remaining 15: comprehension 83.9% (NVD) vs 88.5% (Summary); clarity 3.69 vs
+4.17; confidence 3.79 vs 4.10 -- directionally consistent with the thesis
+hypothesis but not distinguishable from noise at this sample size. The next
+most extreme data point, a 117-second full-block response, is best
+explained by rushed responding rather than condition, and a future run
+should add a minimum-duration exclusion. One MC item was found to test
+information absent from both stimulus texts (self-flagged by a participant)
+and needs fixing before reuse. Full caveats, including a substantive
+participant critique of the project's premise, in
+`HUMAN_STUDY_FINDINGS.md` Section 7.
+
