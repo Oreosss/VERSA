@@ -11,3 +11,5 @@ bert-score>=0.3.13
 textstat>=0.7.13
 matplotlib>=3.11.1
 scipy>=1.18.0
+dash>=2.18.0
+dash-bootstrap-components>=1.6.0

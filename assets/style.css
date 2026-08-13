@@ -1,0 +1,463 @@
+:root {
+  --page-bg: #eef0f3;
+  --card-bg: #ffffff;
+  --filter-bg: #f4f5f7;
+  --text-dark: #1f2430;
+  --text-grey: #6b7280;
+  --text-grey-light: #9aa2b1;
+  --border-light: #e2e5ea;
+  --accent: #35507d;
+  --accent-bg: #eef2f8;
+  --critical-text: #b3261e;
+  --critical-bg: #fbeceb;
+  --critical-border: #f0d3d1;
+  --high-text: #92620a;
+  --high-bg: #faf1de;
+  --high-border: #efdfc0;
+  --medium-text: #3d5a80;
+  --medium-bg: #e9eef5;
+  --medium-border: #d7e0ec;
+  --low-text: #5b6472;
+  --low-bg: #eef0f3;
+  --low-border: #dde1e7;
+  --kev-text: #6b3fa0;
+  --kev-bg: #f2ecf9;
+  --kev-border: #e4d6ef;
+}
+
+body {
+  background: var(--page-bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-dark);
+}
+
+.page-container { max-width: 1280px; margin: 32px auto; padding: 0 16px 64px; }
+
+.app-header {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border-light);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+.app-title-row { display: flex; align-items: center; gap: 14px; }
+.app-logo-badge {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  flex-shrink: 0;
+  display: block;
+}
+.app-title {
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.app-tagline { margin: 8px 0 0 58px; color: var(--text-grey); font-size: 0.95rem; max-width: 640px; }
+
+.cve-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border-light);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.cve-card-header { padding: 20px 24px; }
+.cve-card-header .card-title { margin: 0; font-weight: 700; display: inline; }
+.cve-card-header .tracked-count { color: var(--text-grey); margin-left: 8px; font-size: 0.95rem; }
+.cve-card-header .card-subtitle { color: var(--text-grey); font-size: 0.85rem; margin-top: 4px; }
+
+.back-to-list-btn {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 20px 24px 0;
+  cursor: pointer;
+}
+.back-to-list-btn:hover { text-decoration: underline; }
+
+.filter-zone {
+  background: var(--filter-bg);
+  padding: 16px 24px;
+  border-top: 3px solid var(--accent);
+  border-bottom: 1px solid var(--border-light);
+}
+.kev-only-checklist { font-size: 0.85rem; color: var(--text-dark); }
+.kev-only-checklist label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.filter-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-grey);
+  margin-bottom: 4px;
+}
+.more-filters-toggle {
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  padding: 0;
+}
+.more-filters-toggle:hover { text-decoration: underline; }
+.filter-divider { border-top: 1px solid var(--border-light); margin: 14px 0; }
+.search-row { display: flex; align-items: flex-end; gap: 12px; margin-bottom: 14px; }
+.search-input-wrap { flex: 1; }
+.search-row input { border-radius: 8px; border: 1px solid var(--border-light); width: 100%; box-sizing: border-box; }
+.sort-control { width: 220px; flex-shrink: 0; }
+
+.stat-cards-row { padding: 18px 24px 4px; }
+.stat-card {
+  background: #fbfbfc;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 14px 18px;
+  text-align: left;
+}
+.stat-card .stat-value { font-size: 1.9rem; font-weight: 700; line-height: 1; }
+.stat-card .stat-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-grey);
+  margin-top: 4px;
+}
+.stat-card.critical .stat-value { color: var(--critical-text); }
+
+.vuln-table { width: 100%; border-collapse: collapse; }
+.vuln-table thead th {
+  text-align: left;
+  padding: 10px 24px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-grey);
+  font-weight: 700;
+  background: var(--filter-bg);
+  border-bottom: 1px solid var(--border-light);
+}
+.vuln-table-row { border-bottom: 1px solid var(--border-light); }
+.vuln-table-row:hover { background: #fafbfc; }
+.vuln-table-row.selected { background: var(--accent-bg); }
+.vuln-table-row td { padding: 14px 20px; vertical-align: middle; }
+.vuln-table-row td:first-child { padding-left: 20px; border-left: 4px solid transparent; }
+.vuln-table-row.selected td:first-child { border-left-color: var(--accent); }
+.vuln-table-row .col-severity { white-space: nowrap; }
+.vuln-table-row .col-action { white-space: nowrap; width: 1%; }
+
+.col-cve-id { min-width: 160px; }
+.cve-id-hover { position: relative; display: inline-block; cursor: help; }
+.cve-id-hover .cve-id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.row-hover-preview {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  z-index: 30;
+  background: var(--card-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  padding: 16px;
+  min-width: 380px;
+  width: max-content;
+  max-width: min(700px, 90vw);
+  cursor: default;
+  white-space: normal;
+}
+.cve-id-hover:hover .row-hover-preview { display: block; }
+.row-hover-preview .risk-badge-row { margin-top: 0; }
+.row-hover-preview .tech-table-wrap { padding: 12px 0 0; overflow-x: auto; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; max-width: 340px; }
+.tag-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.tag-chip-neutral { color: var(--text-grey); background: var(--filter-bg); border: 1px solid var(--border-light); }
+.tag-chip-cwe { color: var(--accent); background: var(--accent-bg); }
+
+.severity-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.severity-pill .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.severity-pill.critical { color: var(--critical-text); background: var(--critical-bg); border-color: var(--critical-border); }
+.severity-pill.critical .dot { background: var(--critical-text); }
+.severity-pill.high { color: var(--high-text); background: var(--high-bg); border-color: var(--high-border); }
+.severity-pill.high .dot { background: var(--high-text); }
+.severity-pill.medium { color: var(--medium-text); background: var(--medium-bg); border-color: var(--medium-border); }
+.severity-pill.medium .dot { background: var(--medium-text); }
+.severity-pill.low { color: var(--low-text); background: var(--low-bg); border-color: var(--low-border); }
+.severity-pill.low .dot { background: var(--low-text); }
+.severity-pill.kev { color: var(--kev-text); background: var(--kev-bg); border-color: var(--kev-border); }
+.severity-pill.kev .dot { background: var(--kev-text); }
+.severity-pill.neutral { color: var(--text-grey); background: var(--filter-bg); border-color: var(--border-light); }
+.severity-pill.neutral .dot { background: var(--text-grey-light); }
+
+/* EPSS badge, colored by risk band. Text steps chosen from the documented
+   blue sequential ramp (palette.md) for WCAG text contrast >= 4.5:1 against
+   the shared pale tint bg (validated, not eyeballed) -- the lighter ramp
+   steps already used for the chart's EPSS-band bars read fine as large bar
+   fills but fail text contrast at badge size. */
+.severity-pill.epss-low { color: #1c5cab; background: #cde2fb; border-color: #b7d3f6; }
+.severity-pill.epss-low .dot { background: #1c5cab; }
+.severity-pill.epss-medium { color: #184f95; background: #cde2fb; border-color: #b7d3f6; }
+.severity-pill.epss-medium .dot { background: #184f95; }
+.severity-pill.epss-high { color: #0d366b; background: #cde2fb; border-color: #b7d3f6; }
+.severity-pill.epss-high .dot { background: #0d366b; }
+
+.risk-badge-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; padding: 0 24px; }
+
+.cwe-tags-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 10px; padding: 0 24px; }
+.cwe-tags-label { font-size: 0.8rem; font-weight: 700; color: var(--text-grey); }
+.cwe-tags-row .tag-row { max-width: none; }
+
+.chart-tabs-row { margin-top: 14px; }
+.chart-tabs-parent { border-bottom: none !important; }
+.chart-tabs { border-bottom: none !important; }
+.chart-tab {
+  border: 1px solid var(--border-light) !important;
+  border-radius: 8px !important;
+  padding: 8px 14px !important;
+  margin-right: 6px !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  color: var(--text-grey) !important;
+  background: var(--filter-bg) !important;
+}
+.chart-tab--selected {
+  color: #fff !important;
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+/* No horizontal padding here -- .section-heading already carries its own
+   24px margin, and this section's own padding used to stack on top of
+   that (58px total vs. the 34px every other section heading gets),
+   visibly over-indenting "Similar vulnerabilities" relative to "What is
+   vulnerable" etc. The card row gets its own 24px margin instead, mirroring
+   how .section-body handles this for build_section()'s sections. */
+.similar-cves-section { padding: 4px 0 20px; }
+.similar-cves-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 24px 0; }
+.similar-cve-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 10px 14px;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  min-width: 160px;
+}
+.similar-cve-card:hover { background: var(--accent-bg); border-color: var(--accent); }
+.similar-cve-id {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.similar-cve-subtitle { color: var(--text-grey); font-size: 0.78rem; }
+
+/* Custom hover tooltip, replacing the native title="" attribute -- browsers
+   only show a title tooltip after a ~1-1.5s delay in a small low-contrast
+   system box, easy to miss entirely. This appears instantly and matches the
+   app's own styling. No JS dependency.
+   Opens downward (top: 125%), not upward -- the risk badges and CWE tags
+   this is mostly used on sit near the very top of the detail card, and an
+   upward-opening tooltip there gets clipped by .cve-card's overflow:hidden
+   before it can fully render (confirmed via computed-style measurement,
+   not just eyeballed: the tooltip's top edge landed above the card's own
+   top edge). Below always has more room since there's page content under
+   every badge. */
+[data-tooltip] { position: relative; cursor: help; }
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-dark);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: normal;
+  width: max-content;
+  max-width: 260px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+  z-index: 20;
+}
+[data-tooltip]:hover::after { opacity: 1; }
+
+.explain-btn {
+  border: 1px solid var(--accent) !important;
+  color: var(--accent) !important;
+  background: #fff !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  padding: 6px 16px !important;
+  font-size: 0.85rem !important;
+}
+.explain-btn:hover { background: var(--accent-bg) !important; }
+
+.list-caption { padding: 10px 24px; color: var(--text-grey); font-size: 0.8rem; background: #fbfbfc; border-top: 1px solid var(--border-light); }
+
+.pagination-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-light);
+  background: #fbfbfc;
+}
+.page-nav-btn {
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  padding: 4px 8px;
+}
+.page-nav-btn:hover:not(:disabled) { text-decoration: underline; }
+.page-nav-btn:disabled { color: var(--text-grey-light); cursor: default; }
+.page-indicator { color: var(--text-grey); font-size: 0.82rem; }
+
+.export-row { display: flex; justify-content: center; padding: 12px 24px; border-top: 1px solid var(--border-light); }
+.empty-state { padding: 32px 24px; color: var(--text-grey); text-align: center; }
+
+.detail-header { padding: 20px 24px 0; }
+.detail-header .cve-id { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 1.5rem; font-weight: 700; }
+.detail-header .cve-subtitle { color: var(--text-grey); margin-top: 2px; }
+.detail-divider { border-top: 1px solid var(--border-light); margin: 16px 0 20px; }
+
+.section-heading {
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 700;
+  margin: 20px 24px 10px;
+  padding-left: 10px;
+  border-left: 3px solid var(--accent);
+}
+.section-heading:first-of-type { margin-top: 4px; }
+.section-body { padding: 0 24px; }
+.bullet-list { margin: 0; padding-left: 20px; }
+.bullet-list li { margin-bottom: 8px; line-height: 1.5; }
+
+.action-cue {
+  display: inline-block;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 10px;
+  margin-left: 8px;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+}
+
+.disclosure-row { padding: 4px 24px 20px; }
+.detail-toggle-btn {
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  padding: 0;
+}
+.detail-toggle-btn:hover { text-decoration: underline; }
+
+.raw-description-wrap {
+  background: var(--filter-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 4px 16px 12px;
+  margin-top: 10px;
+}
+.raw-description-wrap .section-heading { margin: 12px 0 8px; }
+.raw-description-text { font-size: 0.9rem; line-height: 1.6; margin: 0; }
+
+.cwe-detail-wrap { margin-top: 10px; display: flex; flex-direction: column; gap: 14px; }
+.cwe-detail-block {
+  background: var(--filter-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 10px 16px 14px;
+}
+.cwe-detail-heading { font-size: 0.85rem; font-weight: 700; color: var(--accent); margin: 4px 0 6px; }
+.cwe-detail-text { font-size: 0.88rem; line-height: 1.6; color: var(--text-dark); margin: 0; }
+
+/* No overflow-x here (there was an `overflow-x: auto`, for narrow
+   viewports): per the CSS overflow spec, if either axis is non-visible the
+   other still computes to auto, not visible, so overflow-x: auto alone
+   was clipping the header tooltip against the wrapper's own top edge --
+   confirmed via computed style, "overflow-y: visible" set alongside it
+   did NOT override that. The table fits at this dashboard's tested
+   1440px width with no observed need for horizontal scroll. */
+.tech-table-wrap { padding: 8px 0 4px; }
+/* No overflow: hidden here (it clipped downward-opening header tooltips,
+   since the table is only as tall as its two rows) -- the rounded-corner
+   look it existed for is instead achieved by radius on the corner cells
+   below, which doesn't clip anything. */
+.tech-table { border: 1px solid var(--border-light); border-radius: 8px; border-collapse: separate; border-spacing: 0; margin-top: 8px; width: 100%; }
+.tech-table th, .tech-table td { border-bottom: 1px solid var(--border-light); border-right: 1px solid var(--border-light); padding: 10px 14px; font-size: 0.85rem; }
+.tech-table th:last-child, .tech-table td:last-child { border-right: none; }
+.tech-table tr:last-child td { border-bottom: none; }
+.tech-table tr:first-child th:first-child { border-top-left-radius: 7px; }
+.tech-table tr:first-child th:last-child { border-top-right-radius: 7px; }
+.tech-table tr:last-child td:first-child { border-bottom-left-radius: 7px; }
+.tech-table tr:last-child td:last-child { border-bottom-right-radius: 7px; }
+.tech-table th {
+  background: var(--filter-bg);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.7rem;
+  color: var(--text-grey);
+  font-weight: 700;
+  text-align: left;
+}
+.tech-table td { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+.reference-section { padding: 8px 0 4px; }
+.reference-list { list-style: none; padding: 0; margin: 10px 0 4px; }
+.reference-list li { margin-bottom: 6px; font-size: 0.85rem; }
+.reference-list a { color: var(--accent); text-decoration: none; word-break: break-all; }
+.reference-list a:hover { text-decoration: underline; }
+.reference-caption { color: var(--text-grey-light); font-size: 0.75rem; margin-top: 6px; font-style: italic; }
+
+.detail-error { padding: 24px; color: var(--critical-text); }
