@@ -562,3 +562,153 @@ Per the locked embedding decision (see CLAUDE.md), only the CVE `description` fi
 | `data/rag_corpus.jsonl` | 12,000 | Proportional stratified sample from all 4 severity JSONL files; seed=42; produced 2026-06-23 | Superseded by enriched version |
 | `data/rag_corpus_enriched.jsonl` | 12,000 | `rag_corpus.jsonl` + `kev_listed`, `epss_score`, `epss_percentile`; produced 2026-06-23 | Current — use this for ChromaDB ingestion |
 
+
+## Note on Stages 6a-6d below
+
+Stages 6a and 6b (and the "Automated Evaluation Metrics -- Prose (v1)" section) were originally recorded only in this file's history on the `prompt-prose` branch (commit `9c65bd8`), which diverged from `prompt-bullet` before those stages were run. They are ported here so this file is a single combined methodology record covering both the prose (v1) and bullet-format (v2) prompt arms, in run order. Two corrections were made during the port, both confirmed against the actual repository state rather than assumed:
+
+- **File paths.** The auto-generated log entries on `prompt-prose` recorded pre-reorganisation, repo-root paths (e.g. `summaries.json`, `metrics_per_summary.csv`, `PROMPT_COMPARISON.md`, `figures/`) because they were written by the scripts at generation time, before those outputs were moved into `v1_prose/` (mirroring the later `v2_bullet/` layout used for the bullet arm). The paths below have been corrected to the final locations (`v1_prose/summaries/summaries_prose.json`, `v1_prose/metrics/...`, `v1_prose/figures/...`, `v1_prose/prompts/...`). File contents and the recorded SHA-256 prompt hashes were diffed against the actual files at commit `9c65bd8` and are unchanged by the move.
+- **Retrieval review completion.** Stage 6a below originally stated the manual same-class relevance judgement was left blank for reviewer completion. That review has since been completed for all 24 eval CVEs in `RETRIEVAL_VALIDATION_VALIDATED.md` (committed 2026-07-27); this is noted inline in Stage 6a.
+
+`src/compute_metrics.py` (used in the prose metrics stage) and the original `v1_prose_prompt-*_v1.txt` prompt filenames exist only on the `prompt-prose` branch history, not in this branch's working tree; `src/generate_summaries.py` and `src/retrieval_validation.py` are shared and present on both.
+
+## Stage 6a -- Retrieval Validation (2026-07-14)
+
+**Script:** `src/retrieval_validation.py`
+**Outputs:** `data/retrieval_validation.json`, `RETRIEVAL_VALIDATION.md`
+
+Ran retrieval validation against the live `rag_corpus` ChromaDB collection (11976 documents) using the 24-CVE eval sample (`data/eval_sample.jsonl`). For each eval CVE, retrieved top-5 nearest neighbours by cosine distance using the same embedding model as corpus build (`all-MiniLM-L6-v2`).
+
+- Distinctness check: passed, 0 of 24 eval ids found in corpus.
+- Cohort nearest-neighbour distance: min 0.0068, median 0.3418, p75 0.4032, max 0.6224.
+- 6 eval CVE(s) flagged above cohort p75 nearest-neighbour distance for manual review (statistical flag only, not a verdict).
+- Manual same-class relevance judgement per eval CVE was initially left blank in `RETRIEVAL_VALIDATION.md` for reviewer completion; grounding and eval-sample-quality verdicts were deliberately not computed by the script itself. This review was subsequently completed for all 24 eval CVEs and recorded in `RETRIEVAL_VALIDATION_VALIDATED.md` (committed 2026-07-27), which pairs each target description with its top-5 neighbours and a same-class assessment (e.g. "borderline", with notes on where neighbour classes diverge from the target).
+
+## Stage 6b -- Baseline vs Persona Summary Generation, Prose (v1) (2026-07-20)
+
+**Script:** `src/generate_summaries.py`
+**Output:** `v1_prose/summaries/summaries_prose.json`
+
+Ran both frozen prompt templates (`v1_prose/prompts/prompt-baseline_v1_prose.txt`, `v1_prose/prompts/prompt-persona_v1_prose.txt`) against all 24 eval CVEs, reusing the saved neighbours from `data/retrieval_validation.json` (no re-querying ChromaDB). Model and temperature were fixed across all calls: model `claude-opus-4-6`, temperature 0.
+
+- Prompt hash (baseline): `5425b0919df5f085de3d751abe0e041e6ed50ff2aae688f49647c2fb460806cf`
+- Prompt hash (persona): `e51f932d77c325eddee6fb45f7c723b004e04a21b9a8b73759628c2d6012229b`
+- Records written this run: 48
+- Records skipped (already present): 0
+- Records failed after retries: 0
+- Run timestamp: 2026-07-20T17:41:35.917227+00:00
+- Generation only -- no metrics (ROUGE, BERTScore, Flesch-Kincaid, LLM-as-judge) computed in this step.
+
+### Model and temperature selection rationale
+
+The study required a fixed, low-temperature generation configuration so that outputs would be reproducible across prompt arms and across any later re-run. `claude-opus-4-6` was selected as the most capable model that still exposed a temperature parameter suitable for this constraint. The model choice was therefore driven by this methodological requirement rather than by an unconstrained ranking of model capability.
+
+### Number of generations
+
+One generation was produced per (CVE, prompt arm) pair, with no repeated sampling at a given configuration. 24 eval CVEs x 2 prompt arms = 48 generations, matching the 48 records written to `summaries_prose.json`.
+
+### Development iteration vs. formal measurement
+
+Informal iteration on both prompt templates took place before the prompt lock recorded above (the hashed, frozen `prompt-baseline_v1_prose.txt` and `prompt-persona_v1_prose.txt`, run under the fixed model and temperature settings noted above). No output produced during that informal iteration is reported as a result anywhere in this study. Only the 48 generations produced after the lock are used in the automated metrics or carried forward to later evaluation stages.
+
+### Retrieval frozen rather than re-queried
+
+Neighbours used for generation were reused from the saved Stage 6a output (`data/retrieval_validation.json`) rather than re-queried from the live ChromaDB collection at generation time. Freezing retrieval this way means any difference observed between the two prompt arms' output is attributable to the prompt itself, not to incidental drift in which neighbours happened to be retrieved for one arm's call versus the other's.
+
+### Reference URLs: no source label available
+
+The ingestion pipeline (Sections 1-4 above) does not capture a source or label field for reference URLs, a gap present in the raw NVD data itself rather than introduced at generation time. Summaries therefore surface each reference as a bare URL with no source label. The raw NVD reference lists in the eval data contain each URL more than once; these are deduplicated in first-seen order before being passed to the model. Inventing a plausible source label (e.g. "vendor advisory") was considered and rejected: no label data exists anywhere in the corpus to support one, and asserting a label the source data does not contain would breach the study's rule against introducing information not present in the source.
+
+### KEV and EPSS: shown to the reader, not interpreted by the model
+
+KEV and EPSS values are included in the header block shown to the reader alongside each summary, but both prompt templates explicitly instruct the model not to describe or interpret them ("The KEV and EPSS values are provided for the reader's context only. Do not describe or interpret them in the summary" -- `prompt-baseline_v1_prose.txt`, `prompt-persona_v1_prose.txt`). This keeps the variable being compared between the two prompt arms clean, since neither arm's summary text is shaped by exploitability signals that are identical across arms. It extends the same display-governed approach already used for the three CVSS-derived fields the prompts do permit the model to reason about (attack vector, privileges required, user interaction) to a second pair of fields that are shown to the reader but placed out of bounds for the model to describe or interpret.
+
+## Automated Evaluation Metrics -- Prose (v1)
+
+**Script:** `src/compute_metrics.py`
+**Outputs:** `v1_prose/metrics/metrics_per_summary_prose.csv`, `v1_prose/metrics/metrics_per_summary_prose.json`, `v1_prose/metrics/PROMPT_COMPARISON_prose.md`, figures in `v1_prose/figures/`
+
+Computed ROUGE, BERTScore, Flesch-Kincaid grade level, Dale-Chall readability score, and word count for all 48 generated summaries (24 persona, 24 baseline, paired across the same 24 eval CVEs), each scored against the raw NVD description for its CVE. Flesch-Kincaid grade level and Dale-Chall readability score were also computed for the 24 raw NVD descriptions themselves, as readability baselines. Full descriptive statistics, paired differences, and effect sizes are reported in `v1_prose/metrics/PROMPT_COMPARISON_prose.md` as evidence, not as an interpretive verdict.
+
+### Reference text used for ROUGE and BERTScore
+
+The raw NVD `description` field (from `data/eval_sample.jsonl`) is the reference text for both ROUGE and BERTScore, for every summary in both prompt arms. This is fixed because the research question is defined as improving comprehension relative to the raw NVD description, so NVD is the thing being compared against, not an alternative reference summary.
+
+### Favourable direction differs per metric
+
+The same NVD reference is used for all three text-comparison metrics, but a favourable result does not mean the same thing for each of them, and this distinction is preserved throughout the reporting in this project rather than treated as a single similarity score.
+
+Flesch-Kincaid treats the NVD description as a baseline to beat. A summary grade level lower than the NVD grade level is the favourable outcome, since a lower grade level means the text is easier to read. This is a before/after comparison, not a similarity score.
+
+Dale-Chall is treated the same way as Flesch-Kincaid. A summary Dale-Chall score lower than the NVD score is the favourable outcome, since a lower score means the text relies less on unfamiliar vocabulary. As with Flesch-Kincaid, NVD is the baseline to beat, not a similarity target.
+
+BERTScore treats NVD as a fidelity anchor rather than a target to maximise. A summary that stays semantically close to the NVD description indicates it has not drifted from or fabricated beyond the source. A higher BERTScore is favourable only as evidence of grounding, not as evidence that comprehension has improved. A summary scoring near 1.0 would mean it barely transformed the source text at all, which is not the goal of this study.
+
+ROUGE is expected to be low, and that is not a failure. Because the summaries deliberately rephrase the NVD description into plainer language, low lexical overlap with NVD is the anticipated and desired result. ROUGE is retained mainly as a conventional reference point rather than as a primary success measure. Low ROUGE alongside high BERTScore is read as the signature of faithful rephrasing, meaning preserved, wording changed.
+
+### ROUGE
+
+**What it measures.** ROUGE measures n-gram overlap between a generated text and a reference text. ROUGE-1 and ROUGE-2 count overlapping single words and word pairs respectively, and ROUGE-L measures the longest common subsequence of words, all reported here as F-measure against the raw NVD description. Porter stemming is applied before matching (`use_stemmer=True`), so words are reduced to a common root and grammatical variants such as "vulnerability" and "vulnerabilities" or "exploited" and "exploits" count as matches rather than mismatches. This is the standard configuration used in the original ROUGE toolkit and avoids penalising the summaries for ordinary morphological variation on top of the deliberate rephrasing already discussed below.
+**Why it is included.** ROUGE is one of the most widely used automated metrics in summarisation research, and reporting it allows this study's results to sit alongside the broader summarisation literature, even though it is not expected to be the metric that best captures this study's goal.
+**Pros for this task.** It is fast to compute, requires no external model, and gives a simple, well-understood lexical baseline that other summarisation studies also report.
+**Limitations for this task.** ROUGE penalises the deliberate rephrasing the summaries are designed to perform. A summary that expresses the same vulnerability in plainer language will necessarily share fewer surface words with the NVD description, so a low ROUGE score here reflects successful transformation rather than infidelity to the source. It is retained mainly as a conventional reference point rather than as a measure this study optimises for or draws conclusions from in isolation.
+
+### BERTScore
+
+**What it measures.** BERTScore measures semantic similarity between a generated text and a reference text using contextual embeddings from a pretrained language model (`roberta-large`), matching tokens by embedding similarity rather than exact surface form. Precision, recall, and F1 are all recorded here rather than F1 alone, so that over-generation and under-coverage relative to the source can be distinguished.
+**Why it is included.** It captures meaning preservation in a way ROUGE cannot, since it can recognise paraphrase and synonymy rather than requiring literal word overlap, which matters directly for summaries that are meant to rephrase, not copy, the source.
+**Pros for this task.** Combined with low ROUGE, a high BERTScore supports the argument that a summary has preserved the meaning of the NVD description while changing its wording, which is the intended behaviour of the summarisation pipeline.
+**Limitations for this task.** BERTScore supports a faithfulness argument but it is not a hallucination detector. It measures how semantically close the summary sits to the reference overall, not whether every specific claim in the summary is actually supported by the source, so a fabricated but topically plausible sentence can still score reasonably well. It is also weaker in specialised domains such as vulnerability descriptions, since the underlying language model is trained on general-purpose text rather than security-specific corpora.
+
+### Flesch-Kincaid grade level
+
+**What it measures.** Flesch-Kincaid grade level estimates the US school grade level needed to understand a piece of text, calculated from average sentence length and average word length (syllable count) only.
+**Why it is included.** Readability relative to the raw NVD description is a central comparison in this study, since the tool's stated goal is to improve comprehension for technical non-security personnel, and grade level is a widely used, cheaply computed proxy for how approachable a piece of text is.
+**Pros for this task.** It is simple, reproducible, requires no external model, and gives a direct before/after comparison against the raw NVD description for every eval CVE.
+**Limitations for this task.** Flesch-Kincaid measures reading ease from sentence and word length only, not clarity, logical structure, or factual correctness. A summary can score a lower grade level while still being confusing, poorly organised, or wrong, so this metric supports the comprehension claim but cannot establish it alone. It is reported alongside, and is intended to be read alongside, the questionnaire-based comprehension evidence from the study's human evaluation.
+
+### Dale-Chall readability score
+
+**What it measures.** The Dale-Chall readability score estimates how difficult a text is to read by checking each word against a list of words familiar to most readers and penalising the proportion of words that fall outside that list, combined with average sentence length.
+**Why it is included.** Flesch-Kincaid uses only sentence length and syllable count, so it has no way to detect vocabulary or jargon. A word such as "authentication" is short and scores as easy under Flesch-Kincaid, even though it is unfamiliar to a non-security reader and is exactly the kind of jargon this study's summaries are meant to explain. Dale-Chall targets that vocabulary barrier directly by scoring against a familiar-word list rather than word length, so it is included as a complementary readability proxy that may reveal a jargon-reduction effect Flesch-Kincaid structurally cannot see.
+**Pros for this task.** It is simple, reproducible, requires no external model, and gives a direct before/after comparison against the raw NVD description for every eval CVE, on a dimension (word familiarity) that Flesch-Kincaid does not cover.
+**Limitations for this task.** The familiar-word list underlying Dale-Chall was built for general English reading material, not for technical or security vocabulary specifically, so it will flag many correct and necessary security terms as unfamiliar regardless of how clearly they are explained. Proper names and regular inflections of listed words are also counted as difficult words by this implementation, which can inflate the score for text that names specific products, vendors, or CVE identifiers. As with Flesch-Kincaid, a lower score does not by itself establish that a text is genuinely clearer, only that it draws on more common vocabulary.
+
+### Word count
+
+**What it measures.** Whitespace-delimited token count (`len(text.split())`) of the same extracted three-part summary body used for the other text metrics, i.e. after the trailing reference/URL block is stripped.
+**Why it is included.** To check for a length confound between the two prompt arms: if one arm is systematically more verbose than the other, that difference in raw length could itself explain part of any gap seen in the readability or comprehension metrics, rather than the prompt's plain-language framing being responsible.
+**Limitations for this task.** Word count says nothing about whether the extra length is useful (e.g. more concrete remediation detail) or just padding, so it is read alongside the readability and comprehension metrics, not as a quality signal on its own.
+
+### LLM-as-judge (deferred)
+
+LLM-as-judge scoring is part of this study's evaluation design but is not implemented in this stage. It is deferred to a later stage and is out of scope for `src/compute_metrics.py`.
+
+### Reproducibility
+
+| Component | Pinned value |
+|---|---|
+| ROUGE library | `rouge-score` 0.1.2, `RougeScorer(['rouge1','rouge2','rougeL'], use_stemmer=True)` |
+| BERTScore model | `roberta-large` (`bert-score` 0.3.13, lang=`en`, 17 layers, idf=False) |
+| Flesch-Kincaid library | `textstat` 0.7.13, `flesch_kincaid_grade()` |
+| Dale-Chall library | `textstat` 0.7.13, `dale_chall_readability_score()` |
+| Word count method | `len(text.split())`, no external library |
+| Statistics library | `scipy` 1.18.0, `scipy.stats.wilcoxon` |
+| Random seeds | None used; all metrics in this script are deterministic given fixed model weights |
+
+## Stage 6c -- Baseline vs Persona Bullet-Format Summary Generation (2026-07-27)
+
+**Script:** `src/generate_summaries.py`
+**Output:** `v2_bullet/summaries/summaries_bullet.json`
+
+Ran both frozen bullet-format prompt templates (`prompt-baseline_v2.txt`, `prompt-persona_v2.txt`) against all 24 eval CVEs, reusing the saved neighbours from `data/retrieval_validation.json` (no re-querying ChromaDB). Model and temperature were fixed across all calls: model `claude-opus-4-6`, temperature 0.
+
+- Prompt hash (baseline): `4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a`
+- Prompt hash (persona): `ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761`
+- Records written this run: 48
+- Records skipped (already present): 0
+- Records failed after retries: 0
+- Run timestamp: 2026-07-27T16:45:50.094303+00:00
+- Generation only -- no metrics (ROUGE, BERTScore, Flesch-Kincaid, LLM-as-judge) computed in this step.
+
+

@@ -12,7 +12,7 @@ _Generated from repo inspection -- 2026-07-08. Do not hand-edit; re-run the insp
 | 3. Enrich (KEV + EPSS join) | DONE -- `data/rag_corpus_enriched.jsonl` (12,000 records, 2026-06-23) |
 | 4. Eval sample selection | DONE -- `data/eval_sample.jsonl` (24 CVEs), `data/rag_corpus_final.jsonl` (11,976 records) |
 | 5. ChromaDB (embed + ingest) | DONE -- `data/chroma_db/` (11,976 records, 2026-07-08) |
-| 6. RAG + LLM summary | NOT STARTED |
+| 6. RAG + LLM summary | DONE (eval-sample generation) -- `v2_bullet/summaries/summaries_bullet.json`; dashboard does its own on-demand generation for the rest of the corpus, see Stage 7 |
 | 7. Dashboard (Plotly Dash) | NOT STARTED |
 | 8. Evaluation | NOT STARTED |
 
@@ -115,10 +115,10 @@ Eval sample exploitability threshold raised from EPSS >= 0.1 to EPSS >= 0.5 ("mo
 - [x] Ingest RAG corpus -- `data/chroma_db/`, collection `rag_corpus`, 11,976 records
 
 **RAG + LLM summary**
-- [ ] Add LLM SDK (`anthropic`) to `requirements.txt`
-- [ ] Write prompt template -- three-part structure (what's vulnerable / how exploited / remediation)
-- [ ] Write retrieval pipeline -- query ChromaDB for similar CVEs, feed as context
-- [ ] Wire retrieval + generation end-to-end
+- [x] Add LLM SDK (`anthropic`) to `requirements.txt`
+- [x] Write prompt template -- three-part structure (what's vulnerable / how exploited / remediation) -- `v2_bullet/prompts/prompt-persona_v2.txt` (bullet format, locked)
+- [x] Write retrieval pipeline -- query ChromaDB for similar CVEs, feed as context
+- [x] Wire retrieval + generation end-to-end -- eval-sample batch (`src/generate_summaries.py`) and on-demand per-CVE (`src/dashboard_generate.py`)
 
 **Dashboard**
 - [ ] Add `plotly`, `dash` to `requirements.txt`
@@ -133,3 +133,15 @@ Eval sample exploitability threshold raised from EPSS >= 0.1 to EPSS >= 0.5 ("mo
 - [ ] Recruit participants (developers + CS students, purposive sampling, BSREC approved)
 - [ ] Run evaluation sessions
 - [ ] Analyse results and write up
+
+## Note (2026-07-27, not part of the generated inspection above)
+
+This whole file predates the `prompt-prose` and `prompt-bullet` branch work and is
+stale outside this note. On `prompt-bullet`: added `v2_bullet/prompts/prompt-baseline_v2.txt`
+and `prompt-persona_v2.txt` (bullet-format three-part summary prompts), ported
+`src/generate_summaries.py` from `prompt-prose` (repointed at the v2 prompts and a
+new output path), and ran it against all 24 eval CVEs. Result: 48 records
+(24 CVEs x baseline/persona) written to `v2_bullet/summaries/summaries_bullet.json`,
+0 failures, model `claude-opus-4-6`, temperature 0. Details in `METHODOLOGY_LOG.md`
+("Stage 6c").
+
