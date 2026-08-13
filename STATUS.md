@@ -1103,3 +1103,18 @@ and needs fixing before reuse. Full caveats, including a substantive
 participant critique of the project's premise, in
 `HUMAN_STUDY_FINDINGS.md` Section 7.
 
+
+## Recent change (2026-08-03)
+
+Added `src/generate_methodology_figures.py`, generating the two methodology-
+chapter figures for the dissertation write-up: `figures/methodology/pipeline_flow.pdf`
+(data lineage flowchart, raw NVD feeds -> filter gate -> filtered pool ->
+branch into retrieval corpus / evaluation sample -> removal step -> indexed
+ChromaDB corpus, with exact pipeline counts: 213,085 -> 156,084 -> 12,000 /
+24 -> 11,976) and `figures/methodology/eval_matrix.pdf` (3x2 purposive
+sampling grid: CRITICAL/HIGH/MEDIUM x lower/higher exploitability, cells
+A-F, 4 CVEs each). Both saved as vector PDF plus a 300 dpi PNG, Times New
+Roman serif throughout, greyscale palette, no in-figure titles (captions
+live in LaTeX), sized to ~6.3in text width. Purely a static-figure script,
+does not touch the pipeline, prompts, or any generated data.
+
