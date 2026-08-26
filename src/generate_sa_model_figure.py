@@ -2,7 +2,7 @@
 comprehension, for the dissertation introduction.
 
 Saves vector PDF (for \\includegraphics) and 300 dpi PNG to
-Images/figures/introduction/sa_model.
+figures/introduction/sa_model.
 """
 
 from pathlib import Path
@@ -17,7 +17,7 @@ plt.rcParams["font.family"] = "sans-serif"
 plt.rcParams["font.sans-serif"] = ["Helvetica", "Arial", "DejaVu Sans"]
 plt.rcParams["axes.unicode_minus"] = False
 
-OUT_DIR = Path("Images/figures/introduction")
+OUT_DIR = Path("figures/introduction")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 FIG_WIDTH = 6.3  # inches, matches this project's other A4-text-width figures
