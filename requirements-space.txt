@@ -1,0 +1,11 @@
+# Runtime-only subset of requirements.txt for the hosted dashboard
+# (Hugging Face Space). Excludes dev/notebook/evaluation-only packages
+# (jupyterlab, pandas, rouge-score, bert-score, textstat, matplotlib,
+# scipy, playwright, openai) that app.py and src/dashboard_*.py never
+# import -- keeps the container image smaller and the build faster.
+python-dotenv>=1.0.0
+chromadb>=0.5.0
+sentence-transformers>=3.0.0
+anthropic>=0.40.0
+dash>=2.18.0
+dash-bootstrap-components>=1.6.0

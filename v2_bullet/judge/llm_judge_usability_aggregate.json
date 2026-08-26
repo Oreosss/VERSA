@@ -1,0 +1,31 @@
+{
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0,
+  "n_passes": 3,
+  "n_screenshots": 6,
+  "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+  "heuristic_means": {
+    "visibility_of_system_status": 4.833333333333333,
+    "match_real_world": 4.333333333333333,
+    "user_control_freedom": 4.666666666666667,
+    "consistency_standards": 5.0,
+    "error_prevention": 3.5,
+    "recognition_not_recall": 4.166666666666667,
+    "flexibility_efficiency": 4.0,
+    "aesthetic_minimalist": 4.833333333333333,
+    "error_recovery": 3.3333333333333335,
+    "help_documentation": 3.1666666666666665
+  },
+  "heuristic_sds": {
+    "visibility_of_system_status": 0.408248290463863,
+    "match_real_world": 0.5163977794943223,
+    "user_control_freedom": 0.5163977794943223,
+    "consistency_standards": 0.0,
+    "error_prevention": 0.5477225575051661,
+    "recognition_not_recall": 0.408248290463863,
+    "flexibility_efficiency": 1.0954451150103321,
+    "aesthetic_minimalist": 0.408248290463863,
+    "error_recovery": 0.816496580927726,
+    "help_documentation": 0.40824829046386296
+  }
+}
