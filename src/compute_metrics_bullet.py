@@ -46,6 +46,7 @@ from pathlib import Path
 
 import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 import numpy as np
 import pandas as pd
 import textstat
@@ -72,6 +73,7 @@ BULLET_MARKER_RE = re.compile(r"(?m)^[ \t]*-[ \t]+")
 COLOR_NVD = "#2a78d6"       # blue
 COLOR_PERSONA = "#008300"   # green
 COLOR_BASELINE = "#4a3aa7"  # violet
+COLOR_REGRESSIVE = "#d6432a"  # red-orange: summary DC score worse than raw NVD
 GRIDLINE = "#e1e0d9"
 AXIS = "#c3c2b7"
 TEXT_PRIMARY = "#0b0b0b"
@@ -344,16 +346,27 @@ def fig_dc_paired_slope(df, dc_nvd_by_cve):
     fig, axes = plt.subplots(1, 2, figsize=(9, 5), sharey=True)
     for ax, arm, color in [(axes[0], "persona", COLOR_PERSONA), (axes[1], "baseline", COLOR_BASELINE)]:
         sub = df.loc[df["arm"] == arm].sort_values("cve_id")
+        n_regressive = 0
         for _, row in sub.iterrows():
             dc_nvd = dc_nvd_by_cve[row["cve_id"]]
-            ax.plot([0, 1], [dc_nvd, row["dc_score_summary"]], color=color, alpha=0.5, linewidth=1, zorder=2)
+            dc_summary = row["dc_score_summary"]
+            if dc_summary > dc_nvd:
+                n_regressive += 1
+                ax.plot([0, 1], [dc_nvd, dc_summary], color=COLOR_REGRESSIVE, alpha=0.85, linewidth=1.6, zorder=3)
+            else:
+                ax.plot([0, 1], [dc_nvd, dc_summary], color=color, alpha=0.5, linewidth=1, zorder=2)
         nvd_vals = [dc_nvd_by_cve[c] for c in sub["cve_id"]]
         summary_vals = sub["dc_score_summary"].tolist()
-        ax.scatter([0] * len(nvd_vals), nvd_vals, color=COLOR_NVD, s=22, zorder=3, label="Raw NVD")
-        ax.scatter([1] * len(summary_vals), summary_vals, color=color, s=22, zorder=3, label=f"{arm.capitalize()} summary")
+        ax.scatter([0] * len(nvd_vals), nvd_vals, color=COLOR_NVD, s=22, zorder=4, label="Raw NVD")
+        ax.scatter([1] * len(summary_vals), summary_vals, color=color, s=22, zorder=4, label=f"{arm.capitalize()} summary")
         ax.set_xticks([0, 1])
         ax.set_xticklabels(["Raw NVD", f"{arm.capitalize()}\nsummary"])
         ax.set_title(arm.capitalize(), fontsize=10, color=TEXT_PRIMARY)
+        if n_regressive:
+            handles, labels = ax.get_legend_handles_labels()
+            handles.append(Line2D([0], [0], color=COLOR_REGRESSIVE, linewidth=1.6))
+            labels.append(f"Regressive (n={n_regressive})")
+            ax.legend(handles, labels, frameon=False, fontsize=8, loc="upper right")
         style_axes(ax)
         ax.xaxis.grid(False)
     axes[0].set_ylabel("Dale-Chall readability score")

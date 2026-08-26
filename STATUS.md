@@ -146,6 +146,71 @@ new output path), and ran it against all 24 eval CVEs. Result: 48 records
 ("Stage 6c").
 
 
+## Recent change (2026-08-14, persistent Clear filters + Explain silent-failure fix)
+
+Two small `app.py` fixes from live use of the deployed dashboard.
+
+1. **Persistent "Clear filters" button.** The "Clear all filters" button added
+   2026-08-13 only rendered inside the zero-result empty state
+   (`build_list()`), so it was invisible unless a filter combination already
+   returned nothing. Moved the button (same id `clear-filters-btn`, same
+   `clear_all_filters` callback, unchanged) into the always-visible search row
+   next to Sort by (`build_filter_bar()`), and removed the now-duplicate copy
+   from the empty state (keeping only the "No CVEs match the current
+   filters." message there) to avoid a duplicate-id error when both would
+   otherwise be on screen at once. Confirmed with the user that Sort by
+   should stay untouched by a filter reset (it's an ordering choice, not a
+   filter).
+2. **Explain pane could fail completely silently for some CVEs.** Reported
+   symptom: clicking "Explain" did the scroll/slide motion but the detail
+   pane never opened -- no error, just back on the overview page.
+   `render_detail` (`app.py`) already had a `try/except` around the
+   generation call (`SUMMARY_GENERATOR.get_or_generate`) that correctly shows
+   a `.detail-error` message on API failure -- that part was never the gap.
+   The actual bug: `build_detail_content(record, summary)` -- which builds
+   the risk badges, CWE tags, similar-CVEs cards, raw-NVD comparison, CWE
+   details, technical-context table, and references -- ran *after and
+   outside* that `try/except`. Any exception there failed the whole Dash
+   callback with none of its three `Output`s set, so `list-view` never hid
+   and `detail-view` never showed; in production (`DASH_DEBUG=0`, per the
+   Cloud Run deployment) a failed callback shows no error notification at
+   all, so the failure was totally silent. Fixed by wrapping
+   `build_detail_content(...)` in its own `try/except`, rendering
+   `"Could not display the summary for {cve_id}: {e}"` via the same
+   `.detail-error` pattern on failure. Ruled out a schema mismatch between
+   the live-generation cache writer and `src/prime_dashboard_cache.py` (the
+   batch pre-cache script) as the cause -- both build an identical 9-key
+   result dict via the same shared `parse_summary`/`derive_action_cue`
+   helpers -- so the exact record(s) that originally triggered this are still
+   unidentified; the fix guarantees any future occurrence (from this or any
+   other cause) now surfaces visibly instead of silently.
+
+Verified against a live `python app.py` with Playwright: the Clear filters
+button is present exactly once and visible on initial load; clearing after
+setting Severity/search resets both and the corpus count reverts to
+11,976, while Sort by is left untouched; a genuine zero-result filter
+combination still shows exactly one Clear filters button (no duplicate-id
+console error) and recovers correctly; the Explain golden path (a normal
+cached CVE) still opens the detail view with no error. Separately, a
+temporary forced exception was injected into `build_detail_content` (`raise
+RuntimeError(...)` as the first line), the server restarted, and Explain
+clicked again -- confirmed the pane now swaps to the detail view showing
+the `.detail-error` message (rather than silently staying on the overview
+page, reproducing the exact reported bug beforehand), then the temporary
+raise was reverted and the golden-path check re-run clean. Only console
+output throughout was the known harmless Dash version-check CORS warning
+already noted elsewhere in this file.
+
+## Recent change (2026-08-13, NVD source link)
+
+Small follow-up: the "Show original NVD description" toggle on the Explain view (`app.py`,
+`build_raw_comparison()`) now includes a direct link to the CVE's own page on
+nvd.nist.gov (`https://nvd.nist.gov/vuln/detail/{cve_id}`), opened in a new tab. Gives a
+one-click way to verify the source record instead of just reading the description text.
+Styled via a new `.nvd-source-link` rule in `assets/style.css`, matching the existing
+reference-link treatment. Verified the generated URL matches the selected CVE ID and opens
+correctly; re-ran both existing regression suites (30 checks) -- all still pass.
+
 ## Recent change (2026-08-12, detail-card padding fix)
 
 Eleventh dashboard pass the same day. The scroll-reset fix (previous entry) addressed one
@@ -1033,6 +1098,70 @@ regardless of the 10,239 underlying options, real mouse-wheel scrolling swaps wh
 render (genuine virtualisation/windowing, not a DOM dump), and typing to search works
 correctly. No code change made for this one; there's no confirmed bug.
 
+## Recent change (2026-08-13, usability judge v2 re-run + v1-vs-v2 comparison)
+
+Re-ran the dashboard usability LLM-as-judge evaluation after the three quick fixes above, to
+document the improvement rather than just assert it. v1 outputs archived to
+`v2_bullet/judge/v1/`, `v2_bullet/screenshots_v1/`, `v2_bullet/figures/llm_judge_usability_bullet_v1.png`
+before re-running, so both runs are preserved.
+
+While extending the screenshot script to also capture the two CSS `:hover`-only tooltip fixes
+(invisible to any static screenshot unless a hover is deliberately triggered), found and fixed a
+real, newly-introduced CSS bug: the tech-details header tooltip was being clipped by
+`.tech-table`'s own `overflow: hidden` and `.tech-table-wrap`'s `overflow-x: auto` (which, per
+the CSS overflow spec, forces `overflow-y` to compute as `auto` rather than `visible` even when
+set explicitly -- confirmed via `getComputedStyle`). Fixed in `assets/style.css` by dropping
+both overflow rules and achieving the same rounded-corner look via per-cell corner-radius rules
+instead, which don't clip anything. Verified the tooltip now renders in full (4 lines) with
+corners intact.
+
+**Design:** same 6 primary screenshots/states as v1, byte-identical, for a clean paired diff
+(`src/llm_judge_usability.py`'s `PRIMARY_SCREENSHOTS`), plus 2 new supplementary screenshots
+(`SUPPLEMENTARY_SCREENSHOTS`) that explicitly hover a tech-details header and a filter label, so
+the two hover-only fixes are visible to the judge at all. 24 judge calls total (6+2 states x 3
+passes), 0 failed. Comparison produced by the new `src/compare_usability_judge_runs.py`.
+
+**Result:** overall mean across all 10 heuristics, 4.14 (v1) -> 4.18 (v2), +0.04. Heuristics a
+static screenshot can actually see moved as expected: "Help users recognize, diagnose, and
+recover from errors" 3.17 -> 3.33 (+0.17, the "Clear all filters" fix), "Match between system
+and the real world" 4.17 -> 4.33 (+0.17), "Recognition rather than recall" 4.06 -> 4.17 (+0.11).
+"Help and documentation" is flat on the primary diff (3.17 -> 3.17) by construction -- the two
+tooltip fixes are hover-only and the primary screenshots are unchanged from v1 -- but scores
+5.00 on the two supplementary hover screenshots, confirming the fix is real even though the
+paired comparison structurally can't see it. Full table, the "why some heuristics show no
+primary movement" explanation, and the supplementary breakdown:
+`v2_bullet/judge/LLM_JUDGE_USABILITY_V1_VS_V2.md`. Figure:
+`v2_bullet/figures/llm_judge_usability_v1_vs_v2_bullet.png` (+ `.svg`).
+
+Descriptive comparison only (n=1 run per version, no significance test), consistent with this
+project's exploratory framing for the rest of the LLM-as-judge evaluation.
+
+## Recent change (2026-08-13, literature-alignment check: context awareness + security visualization)
+
+New file `DASHBOARD_LITERATURE_ALIGNMENT.md`, written after being asked directly whether the
+dashboard fulfils "context awareness" and how it meets the thesis's security-visualization
+literature requirements -- with an explicit instruction not to fabricate an answer. Checked both
+claims against the actual thesis PDF (`oreoluwaThesisDraft_v8.pdf`, present on disk, text
+extracted and searched directly) rather than against paraphrases from earlier sessions.
+
+**Context awareness: weakly grounded.** The thesis's own "Definitions of Key Terms" (§1.8) does
+not define "context awareness" as a term -- its actual framework is Endsley's Situational
+Awareness model. Where "context-aware" is used substantively in the lit review, it means CVSS
+environmental scoring against an organisation's asset database (Walkowski et al. 2021), which
+this tool does not implement (no asset data). The similar-vulnerabilities panel and CVSS-percentile
+tooltip are real features, but the phrase "content context-awareness" used for them exists only
+in this file's own earlier changelog entry (2026-08-12) and the `build_similar_cves` docstring in
+`app.py`, not in the thesis text -- the write-up flags this as a claim to soften or re-ground
+(in Haney & Lutters 2018's transparency/contextual-relevance framing instead) before submission.
+
+**Security visualization: well grounded.** §2.2 of the thesis gives concrete, citable design
+responses (Reynolds et al. 2021 progressive disclosure; Jung et al. 2022 multi-criteria filtering;
+Jiang et al. 2022 non-expert audience + clutter risk; Haney & Lutters 2018 transparent/non-alarmist
+framing; Alloza-García et al. 2025 audience tailoring), each mapped in the new file to specific
+`app.py`/`dashboard_data.py` evidence and, where available, to the usability-judge results already
+on record. Confirmed absent from the thesis and excluded from any citation: Shneiderman's mantra,
+Shiravi et al., "visualization taxonomy" as a named framework.
+
 ## Recent change (2026-08-11)
 
 Human comprehension study (Stage 8) grew from 17 to 18 recorded responses (one
@@ -1117,4 +1246,105 @@ A-F, 4 CVEs each). Both saved as vector PDF plus a 300 dpi PNG, Times New
 Roman serif throughout, greyscale palette, no in-figure titles (captions
 live in LaTeX), sized to ~6.3in text width. Purely a static-figure script,
 does not touch the pipeline, prompts, or any generated data.
+
+## Recent change (2026-08-13, Hugging Face Spaces hosting setup)
+
+Built and locally verified the deployment artefacts for hosting the live dashboard on Hugging
+Face Spaces (Docker SDK) so it can be viewed by others via a public URL -- the plan discussed
+and paused earlier (see the 2026-08-12 feature-consolidation entry's "Deferred" note) is now
+built, not yet pushed.
+
+Confirmed with the user first: platform choice was left to a recommendation (Hugging Face
+Spaces -- it's built for exactly this ML-app profile: chromadb + sentence-transformers/torch
+are heavy dependencies that would strain a generic free web-service tier's RAM); API-key
+handling stays as **live generation** with the existing `ANTHROPIC_API_KEY` as a host secret,
+and once its balance is exhausted (no further top-ups planned) `app.py`'s existing
+`select_cve` callback (`app.py:1224-1230`) already catches any generation exception and shows
+`"Could not generate a summary for {cve_id}: {e}"` in the detail view instead of crashing --
+no new error-handling code was needed for this, it was already there.
+
+New files: `Dockerfile` (python:3.13-slim, CPU-only torch installed explicitly before the rest
+of the requirements -- pip's default Linux resolution otherwise pulls the ~1.5GB CUDA build,
+useless on HF's CPU-only free tier; embedding model pre-downloaded at build time so the first
+real request isn't the one paying for it; copies only the files the dashboard actually reads
+at runtime -- `app.py`, `src/`, `assets/`, `v2_bullet/prompts/prompt-persona_v2.txt`,
+`data/rag_corpus_final.jsonl`, `data/chroma_db/`, `data/dashboard_summary_cache.json`, per a
+grep of every `data/`-referencing path in the dashboard modules, not guessed), `requirements-space.txt`
+(runtime-only subset of `requirements.txt` -- excludes jupyterlab/pandas/rouge-score/bert-score/
+textstat/matplotlib/scipy/playwright/openai, none of which `app.py` or `src/dashboard_*.py`
+import), `.dockerignore` (excludes the ~650MB of raw NVD pulls and backup files under `data/`
+that aren't needed to serve the app -- named individually rather than ignoring `data/` wholesale
+and negating, since `!pattern` re-inclusion for files under an ignored parent directory is
+unreliable across Docker engine versions), `SPACE_README.md` (HF Spaces YAML frontmatter --
+kept as a separate file rather than overwriting the project's actual `README.md`, since HF
+Spaces reads frontmatter from the *Space repo's* root README, a different git repo from this
+one; becomes `README.md` only inside the Space repo at push time).
+
+`app.py`'s entrypoint (`app.py:1282`) changed from a hardcoded `app.run(debug=True)` to reading
+`HOST`/`PORT`/`DASH_DEBUG` from the environment, defaulting to the previous local behavior
+(`127.0.0.1:8050`, debug on) so `python app.py` is unchanged; the Dockerfile sets
+`HOST=0.0.0.0 PORT=7860 DASH_DEBUG=0` (debug mode's live-reload/debugger has no place on a
+public host, and HF Spaces' Docker SDK expects the app on port 7860).
+
+**Verified for real, not assumed:** built the image locally (`docker build`), caught it at
+9.8GB on the first pass (full CUDA torch), fixed via the explicit CPU-only torch install, down
+to 3.07GB. Ran the container with the real `.env` (`--env-file .env`), confirmed via
+`docker logs` the corpus loads (11,976 CVEs), the embedding model loads, and `Debug mode: off`
+(the env-var fix took effect); `curl` against the running container returned HTTP 200 for both
+`/` (`<title>CVETranslate</title>` present) and `/assets/style.css`; idle memory usage was
+~570MB (`docker stats`), comfortably inside HF Spaces' free CPU tier. Container removed after
+the check.
+
+**Superseded the same day -- see the entry below.** Hugging Face's Docker SDK turned out to be
+gated behind account verification/payment for this account, so the Space was never created;
+the app was deployed to Google Cloud Run instead using the same Docker image.
+
+## Recent change (2026-08-13, deployed live to Google Cloud Run)
+
+The dashboard is now publicly reachable: **https://cve-dashboard-625382019690.us-central1.run.app**
+
+Hugging Face Spaces (previous entry) was abandoned after the user reported Docker SDK creation
+is gated behind account verification/payment on their account -- not something buildable
+around from this session. Also confirmed with the user directly: GitHub (Pages/Actions/
+Codespaces) cannot host this at all, since it needs a live Python backend (Dash callbacks,
+ChromaDB queries, Anthropic calls per request), not static files.
+
+**Platform: Google Cloud Run**, chosen after the user confirmed a payment card on a cloud
+provider is acceptable as long as it's confirmed free/near-free at this traffic level (not the
+tunnel-from-own-machine alternative, which would need the user's laptop on and connected for
+the link to work). New GCP project `cve-intelligence-dashboard`, billed to a billing account
+the user named `Dissertation-CVETranslate` (their existing `My Billing Account` was closed and
+not reactivated -- a second, open billing account was used instead).
+
+**Cost surfaces, flagged to the user before creating anything billable, not glossed over:**
+Cloud Run's compute (vCPU/memory/requests) has an always-free monthly tier that a low-traffic
+demo won't exceed -- deploy used `--min-instances=0` (scales to zero, no charge while idle) and
+`--max-instances=2` (caps runaway cost from a traffic spike). Artifact Registry image storage
+is *not* fully free at this image's size (3.07GB, mostly torch/transformers/chromadb) -- the
+user explicitly accepted a small (~$0.20-0.50/month) storage charge as a known, bounded
+exception to "no paid services," rather than this being silently absorbed as "free."
+
+**Build/deploy details:** the existing `Dockerfile` (built for the abandoned HF Spaces plan)
+was reused with one change -- `EXPOSE`/`ENV PORT` switched from HF's 7860 convention to Cloud
+Run's 8080 (Cloud Run also injects `PORT` itself at container start, overriding the image
+default, so this matters only for standalone `docker run`). Locally-built images on this
+Apple Silicon Mac are `arm64`; Cloud Run requires `linux/amd64`, so the image was rebuilt via
+`docker buildx build --platform linux/amd64 --push` straight to a new Artifact Registry repo
+(`us-central1-docker.pkg.dev/cve-intelligence-dashboard/cve-dashboard`) rather than loaded
+locally first. `ANTHROPIC_API_KEY` was pushed into **Secret Manager** (`anthropic-api-key`
+secret, one `gcloud secrets create --data-file=-` piped directly from `.env`, never printed to
+any log or transcript) and wired to the service via `--set-secrets`, with the Cloud Run
+service account granted `roles/secretmanager.secretAccessor` on that one secret specifically
+(first deploy attempt failed on a permission error until this grant was added -- expected
+Cloud Run behavior, not a bug). Deployed with `--memory=2Gi --cpu=1 --allow-unauthenticated
+--port=8080`.
+
+**Verified live**, not just "deploy succeeded": `curl` against the real service URL returned
+HTTP 200 for both `/` (`<title>CVETranslate</title>` present) and `/assets/style.css`.
+
+Neither this repo's GitHub remote nor its `thesis-writeup` branch was touched by any of this --
+Cloud Run pulls from Artifact Registry, not from git, so nothing was pushed to GitHub.
+`SPACE_README.md` (written for the abandoned HF plan) is now stale/unused but left in place
+rather than deleted, since it cost nothing to leave and documents what the HF attempt would
+have looked like.
 

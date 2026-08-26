@@ -6,3 +6,24 @@ data/
 .DS_Store
 .python-version
 .ipynb_checkpoints/
+.claude/
+
+# thesis draft (pre-submission, not for public repo)
+oreoluwaThesisDraft_v8.pdf
+
+# internal analysis / writeup docs kept local
+FINDINGS_LOG.md
+DISCUSSION_SOURCE_PACK.md
+DASHBOARD_USABILITY_WRITEUP.md
+DASHBOARD_DESIGN_RATIONALE.md
+DASHBOARD_LITERATURE_ALIGNMENT.md
+METHODOLOGY_LOG.md
+RETRIEVAL_VALIDATION.md
+RETRIEVAL_VALIDATION_VALIDATED.md
+HUMAN_STUDY_DEMOGRAPHICS.md
+HUMAN_STUDY_FINDINGS.md
+HUMAN_STUDY_18P_FINDINGS.md
+v2_bullet/judge/**/*COMPARISON*.md
+v2_bullet/judge/**/*V1_VS_V2*.md
+v2_bullet/judge/FAITHFULNESS_SENSITIVITY_SUMMARY.md
+v2_bullet/metrics/PROMPT_COMPARISON_bullet.md

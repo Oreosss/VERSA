@@ -278,6 +278,143 @@ def make_eval_matrix():
     return fig
 
 
+# ---------------------------------------------------------------------------
+# Figure 3: dashboard UI workflow
+# ---------------------------------------------------------------------------
+
+def side_arrow(ax, p0, p1, rad, label=None, label_pos=None):
+    """Curved arrow for the two loop-back paths, offset to the right of the
+    main column so they read as returns to an earlier state rather than
+    another step in the linear flow."""
+    a = FancyArrowPatch(
+        p0,
+        p1,
+        arrowstyle="-|>",
+        mutation_scale=12,
+        linewidth=1.1,
+        color=EDGE,
+        connectionstyle=f"arc3,rad={rad}",
+        shrinkA=0,
+        shrinkB=0,
+    )
+    ax.add_patch(a)
+    if label:
+        lx, ly = label_pos
+        ax.text(lx, ly, label, ha="left", va="center", fontsize=7.5,
+                color=SUBTEXT, style="italic")
+
+
+def make_ui_workflow():
+    fig, ax = plt.subplots(figsize=(FIG_WIDTH, 9.6))
+    cx = 5.0
+    ax.set_xlim(0, 11.6)
+    ax.set_ylim(0, 15.2)
+    ax.axis("off")
+
+    y_list = 14.0
+    y_select = 11.9
+    y_lookup = 9.8
+    y_branch = 7.3
+    y_detail = 4.4
+
+    w_wide = 6.6
+    w_narrow = 4.6
+    w_branch = 4.6
+    h_std = 1.05
+    h_branch = 1.55
+    h_detail = 2.05
+
+    # List view
+    draw_box(
+        ax, cx, y_list, w_wide, h_std,
+        ["List view", "browse • filter • search • sort  —  11,976-CVE corpus"],
+        [10.5, 8.5],
+        DATA_FILL,
+        weight="bold",
+    )
+
+    # Select a CVE
+    draw_box(
+        ax, cx, y_select, w_narrow, h_std,
+        ["Select a CVE", "“Explain” on a row, or a Similar-CVE card"],
+        [10, 8],
+        PROCESS_FILL,
+        dashed=True,
+        weight="bold",
+    )
+
+    # Cache lookup
+    draw_box(
+        ax, cx, y_lookup, w_narrow, h_std,
+        ["Cache lookup", "get_or_generate(cve_id)"],
+        [10, 8.5],
+        PROCESS_FILL,
+        dashed=True,
+        weight="bold",
+    )
+
+    # Branch: cache hit (left) vs generate on demand (right)
+    x_left, x_right = cx - 2.4, cx + 2.4
+    draw_box(
+        ax, x_left, y_branch, w_branch, h_branch,
+        ["Cache hit", "load stored summary"],
+        [9.5, 8],
+        DATA_FILL,
+        weight="bold",
+    )
+    draw_box(
+        ax, x_right, y_branch, w_branch, h_branch,
+        ["Cache miss — generate",
+         "ChromaDB k-NN retrieval → prompt →",
+         "Claude LLM call → parse → write cache"],
+        [9.5, 7.5, 7.5],
+        PROCESS_FILL,
+        dashed=True,
+        weight="bold",
+    )
+
+    # Detail view
+    draw_box(
+        ax, cx, y_detail, w_wide, h_detail,
+        ["Detail view",
+         "3-part plain-language summary (vulnerable / exploited / action)",
+         "similar CVEs  •  raw NVD comparison  •  CWE, technical context, references"],
+        [10.5, 8, 8],
+        DATA_FILL,
+        weight="bold",
+    )
+
+    # --- main-column arrows ---
+    arrow(ax, (cx, y_list - h_std / 2), (cx, y_select + h_std / 2))
+    arrow(ax, (cx, y_select - h_std / 2), (cx, y_lookup + h_std / 2))
+    arrow(ax, (cx, y_lookup - h_std / 2), (x_left, y_branch + h_branch / 2))
+    arrow(ax, (cx, y_lookup - h_std / 2), (x_right, y_branch + h_branch / 2))
+    arrow(ax, (x_left, y_branch - h_branch / 2), (cx - w_wide / 2 + 0.4, y_detail + h_detail / 2))
+    arrow(ax, (x_right, y_branch - h_branch / 2), (cx + w_wide / 2 - 0.4, y_detail + h_detail / 2))
+
+    # --- loop-back arrows (right-hand side, outside the main boxes' footprint) ---
+    x_edge = cx + w_wide / 2  # right edge shared by List view and Detail view
+    side_arrow(
+        ax,
+        (x_edge, y_detail + h_detail / 2 - 0.15),
+        (cx + w_narrow / 2, y_select + 0.1),
+        rad=0.65,
+        label="clicking a\nSimilar-CVE card",
+        label_pos=(x_edge + 0.15, y_lookup + 0.1),
+    )
+    side_arrow(
+        ax,
+        (x_edge, y_detail - h_detail / 2 + 0.2),
+        (x_edge, y_list - 0.1),
+        rad=0.45,
+        label="“Back to list”",
+        label_pos=(x_edge + 1.2, y_list - 1.55),
+    )
+
+    fig.subplots_adjust(left=0.01, right=0.99, top=0.99, bottom=0.01)
+    return fig
+
+
 if __name__ == "__main__":
     fig1 = make_pipeline_flow()
     p1_pdf, p1_png = save(fig1, "pipeline_flow")
@@ -287,9 +424,16 @@ if __name__ == "__main__":
     p2_pdf, p2_png = save(fig2, "eval_matrix")
     w2, h2 = fig2.get_size_inches()
 
+    fig3 = make_ui_workflow()
+    p3_pdf, p3_png = save(fig3, "ui_workflow")
+    w3, h3 = fig3.get_size_inches()
+
     print(f"pipeline_flow: figsize {w1:.2f}in x {h1:.2f}in (pre-crop)")
     print(f"  {p1_pdf}")
     print(f"  {p1_png}")
     print(f"eval_matrix: figsize {w2:.2f}in x {h2:.2f}in (pre-crop)")
     print(f"  {p2_pdf}")
     print(f"  {p2_png}")
+    print(f"ui_workflow: figsize {w3:.2f}in x {h3:.2f}in (pre-crop)")
+    print(f"  {p3_pdf}")
+    print(f"  {p3_png}")

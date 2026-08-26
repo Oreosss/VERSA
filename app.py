@@ -88,7 +88,7 @@ print(f"Loaded {len(STORE)} CVEs.")
 print("Connecting search engine (ChromaDB + embedding model)...")
 SEARCH_ENGINE = SearchEngine(STORE)
 
-API_KEY = os.getenv("ANTHROPIC_API_KEY")
+API_KEY = (os.getenv("ANTHROPIC_API_KEY") or "").strip() or None
 SUMMARY_GENERATOR = SummaryGenerator(
     collection=SEARCH_ENGINE.collection,
     embedding_fn=SEARCH_ENGINE.embedding_fn,
@@ -427,6 +427,8 @@ def build_filter_bar():
                     clearable=False,
                 ),
             ], className="sort-control"),
+            html.Button("Clear filters", id="clear-filters-btn",
+                        className="detail-toggle-btn"),
         ], className="search-row"),
 
         dbc.Row([
@@ -612,8 +614,6 @@ def build_list(page_records, selected_id):
     if not page_records:
         return html.Div([
             html.Div("No CVEs match the current filters."),
-            html.Button("Clear all filters", id="clear-filters-btn",
-                        className="detail-toggle-btn"),
         ], className="empty-state")
     header = html.Thead(html.Tr([
         html.Th("CVE ID"), html.Th("Severity"), html.Th("Tags"), html.Th(""),
@@ -680,9 +680,12 @@ def build_references(references):
 
 
 def build_raw_comparison(record):
+    nvd_url = f"https://nvd.nist.gov/vuln/detail/{record['id']}"
     content = html.Div([
         html.Div("Original NVD description", className="section-heading"),
         html.P(record["description"], className="raw-description-text"),
+        html.A("View this CVE on nvd.nist.gov ↗", href=nvd_url, target="_blank",
+               rel="noopener noreferrer", className="nvd-source-link"),
     ], className="raw-description-wrap")
     return html.Div([
         html.Button("Show original NVD description ▾", id="show-raw-btn",
@@ -1229,8 +1232,15 @@ def render_detail(cve_id):
             className="detail-error",
         )]
 
-    return ({"display": "none"}, {"display": "block"},
-            build_detail_content(record, summary))
+    try:
+        content = build_detail_content(record, summary)
+    except Exception as e:
+        return {"display": "none"}, {"display": "block"}, [html.Div(
+            f"Could not display the summary for {cve_id}: {e}",
+            className="detail-error",
+        )]
+
+    return {"display": "none"}, {"display": "block"}, content
 
 
 # List-view and detail-view are the same long page with one hidden via
@@ -1280,4 +1290,12 @@ def clear_all_filters(_n_clicks):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Defaults reproduce the previous local behavior (python app.py ->
+    # http://127.0.0.1:8050, debug on). A container deployment overrides
+    # these via env vars (HOST=0.0.0.0, PORT=<platform port>, DASH_DEBUG=0 --
+    # debug mode's live-reload/debugger has no place on a public host).
+    app.run(
+        host=os.environ.get("HOST", "127.0.0.1"),
+        port=int(os.environ.get("PORT", 8050)),
+        debug=os.environ.get("DASH_DEBUG", "1") == "1",
+    )

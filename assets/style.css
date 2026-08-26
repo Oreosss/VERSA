@@ -411,6 +411,15 @@ body {
 }
 .raw-description-wrap .section-heading { margin: 12px 0 8px; }
 .raw-description-text { font-size: 0.9rem; line-height: 1.6; margin: 0; }
+.nvd-source-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.nvd-source-link:hover { text-decoration: underline; }
 
 .cwe-detail-wrap { margin-top: 10px; display: flex; flex-direction: column; gap: 14px; }
 .cwe-detail-block {
@@ -452,6 +461,12 @@ body {
   text-align: left;
 }
 .tech-table td { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+/* The generic [data-tooltip]::after popover centers itself on its element
+   (left: 50%; translateX(-50%)), which clips off the left edge of the
+   viewport for the first column ("Attack vector") since there's no room to
+   its left. Anchor this one tooltip to the cell's own left edge instead of
+   centering, so it opens rightward and stays on screen. */
+.tech-table th:first-child[data-tooltip]::after { left: 0; transform: none; }
 
 .reference-section { padding: 8px 0 4px; }
 .reference-list { list-style: none; padding: 0; margin: 10px 0 4px; }
