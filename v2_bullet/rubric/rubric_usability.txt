@@ -1,0 +1,71 @@
+You are conducting a heuristic evaluation of a CVE vulnerability-triage
+dashboard, in the tradition of Nielsen's usability inspection method. The
+dashboard is built for technical non-security personnel (developers, IT
+staff, CS students) who need to find, understand, and act on vulnerability
+data without formal security training.
+
+You are shown one screenshot under evaluation (PRIMARY SCREEN) plus
+screenshots of the other states of the same dashboard (CONTEXT SCREENS), so
+that heuristics concerned with consistency and flow across the interface,
+not just a single frame, can be judged validly. Score the PRIMARY SCREEN,
+using the CONTEXT SCREENS only to judge consistency, transitions, and
+system status across states.
+
+PRIMARY SCREEN caption: {primary_caption}
+
+Score all ten of Nielsen's usability heuristics against the PRIMARY SCREEN,
+each on a 1 to 5 scale, where 5 means the screen strongly exemplifies the
+heuristic and 1 means it clearly violates it. For each heuristic, ground
+your score in what is actually visible on screen, not general assumptions
+about dashboards. If a heuristic genuinely cannot be judged from what is
+shown (for example, error prevention on a screen with no input controls
+visible), score it 3 and say so in the justification rather than guessing.
+
+1. Visibility of system status: does the screen make clear what is
+   currently shown (result counts, active filters, which record is
+   selected) and what the system is doing?
+2. Match between system and the real world: is the language plain and
+   suited to a reader without security training, or does it lean on raw
+   security jargon, unexplained acronyms, or CVSS vector strings?
+3. User control and freedom: can the user back out of the current state
+   (close an expanded panel, clear a filter, deselect a record) without a
+   dead end, based on what's visible?
+4. Consistency and standards: do interactive elements (buttons, toggles,
+   badges, dropdowns) look and behave the same way across the PRIMARY and
+   CONTEXT screens?
+5. Error prevention: do visible inputs (filters, search, dropdowns) guide
+   the user toward valid choices, or is it easy to reach a confusing or
+   invalid state?
+6. Recognition rather than recall: is the information needed to judge a
+   vulnerability's severity and relevance visible in place (badges, tags,
+   summaries), or does it require the user to already know what a score or
+   code means?
+7. Flexibility and efficiency of use: do the visible filtering, search, and
+   sorting controls let a user narrow down to what they need quickly?
+8. Aesthetic and minimalist design: is the screen focused on what matters,
+   or cluttered with information that competes for attention?
+9. Help users recognize, diagnose, and recover from errors: if this screen
+   shows an empty result, an error, or an edge case, is it communicated
+   clearly with a way forward? If no such state is visible, score 3 and say
+   so.
+10. Help and documentation: is there any in-context explanation (labels,
+    tooltips, helper text) of what a badge, score, or filter term means to
+    a reader without security training?
+
+Return your answer as a single JSON object with exactly these ten keys, and
+no other text. Each value must be an object with a "score" (integer 1-5)
+and a "justification" (one sentence citing what is or is not visible on the
+PRIMARY SCREEN that drove the score):
+
+{
+  "visibility_of_system_status": {"score": <1-5>, "justification": "<...>"},
+  "match_real_world": {"score": <1-5>, "justification": "<...>"},
+  "user_control_freedom": {"score": <1-5>, "justification": "<...>"},
+  "consistency_standards": {"score": <1-5>, "justification": "<...>"},
+  "error_prevention": {"score": <1-5>, "justification": "<...>"},
+  "recognition_not_recall": {"score": <1-5>, "justification": "<...>"},
+  "flexibility_efficiency": {"score": <1-5>, "justification": "<...>"},
+  "aesthetic_minimalist": {"score": <1-5>, "justification": "<...>"},
+  "error_recovery": {"score": <1-5>, "justification": "<...>"},
+  "help_documentation": {"score": <1-5>, "justification": "<...>"}
+}

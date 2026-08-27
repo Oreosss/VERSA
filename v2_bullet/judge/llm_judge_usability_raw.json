@@ -1,0 +1,1202 @@
+[
+  {
+    "screenshot_id": "6_empty_state",
+    "pass": 1,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows that 0 CVEs match the current filters, displays the active filters, and provides a 'Clear all filters' button, making the current state and system status explicit."
+      },
+      "match_real_world": {
+        "score": 5,
+        "justification": "All visible language is plain and avoids unexplained security jargon or acronyms, with filter labels and empty state text understandable to non-security users."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "The 'Clear all filters' button is prominently visible, allowing users to easily back out of the empty state and reset their search."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements (filters, buttons, toggles) are styled and placed consistently with the CONTEXT SCREENS, maintaining a uniform interface."
+      },
+      "error_prevention": {
+        "score": 4,
+        "justification": "Filters are clearly labeled and use dropdowns and checkboxes to guide input, but it is still possible to combine filters in a way that yields no results, which could be confusing for some users."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Filter options and summary counts are visible, but the meaning of some filter terms (e.g., 'CISA KEV-listed') is not explained in place, requiring some prior knowledge."
+      },
+      "flexibility_efficiency": {
+        "score": 5,
+        "justification": "The visible filtering, search, and sorting controls allow users to quickly narrow or broaden results, supporting efficient exploration."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The screen is clean and focused, showing only relevant controls and a clear empty state message without unnecessary clutter."
+      },
+      "error_recovery": {
+        "score": 5,
+        "justification": "The empty state is clearly communicated with a direct message and a 'Clear all filters' action, helping users recover from a no-results situation."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "There are no visible tooltips, helper text, or explanations for filter terms or badges on this screen, so the presence of in-context help cannot be judged."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:25:25.670793+00:00"
+  },
+  {
+    "screenshot_id": "2_filtered_search",
+    "pass": 3,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows active filters, result counts, and which filters are applied, with immediate feedback on the number of matching vulnerabilities."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and filter labels are understandable, but some tags (e.g., 'Use After Free', 'Improper Input Validation') and acronyms (CVE, CWE) are not explained in place."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "Users can close the expanded filter panel, clear filters, and navigate pages, with no visible dead ends or traps."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements (dropdowns, toggles, badges, buttons) are visually and functionally consistent with the context screens."
+      },
+      "error_prevention": {
+        "score": 4,
+        "justification": "Dropdowns and checkboxes restrict input to valid options, but there is no visible inline validation or prevention of conflicting filter states."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity is shown as a badge and tags are visible, but some technical terms and acronyms require prior knowledge or further exploration to fully understand."
+      },
+      "flexibility_efficiency": {
+        "score": 5,
+        "justification": "Multiple filters, search, and sorting controls are visible and allow efficient narrowing of results."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The layout is clean, focused on relevant information, and avoids unnecessary clutter or distractions."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty state is visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "There are no visible tooltips, helper text, or in-context explanations for technical terms or acronyms on this screen."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:25:47.678080+00:00"
+  },
+  {
+    "screenshot_id": "7_tooltip_tech_details",
+    "pass": 1,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 4,
+        "justification": "The screen clearly shows which CVE is selected, which details are expanded, and provides context on severity and related vulnerabilities, but does not show active filters or navigation breadcrumbs beyond 'Back to list'."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and explanatory, but some technical terms (e.g., 'CWE', 'EPSS', 'SCTP') are present, though mitigated by tooltips and summaries."
+      },
+      "user_control_freedom": {
+        "score": 4,
+        "justification": "The user can hide expanded sections and return to the list, but there is no visible 'deselect' or 'close' for the detail view itself except the 'Back to list' link."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements (badges, toggles, tooltips, disclosure links) are styled and behave consistently with the other screens."
+      },
+      "error_prevention": {
+        "score": 3,
+        "justification": "No input controls are visible on this screen, so error prevention cannot be judged here."
+      },
+      "recognition_not_recall": {
+        "score": 5,
+        "justification": "Severity, impact, and technical details are shown with badges, summaries, and tooltips, minimizing the need for prior knowledge."
+      },
+      "flexibility_efficiency": {
+        "score": 3,
+        "justification": "No filtering or search controls are visible on this detail screen, so efficiency of narrowing results cannot be judged here."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The layout is clean, focused on actionable and relevant information, with no visible clutter or extraneous data."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty states are visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 5,
+        "justification": "A tooltip is visible explaining 'Confidentiality impact', and other fields are labeled or explained in context, supporting users without security training."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:25:55.411826+00:00"
+  },
+  {
+    "screenshot_id": "8_tooltip_filter_label",
+    "pass": 3,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows the number of vulnerabilities tracked, active filters, and the current state of the 'More filters' panel, with immediate feedback on filter changes and visible result counts."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and explanatory (e.g., the tooltip for 'Privileges'), but some filter labels (like 'CWE') use acronyms without visible expansion or explanation on this screen."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "Users can close the 'More filters' panel, clear filters, and navigate pages, with no visible dead ends or irreversible actions."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements (dropdowns, buttons, toggles) are styled and behave consistently with the CONTEXT SCREENS, supporting a predictable experience."
+      },
+      "error_prevention": {
+        "score": 4,
+        "justification": "All filter controls are dropdowns or checkboxes, preventing invalid input, but there is no visible inline validation or prevention for conflicting filter combinations."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity is shown as labeled badges and tags are descriptive, but some codes (like 'CWE') are not explained in place, requiring some recall."
+      },
+      "flexibility_efficiency": {
+        "score": 5,
+        "justification": "Multiple filters, search, and sort options are visible, allowing users to efficiently narrow results to their needs."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The layout is clean, with only relevant controls and data visible, and no unnecessary clutter or distractions."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty state is visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 5,
+        "justification": "The tooltip for 'Privileges' provides in-context explanation, and similar tooltips are likely available for other filters, supporting users without security training."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:26:04.054541+00:00"
+  },
+  {
+    "screenshot_id": "5_all_expanded",
+    "pass": 2,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows which CVE is selected, which sections are expanded, and provides visible status indicators for severity, EPSS, and CISA KEV, matching the context screens\u2019 conventions."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most of the language is plain and explanatory, but some technical terms (e.g., 'CWE', 'EPSS', 'NVD') and acronyms are present without inline definitions or tooltips."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "All expanded sections have visible 'Hide' toggles, and a 'Back to list' link is present, allowing users to easily back out or collapse details."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Disclosure toggles, badges, and layout are consistent with the context screens, maintaining uniform interaction patterns and visual standards."
+      },
+      "error_prevention": {
+        "score": 3,
+        "justification": "No input controls or actions that could cause errors are visible on this detail screen, so error prevention cannot be judged here."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity, attack vector, and CWE are shown with badges and summaries, but some codes (like CWE-770) are only partially explained and may require prior knowledge."
+      },
+      "flexibility_efficiency": {
+        "score": 3,
+        "justification": "This screen is focused on detail display, not filtering or searching, so efficiency controls are not present or relevant here."
+      },
+      "aesthetic_minimalist": {
+        "score": 4,
+        "justification": "The layout is clean and sections are well-separated, but with all disclosures open, the screen is dense and could overwhelm some users."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty states are visible on this screen, so the ability to recognize or recover from errors cannot be judged."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "There are no visible tooltips or inline explanations for technical terms or badges, so users without security training may lack needed context."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:26:15.237524+00:00"
+  },
+  {
+    "screenshot_id": "4_raw_nvd_toggle",
+    "pass": 2,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows which CVE is selected, the expanded state of the NVD description, and provides visible context for all active sections and toggles."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and explanatory, but some technical terms (e.g., 'CWE', 'EPSS', 'NVD') are present without in-place definitions or helper text."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "The user can hide the NVD description and return to the previous state with visible toggles and a clear 'Back to list' link."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Disclosure toggles, badges, and navigation elements are visually and functionally consistent with other screens."
+      },
+      "error_prevention": {
+        "score": 3,
+        "justification": "No input controls are visible on this screen, so error prevention cannot be judged here."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity, tags, and summary explanations are visible, but some badges (e.g., 'EPSS', 'CWE') lack immediate definitions or tooltips."
+      },
+      "flexibility_efficiency": {
+        "score": 3,
+        "justification": "No filtering or search controls are visible on this detail screen, so efficiency of narrowing results cannot be judged here."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The layout is clean, with clear separation between summary, details, and similar vulnerabilities, and no visible clutter."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty states are visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "There are no visible tooltips or helper text explaining technical terms or badges on this screen."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:26:22.807240+00:00"
+  },
+  {
+    "screenshot_id": "6_empty_state",
+    "pass": 3,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows that 0 CVEs match the current filters, displays the active filters, and provides a 'Clear all filters' button, making the current state and system status explicit."
+      },
+      "match_real_world": {
+        "score": 5,
+        "justification": "All visible language is plain and non-jargon, with no unexplained acronyms or technical codes present on this empty state screen."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "The 'Clear all filters' link is prominently available, allowing users to easily back out of the empty state and reset their search."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements (filters, buttons, toggles) are visually and functionally consistent with those in the context screens."
+      },
+      "error_prevention": {
+        "score": 4,
+        "justification": "While it is possible to reach a zero-results state, the interface makes it clear why and offers a direct way to recover, though it does not prevent the state entirely."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Filter states and result counts are visible, but since there are no results, there are no badges or summaries to aid recognition for this state."
+      },
+      "flexibility_efficiency": {
+        "score": 5,
+        "justification": "Filtering, search, and sorting controls are all visible and accessible, supporting efficient narrowing and adjustment of results."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The screen is clean and focused, showing only relevant information and controls for the empty state without unnecessary clutter."
+      },
+      "error_recovery": {
+        "score": 5,
+        "justification": "The empty state message is clear and actionable, with a direct 'Clear all filters' link to help users recover from the no-results situation."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "No helper text, tooltips, or explanations for filter terms or badges are visible on this screen, but such aids cannot be judged in this empty state."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:26:31.053577+00:00"
+  },
+  {
+    "screenshot_id": "4_raw_nvd_toggle",
+    "pass": 3,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows which CVE is selected, the expanded state of the NVD description, and provides visible context for the user's current location and actions."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and explanatory, but some technical terms (e.g., 'CWE-770', 'EPSS', 'SCTP') are present without immediate explanation on this screen."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "The user can hide the NVD description and return to the previous state with visible toggles and a 'Back to list' link, supporting easy reversal of actions."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Disclosure toggles, badges, and navigation elements are visually and functionally consistent with those in the context screens."
+      },
+      "error_prevention": {
+        "score": 3,
+        "justification": "No input controls or actions that could cause errors are visible on this screen, so error prevention cannot be judged."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity, tags, and summary explanations are visible, but some codes and acronyms (e.g., CWE-770) are not explained in place on this screen."
+      },
+      "flexibility_efficiency": {
+        "score": 3,
+        "justification": "No filtering or search controls are visible on this detail screen, so efficiency of narrowing results cannot be judged here."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The screen is clean, focused on the vulnerability details, and avoids unnecessary clutter or extraneous information."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty states are visible on this screen, so error recovery cannot be judged."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "There are no visible tooltips or helper text explaining badges, scores, or acronyms to a non-expert on this screen."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:26:53.042360+00:00"
+  },
+  {
+    "screenshot_id": "5_all_expanded",
+    "pass": 3,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows which CVE is selected, which sections are expanded, and provides visible status indicators for severity, EPSS, and CISA KEV, matching the context screens\u2019 conventions."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most of the summary uses plain language, but some technical terms (e.g., 'CWE-770', 'EPSS', 'NVD') and acronyms are present without inline explanation."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "All expanded sections have visible 'Hide' toggles, and a 'Back to list' link is present, allowing users to easily back out or collapse panels."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Disclosure toggles, badges, and layout are consistent with the context screens, maintaining uniform interaction patterns and visual standards."
+      },
+      "error_prevention": {
+        "score": 3,
+        "justification": "No input controls or actions that could cause errors are visible on this screen, so error prevention cannot be fully judged here."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity, attack vector, and CWE are shown with badges and summaries, but some codes (like CWE-770) and scores (EPSS) are not explained in place."
+      },
+      "flexibility_efficiency": {
+        "score": 3,
+        "justification": "No filtering or search controls are visible on this detail screen; efficiency features are only present on the list view."
+      },
+      "aesthetic_minimalist": {
+        "score": 4,
+        "justification": "The screen is well-organized and focused, but with all sections open, the amount of information may feel dense for some users."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty states are visible on this screen, so the ability to recognize and recover from errors cannot be judged."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "There are no visible tooltips or inline explanations for technical terms or badges, so users without security training may need more guidance."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:26:59.913185+00:00"
+  },
+  {
+    "screenshot_id": "6_empty_state",
+    "pass": 2,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows that 0 CVEs match the current filters, displays the active filters, and provides a 'Clear all filters' button, making the current state and system status explicit."
+      },
+      "match_real_world": {
+        "score": 5,
+        "justification": "All visible language is plain and non-jargon, with no unexplained acronyms or technical codes; terms like 'Severity', 'Attack vector', and 'Only show CISA KEV-listed' are either self-explanatory or industry-standard."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "The 'Clear all filters' link is prominent, allowing users to easily back out of the empty state and reset the view without a dead end."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "All interactive elements (filters, toggles, buttons) are styled and placed consistently with the CONTEXT SCREENS, maintaining a uniform interface."
+      },
+      "error_prevention": {
+        "score": 4,
+        "justification": "While it is possible to reach a zero-results state, the interface prevents confusion by clearly stating no matches and offering a way to recover, though it does not prevent the empty state itself."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Filter states and result counts are visible, but the meaning of 'CISA KEV-listed' is not explained in place, requiring some prior knowledge."
+      },
+      "flexibility_efficiency": {
+        "score": 5,
+        "justification": "The visible filtering, search, and sorting controls are comprehensive and allow users to quickly narrow down results, as seen in both the PRIMARY and CONTEXT screens."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The screen is clean, focused, and free of clutter, showing only relevant controls and status messages for the empty state."
+      },
+      "error_recovery": {
+        "score": 5,
+        "justification": "The empty state is clearly communicated with a direct suggestion to 'Clear all filters', providing an immediate path to recover from the no-results situation."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "There are no visible tooltips, helper text, or in-context explanations for filter terms or badges on this screen, so help and documentation cannot be fully judged."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:27:07.371348+00:00"
+  },
+  {
+    "screenshot_id": "1_initial_load",
+    "pass": 2,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows the total number of vulnerabilities tracked, the current sort order, and that no filters are applied; the distribution chart and list update accordingly."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and approachable, but some tags and column headers (e.g., 'CWE') use unexplained acronyms that may not be familiar to non-security users."
+      },
+      "user_control_freedom": {
+        "score": 4,
+        "justification": "Users can clear filters, change sort order, and navigate pages, but there is no visible way to deselect a record or close an expanded panel from this screen."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements (filters, buttons, badges) are styled and behave consistently across all screens, as seen in the context views."
+      },
+      "error_prevention": {
+        "score": 4,
+        "justification": "Dropdowns and checkboxes constrain input to valid options, but there is no visible inline validation or prevention for potentially confusing filter combinations."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity is shown as labeled badges and tags are visible, but some information (like what 'High' means or what a CWE code is) is not explained in place."
+      },
+      "flexibility_efficiency": {
+        "score": 5,
+        "justification": "Filtering, search, and sorting controls are prominent and allow users to quickly narrow down the list to relevant vulnerabilities."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The layout is clean, with clear separation of sections and no unnecessary information or visual clutter."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty state is visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "There are no visible tooltips, helper text, or explanations for badges, scores, or filter terms on this screen."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:27:15.865177+00:00"
+  },
+  {
+    "screenshot_id": "5_all_expanded",
+    "pass": 1,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The PRIMARY SCREEN clearly shows which CVE is selected, which sections are expanded, and provides visible status indicators for severity, EPSS, and CISA KEV, matching the consistent status cues across CONTEXT SCREENS."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most of the language is plain and explanatory (e.g., 'What is vulnerable', 'How it can be exploited'), but some technical terms and acronyms (e.g., 'CWE', 'EPSS', 'NVD') are present without inline explanation."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "All expanded sections have visible 'Hide' toggles, and a 'Back to list' link is present, allowing users to easily back out or collapse details without dead ends."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Disclosure toggles, badges, and navigation elements are visually and functionally consistent with those in the CONTEXT SCREENS, supporting predictable interaction."
+      },
+      "error_prevention": {
+        "score": 3,
+        "justification": "No input controls or actions that could cause errors are visible on the PRIMARY SCREEN, so error prevention cannot be judged here."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity, attack vector, and CWE are shown as badges and in a summary table, but some codes (like CWE-770) are not explained in plain language unless the user expands the relevant section."
+      },
+      "flexibility_efficiency": {
+        "score": 3,
+        "justification": "No filtering, search, or sorting controls are visible on the PRIMARY SCREEN itself, so efficiency of narrowing results cannot be judged here."
+      },
+      "aesthetic_minimalist": {
+        "score": 4,
+        "justification": "The screen is information-dense but well-organized, with clear sectioning and no obvious visual clutter, though having all sections open at once may be overwhelming for some users."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty states are visible on the PRIMARY SCREEN, so the ability to recognize and recover from errors cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "There are no visible tooltips, helper text, or inline explanations for technical terms or badges on the PRIMARY SCREEN, so help for non-experts is limited."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:27:26.547023+00:00"
+  },
+  {
+    "screenshot_id": "8_tooltip_filter_label",
+    "pass": 1,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows the number of vulnerabilities tracked, the current filter state, and provides immediate feedback on what is being displayed, including active filters and result counts."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and explanatory (e.g., the tooltip for 'Privileges'), but some filter labels (like 'CWE') use acronyms without visible expansion or explanation on this screen."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "Users can close the expanded filter panel ('Fewer filters'), clear filters, and navigate between pages, with no visible dead ends."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements (dropdowns, buttons, badges) are styled and behave consistently with the CONTEXT SCREENS, supporting a predictable experience."
+      },
+      "error_prevention": {
+        "score": 4,
+        "justification": "All visible inputs are dropdowns or checkboxes, which constrain user input to valid options and prevent invalid states."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity is shown as labeled badges and tags are descriptive, but some codes (like CWE) are not explained in place, requiring some recall."
+      },
+      "flexibility_efficiency": {
+        "score": 5,
+        "justification": "Multiple filters, search, and sort options are visible, allowing users to efficiently narrow results to what they need."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The layout is clean, with clear separation of controls and results, and no unnecessary information or visual clutter."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty state is visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 5,
+        "justification": "The tooltip for 'Privileges' provides in-context explanation, and similar tooltips are likely available for other terms, supporting users without security training."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:27:47.255969+00:00"
+  },
+  {
+    "screenshot_id": "3_explain_summary",
+    "pass": 1,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 4,
+        "justification": "The screen clearly shows which CVE is selected and what information is being displayed, but does not indicate any loading or processing state if data is being fetched."
+      },
+      "match_real_world": {
+        "score": 5,
+        "justification": "The summary uses plain language and explains technical terms, avoiding unexplained jargon and acronyms, making it accessible to non-security users."
+      },
+      "user_control_freedom": {
+        "score": 4,
+        "justification": "A 'Back to list' link is visible for returning to the previous view, but there is no visible way to deselect the CVE or close the detail panel without navigating away."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements such as badges, buttons, and disclosure toggles are styled and behave consistently with those in the context screens."
+      },
+      "error_prevention": {
+        "score": 3,
+        "justification": "No input controls are visible on this screen, so error prevention cannot be judged here."
+      },
+      "recognition_not_recall": {
+        "score": 5,
+        "justification": "Severity, exploitability, and action items are all shown in place with clear labels and summaries, minimizing the need for prior knowledge."
+      },
+      "flexibility_efficiency": {
+        "score": 3,
+        "justification": "No filtering or search controls are visible on this detail screen, so efficiency of narrowing results cannot be judged here."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The screen is clean and focused on the essential details of the CVE, with no unnecessary clutter or distractions."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty states are visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 4,
+        "justification": "Most terms are explained in context, but some badges (e.g., EPSS, CWE) lack visible tooltips or helper text for users unfamiliar with them."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:27:53.817020+00:00"
+  },
+  {
+    "screenshot_id": "4_raw_nvd_toggle",
+    "pass": 1,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows which CVE is selected, the state of the 'Show original NVD description' toggle, and provides visible context for what is being displayed."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and explanatory, but some technical terms (e.g., 'CWE-770', 'EPSS', 'NVD') are present without in-place definitions on this screen."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "The user can hide the original NVD description and return to the previous state, with clear toggles and a 'Back to list' link visible."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Disclosure toggles, badges, and navigation elements are visually and functionally consistent with the other screens."
+      },
+      "error_prevention": {
+        "score": 3,
+        "justification": "No input controls or actions that could cause errors are visible on this screen, so error prevention cannot be judged."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity, tags, and summary explanations are visible, but some badges (e.g., 'EPSS', 'CWE') lack immediate plain-language definitions."
+      },
+      "flexibility_efficiency": {
+        "score": 3,
+        "justification": "Filtering and search controls are not visible on this detail screen, so efficiency of narrowing results cannot be judged here."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The screen is clean, focused on the vulnerability details, and avoids unnecessary clutter or extraneous information."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty states are visible on this screen, so error recovery cannot be judged."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "There are no visible tooltips or helper text explaining technical terms or badges directly on this screen."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:28:13.134893+00:00"
+  },
+  {
+    "screenshot_id": "1_initial_load",
+    "pass": 3,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows the total number of vulnerabilities tracked, the current sort order, and that no filters are applied; the distribution chart and list header reinforce what is being displayed."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and approachable, but some tags and column headers (e.g., 'CWE', 'Out-of-bounds Read') may be unclear to users without security training."
+      },
+      "user_control_freedom": {
+        "score": 4,
+        "justification": "The presence of filter dropdowns and navigation controls suggests users can easily change or clear selections, but there is no explicit 'clear all' or 'reset' button visible on this default screen."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements such as buttons, dropdowns, and badges are styled and positioned consistently with the context screens, supporting predictable interaction."
+      },
+      "error_prevention": {
+        "score": 4,
+        "justification": "All visible inputs are dropdowns or checkboxes, which constrain user input to valid options and prevent invalid states."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity is shown as labeled badges and tags are visible, but some terms (e.g., 'CWE', 'Use After Free') may require prior knowledge as there are no visible explanations or tooltips."
+      },
+      "flexibility_efficiency": {
+        "score": 5,
+        "justification": "Filtering, search, and sorting controls are prominent and allow users to quickly narrow down the list to relevant vulnerabilities."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The layout is clean, with clear separation of sections and no unnecessary information or visual clutter."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty state is visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "There are no visible tooltips, helper text, or in-context explanations for technical terms or badges on this screen."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:28:28.636863+00:00"
+  },
+  {
+    "screenshot_id": "8_tooltip_filter_label",
+    "pass": 2,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows the number of vulnerabilities tracked, active filters, and the current state of the 'More filters' panel, with immediate feedback on filter changes and visible pagination."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and explanatory (e.g., the tooltip for 'Privileges'), but some filter labels (e.g., 'CWE') use acronyms without visible expansion or explanation on this screen."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "Users can close the 'More filters' panel, clear filters, and navigate pages, with no visible dead ends or irreversible actions."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements (dropdowns, buttons, toggles) are styled and behave consistently with the CONTEXT SCREENS, maintaining a uniform interface."
+      },
+      "error_prevention": {
+        "score": 4,
+        "justification": "All filter controls are dropdowns or checkboxes, guiding users to valid choices and preventing invalid input, though there is no explicit prevention of contradictory filter combinations visible."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity is shown as labeled badges, tags are descriptive, and tooltips provide in-place explanations, but some codes (like CWE) are not explained directly on this screen."
+      },
+      "flexibility_efficiency": {
+        "score": 5,
+        "justification": "Multiple filters, search, and sort options are visible and easily combinable, supporting efficient narrowing of results."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The layout is clean, with only relevant controls and data visible, and no unnecessary clutter or distracting elements."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty state is visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 5,
+        "justification": "The tooltip for 'Privileges' provides clear, in-context explanation, and similar tooltips are likely available for other filters, supporting users without security training."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:28:45.237080+00:00"
+  },
+  {
+    "screenshot_id": "2_filtered_search",
+    "pass": 2,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows active filters, result counts, and which filters are applied, with immediate feedback in the distribution chart and list."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and filter labels are clear, but some tags (e.g., 'Use After Free', 'Out-of-bounds Write') and acronyms (CVE, CWE) are not explained in place."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "Users can close the expanded filter panel, clear filters, and navigate between pages, with no visible dead ends."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements (dropdowns, toggles, buttons) are visually and functionally consistent with the context screens."
+      },
+      "error_prevention": {
+        "score": 4,
+        "justification": "All filter inputs are dropdowns or toggles, preventing invalid entries, but there is no visible inline validation or guidance for ambiguous filter combinations."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity is shown as a badge and tags are visible, but some technical terms and acronyms require prior knowledge or a click to 'Explain' for more context."
+      },
+      "flexibility_efficiency": {
+        "score": 5,
+        "justification": "Multiple filters, search, and sort options are visible and allow efficient narrowing of results."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The layout is clean, with only relevant information and controls visible, and no unnecessary clutter."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty state is visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "There are no visible tooltips, helper text, or inline explanations for technical terms or acronyms on this screen."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:28:59.573398+00:00"
+  },
+  {
+    "screenshot_id": "7_tooltip_tech_details",
+    "pass": 2,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows which CVE is selected, which details are expanded, and provides clear section headers and disclosure toggles for system state."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and explanatory, but some technical terms (e.g., 'CWE', 'EPSS', 'SCTP') are present, though mitigated by tooltips and summaries."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "The user can close expanded panels, return to the list, and hide details using visible toggles and the 'Back to list' link."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements (badges, toggles, tooltips) are styled and behave consistently with the other screens."
+      },
+      "error_prevention": {
+        "score": 3,
+        "justification": "No input controls are visible on this detail screen, so error prevention cannot be judged here."
+      },
+      "recognition_not_recall": {
+        "score": 5,
+        "justification": "Severity, impact, and technical fields are labeled, color-coded, and explained in place, with a tooltip for 'Confidentiality impact' reducing the need for recall."
+      },
+      "flexibility_efficiency": {
+        "score": 3,
+        "justification": "Filtering and search controls are not visible on this detail screen, so efficiency of narrowing results cannot be judged here."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The screen is clean, well-organized, and focused on actionable information without unnecessary clutter."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty states are visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 5,
+        "justification": "A tooltip explains 'Confidentiality impact' in plain language, and other fields are labeled or described, supporting users without security training."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:29:18.264936+00:00"
+  },
+  {
+    "screenshot_id": "3_explain_summary",
+    "pass": 2,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 4,
+        "justification": "The screen clearly shows which CVE is selected, the context (Netty before 4.1.13.5), and the active view (detail with summary and similar vulnerabilities), but does not indicate any loading or background activity."
+      },
+      "match_real_world": {
+        "score": 5,
+        "justification": "The summary uses plain language to explain what is vulnerable, how it can be exploited, and what to do, with minimal jargon and clear explanations for technical terms."
+      },
+      "user_control_freedom": {
+        "score": 4,
+        "justification": "A 'Back to list' link is visible, allowing users to return to the previous state, but there is no visible way to deselect the current CVE without leaving the detail view."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements such as badges, buttons, and disclosure toggles are styled and behave consistently with those on the list and other detail screens."
+      },
+      "error_prevention": {
+        "score": 3,
+        "justification": "No input controls are visible on this screen, so error prevention cannot be judged here."
+      },
+      "recognition_not_recall": {
+        "score": 5,
+        "justification": "Severity, tags, and summary information are all visible in place, and the summary explains the technical details without requiring prior knowledge."
+      },
+      "flexibility_efficiency": {
+        "score": 3,
+        "justification": "No filtering or search controls are visible on this detail screen, so efficiency of narrowing results cannot be judged here."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The screen is clean, focused on the summary and similar vulnerabilities, and avoids unnecessary clutter or extraneous information."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty states are visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 4,
+        "justification": "Most terms are explained in context, but some badges (e.g., EPSS, CWE) are not directly defined or linked to help for non-experts on this screen."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:29:32.286638+00:00"
+  },
+  {
+    "screenshot_id": "3_explain_summary",
+    "pass": 3,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 4,
+        "justification": "The screen clearly shows which CVE is selected and provides context (version, severity, tags), but does not indicate any active filters or the user's navigation path beyond a 'Back to list' link."
+      },
+      "match_real_world": {
+        "score": 5,
+        "justification": "The summary uses plain language to explain what is vulnerable, how it can be exploited, and what to do, with minimal jargon and clear explanations for technical terms."
+      },
+      "user_control_freedom": {
+        "score": 4,
+        "justification": "A 'Back to list' link is visible for returning to the previous state, but there is no visible way to deselect the CVE or close the detail view without leaving the page."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements (badges, buttons, disclosure toggles) are styled and behave consistently with those on the list and expanded detail views in the context screens."
+      },
+      "error_prevention": {
+        "score": 3,
+        "justification": "No input controls are visible on this screen, so error prevention cannot be judged here."
+      },
+      "recognition_not_recall": {
+        "score": 5,
+        "justification": "Severity, tags, and plain-language summaries are all visible in place, so users do not need to recall what codes or scores mean."
+      },
+      "flexibility_efficiency": {
+        "score": 3,
+        "justification": "No filtering or search controls are visible on this detail screen, so efficiency of narrowing results cannot be judged here."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The screen is clean, focused on the summary and similar vulnerabilities, and avoids unnecessary clutter or extraneous information."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty states are visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 4,
+        "justification": "Most terms are explained in context, but some badges (e.g., EPSS, CWE) are not directly defined or explained for non-experts on this screen."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:29:48.334894+00:00"
+  },
+  {
+    "screenshot_id": "1_initial_load",
+    "pass": 1,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows the total number of vulnerabilities tracked, the current sort order, and that no filters are applied, with visible counts and distribution charts."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and approachable, but some tags and column headers (e.g., 'CWE') use unexplained acronyms that may not be familiar to non-security users."
+      },
+      "user_control_freedom": {
+        "score": 4,
+        "justification": "Users can change filters, sort order, and navigate pages, but there is no visible way to deselect a record or close an expanded panel from this screen (since none are open)."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements such as filters, buttons, and badges are styled and placed consistently across all screens, supporting predictable interaction."
+      },
+      "error_prevention": {
+        "score": 4,
+        "justification": "Dropdowns and checkboxes constrain input to valid options, but there is no visible inline validation or prevention of conflicting filter states on this screen."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity is shown as labeled badges and tags are visible, but some information (like what 'CWE' means) is not explained in place, requiring some recall."
+      },
+      "flexibility_efficiency": {
+        "score": 5,
+        "justification": "Multiple filtering, search, and sorting controls are visible, allowing users to quickly narrow down results to what they need."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The design is clean and focused, with no unnecessary information or visual clutter competing for attention."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty state is visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "There are no visible tooltips, helper text, or in-context explanations for technical terms or badges on this screen."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:30:00.975207+00:00"
+  },
+  {
+    "screenshot_id": "2_filtered_search",
+    "pass": 1,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows active filters, result counts, and which filters are applied, with immediate feedback in the distribution chart and list."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and filter labels are understandable, but some tags (e.g., 'Use After Free', 'Improper Input Validation') and acronyms (CVE, CWE) are not explained in place."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "Users can close the expanded filter panel, clear or change filters, and navigate pages, with no visible dead ends."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements (dropdowns, toggles, badges, buttons) are visually and functionally consistent with the context screens."
+      },
+      "error_prevention": {
+        "score": 4,
+        "justification": "All filter inputs are dropdowns or toggles, preventing invalid entries, but there is no visible inline validation or guidance for ambiguous filter combinations."
+      },
+      "recognition_not_recall": {
+        "score": 4,
+        "justification": "Severity is shown as a badge and tags are visible, but some technical terms and acronyms require prior knowledge or further explanation."
+      },
+      "flexibility_efficiency": {
+        "score": 5,
+        "justification": "Multiple filters, search, and sorting options are visible and allow efficient narrowing of results."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The layout is clean, focused on relevant data, and avoids unnecessary clutter or distractions."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty state is visible on this screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 3,
+        "justification": "There are no visible tooltips, helper text, or in-context explanations for technical terms or acronyms on this screen."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:30:19.862248+00:00"
+  },
+  {
+    "screenshot_id": "7_tooltip_tech_details",
+    "pass": 3,
+    "heuristics": {
+      "visibility_of_system_status": {
+        "score": 5,
+        "justification": "The screen clearly shows which CVE is selected, which details are expanded, and provides clear section headers and disclosure toggles for system state."
+      },
+      "match_real_world": {
+        "score": 4,
+        "justification": "Most language is plain and explanatory, but some technical terms (e.g., 'CWE', 'EPSS') are present, though mitigated by badges and tooltips."
+      },
+      "user_control_freedom": {
+        "score": 5,
+        "justification": "The user can close expanded panels, return to the list, and toggle details, with no visible dead ends."
+      },
+      "consistency_standards": {
+        "score": 5,
+        "justification": "Interactive elements (badges, toggles, tooltips) are styled and behave consistently across all screens."
+      },
+      "error_prevention": {
+        "score": 3,
+        "justification": "No input controls are visible on this detail screen, so error prevention cannot be judged here."
+      },
+      "recognition_not_recall": {
+        "score": 5,
+        "justification": "Severity, impact, and technical fields are labeled, color-coded, and explained in place, with a tooltip for 'Confidentiality impact.'"
+      },
+      "flexibility_efficiency": {
+        "score": 3,
+        "justification": "Filtering and search controls are not visible on this detail screen, so efficiency of narrowing results cannot be judged here."
+      },
+      "aesthetic_minimalist": {
+        "score": 5,
+        "justification": "The screen is clean, focused on actionable and relevant information, with no visible clutter or extraneous data."
+      },
+      "error_recovery": {
+        "score": 3,
+        "justification": "No error or empty states are visible on this detail screen, so error recovery cannot be judged here."
+      },
+      "help_documentation": {
+        "score": 5,
+        "justification": "A tooltip explains 'Confidentiality impact' in plain language, and other fields are labeled and described in context."
+      }
+    },
+    "model": "gpt-4.1-2025-04-14",
+    "temperature": 0,
+    "rubric_hash": "a4ba0b278288f8bda6abfbe707664ee01e2f561676cdb78857d15a0993b16875",
+    "timestamp": "2026-08-13T00:30:33.307965+00:00"
+  }
+]

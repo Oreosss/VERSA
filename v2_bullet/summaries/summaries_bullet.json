@@ -1,0 +1,818 @@
+[
+  {
+    "cve_id": "CVE-2020-8010",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2024-1914",
+      "CVE-2025-0571",
+      "CVE-2024-30961",
+      "CVE-2020-3371",
+      "CVE-2023-40686"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects CA Unified Infrastructure Management, also known as Nimsoft or UIM, in versions 20.1, 20.3.x, and 9.20 and below.\n- CA UIM is an infrastructure monitoring platform used to manage and monitor IT environments.\n- The flaw is in the robot (controller) component, which is the agent that runs on monitored systems to carry out management tasks.\n- The vulnerability is an improper ACL (access control list) handling issue, meaning the software does not correctly enforce rules about who is allowed to perform actions on the system.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach the vulnerable component remotely without needing to be on the same machine.\n- No login credentials and no user interaction are required, so anyone who can reach the service over the network can attempt the attack.\n- Confidentiality, integrity, and availability are all rated HIGH, meaning an attacker could read data from, write data to, or execute commands on the target system.\n- The CVSS score of 9.8 reflects the combination of remote access, no authentication, and full impact across all three areas.\n\n## What action to take\n\n- Check whether any CA Unified Infrastructure Management deployment is running version 20.1, 20.3.x, or 9.20 and below.\n- Broadcom (which now owns CA Technologies) has published a security notice with remediation guidance, linked in the references below.\n- Review the Broadcom security advisory and the associated technical documentation for the recommended update or patch.\n- The Packet Storm reference provides additional technical background but should be treated as a third-party resource rather than an official fix.\n\n## Reference\n\nAdvisories and resources documenting the vulnerability:\nBroadcom security advisory (vendor): https://support.broadcom.com/external/content/security-advisories/CA20200205-01-Security-Notice-for-CA-Unified-Infrastructure-Management/7832\nBroadcom technical documentation (vendor): https://techdocs.broadcom.com/us/product-content/status/announcement-documents/2019/ca20200205-01-security-notice-for-ca-unified-infrastructure-management.html\nPacket Storm Security (third-party technical reference): http://packetstormsecurity.com/files/158693/CA-Unified-Infrastructure-Management-Nimsoft-7.80-Buffer-Overflow.html",
+    "timestamp": "2026-07-27T16:46:08.655266+00:00"
+  },
+  {
+    "cve_id": "CVE-2020-8010",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2024-1914",
+      "CVE-2025-0571",
+      "CVE-2024-30961",
+      "CVE-2020-3371",
+      "CVE-2023-40686"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects CA Unified Infrastructure Management, also known as Nimsoft or UIM, in versions 20.1, 20.3.x, and 9.20 and below.\n- UIM is an infrastructure monitoring platform used to manage and monitor IT environments.\n- The flaw is in the robot (controller) component, which is the agent that runs on monitored systems to carry out management tasks.\n- The problem is improper ACL handling, meaning the access control list that decides who is allowed to perform actions on the controller is not enforced correctly.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach the vulnerable component remotely without needing to be on the same machine.\n- No login and no user interaction are needed, so an attacker can attempt this without any prior access or help from a user.\n- Because the access controls are not properly enforced, a remote attacker can execute commands, read data from, or write data to the target system.\n- Confidentiality, integrity, and availability are all rated HIGH, so an attacker could read sensitive information, modify data, and disrupt the system's operation.\n\n## What action to take\n\n- Check whether any CA Unified Infrastructure Management (Nimsoft/UIM) deployment is running version 20.1, 20.3.x, or 9.20 and below.\n- Broadcom (formerly CA Technologies) has published a security notice with remediation guidance, linked in the references below.\n- Follow the vendor advisory for patching or upgrading instructions specific to your installed version.\n- The Packet Storm reference provides additional technical background but should be treated as supplementary rather than a primary source for fixes.\n\n## Reference\n\nAdvisories and references documenting the vulnerability:\n\nBroadcom security advisory (vendor): https://support.broadcom.com/external/content/security-advisories/CA20200205-01-Security-Notice-for-CA-Unified-Infrastructure-Management/7832\n\nBroadcom technical documentation (vendor): https://techdocs.broadcom.com/us/product-content/status/announcement-documents/2019/ca20200205-01-security-notice-for-ca-unified-infrastructure-management.html\n\nPacket Storm Security (third-party technical reference): http://packetstormsecurity.com/files/158693/CA-Unified-Infrastructure-Management-Nimsoft-7.80-Buffer-Overflow.html",
+    "timestamp": "2026-07-27T16:46:26.323449+00:00"
+  },
+  {
+    "cve_id": "CVE-2023-50919",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2024-39227",
+      "CVE-2023-29778",
+      "CVE-2023-52534",
+      "CVE-2024-7554",
+      "CVE-2021-45575"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects a range of GL.iNet networking devices, which are compact routers and travel routers, running firmware before version 4.5.0.\n- The specific models affected include A1300, AX1800, AXT1800, MT3000, MT2500, MT6000, MT1300, MT300N-V2, AR750S, AR750, AR300M, and B1300 at various firmware versions.\n- The flaw is in the NGINX web server configuration on these devices, where authentication checks are bypassed due to a weakness in Lua string pattern matching.\n- This means the login protection on the device's management interface does not work correctly, allowing access without valid credentials.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach the device remotely over the network without needing physical access.\n- No login credentials and no user interaction are required, meaning an attacker can attempt this without any prior access or help from the device owner.\n- Confidentiality, integrity, and availability are all rated HIGH, so an attacker could read sensitive data, change device settings, and potentially disrupt the device's operation.\n- A public write-up on Packet Storm describes this as enabling unauthenticated remote command execution, which means an attacker could run arbitrary commands on the device without logging in.\n\n## What action to take\n\n- Check whether any GL.iNet devices on your network are running firmware at or below the versions listed in the description, and update them to version 4.5.0 or later.\n- The vendor's GitHub page linked below provides details on the authentication bypass and should be consulted for remediation guidance.\n- Given that a public exploit is available, prioritise updating affected devices promptly.\n- If an immediate update is not possible, consider restricting network access to the device's management interface to trusted networks only.\n\n## Reference\n\nAdvisories and write-ups documenting the vulnerability:\nPublic exploit write-up on Packet Storm: http://packetstormsecurity.com/files/176708/GL.iNet-Unauthenticated-Remote-Command-Execution.html\nGL.iNet vendor advisory on GitHub: https://github.com/gl-inet/CVE-issues/blob/main/4.0.0/Authentication-bypass.md",
+    "timestamp": "2026-07-27T16:46:42.190666+00:00"
+  },
+  {
+    "cve_id": "CVE-2023-50919",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2024-39227",
+      "CVE-2023-29778",
+      "CVE-2023-52534",
+      "CVE-2024-7554",
+      "CVE-2021-45575"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects a range of GL.iNet networking devices, which are compact routers and travel routers, running firmware before version 4.5.0.\n- The specific models affected include A1300, AX1800, AXT1800, MT3000, MT2500, MT6000, MT1300, MT300N-V2, AR750S, AR750, AR300M, and B1300 at various firmware versions.\n- The flaw is in the NGINX web server configuration on these devices, where authentication (the login check that confirms who you are before granting access) can be bypassed.\n- The bypass works through a weakness in Lua string pattern matching, which is the code the device uses to decide whether a request needs a valid login session.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so anyone who can reach the device's web interface over the network can attempt this.\n- No login credentials and no user interaction are needed, meaning an attacker does not need an account on the device and no one has to click anything for the attack to work.\n- Confidentiality, integrity, and availability are all rated HIGH, so a successful attacker could read device configuration and secrets, change settings, and potentially disrupt the device entirely.\n- A public write-up on Packet Storm describes this as enabling unauthenticated remote command execution, which means an attacker could run arbitrary commands on the device without logging in.\n\n## What action to take\n\n- Check whether any GL.iNet devices in your environment are running the affected firmware versions listed in the description.\n- Update affected devices to firmware version 4.5.0 or later, as the vendor indicates this version addresses the issue.\n- The GL.iNet GitHub advisory linked below provides details on the fix and affected versions.\n- If the device's web management interface is exposed to the internet, consider restricting access to trusted networks until the update is applied.\n\n## Reference\n\nAdvisories and write-ups documenting the vulnerability:\nPublic exploit write-up on Packet Storm: http://packetstormsecurity.com/files/176708/GL.iNet-Unauthenticated-Remote-Command-Execution.html\nGL.iNet vendor advisory on GitHub: https://github.com/gl-inet/CVE-issues/blob/main/4.0.0/Authentication-bypass.md",
+    "timestamp": "2026-07-27T16:46:55.270153+00:00"
+  },
+  {
+    "cve_id": "CVE-2023-29119",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2020-23763",
+      "CVE-2025-63947",
+      "CVE-2024-40741",
+      "CVE-2023-33787",
+      "CVE-2024-6263"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects the Waybox Enel X, an electric vehicle charging station, specifically its web management application.\n- The flaw is in the `/admin/dbstore.php` endpoint, which can be used to send arbitrary requests to the device's internal database.\n- Because the database can be reached through this endpoint without proper restrictions, an attacker could read, modify or delete data stored on the device.\n\n## How it can be exploited\n\n- The attack vector is ADJACENT_NETWORK, meaning the attacker must be on the same local network segment as the Waybox device rather than attacking it over the internet.\n- No login credentials and no user interaction are required, so anyone with network proximity to the device can attempt the attack directly.\n- Confidentiality, integrity and availability are all rated HIGH, so an attacker could read sensitive data, alter device configuration or disrupt the charging station's operation.\n\n## What action to take\n\n- Check whether any Waybox Enel X charging stations are deployed and whether their web management interfaces are reachable on the local network.\n- Review the vendor security bulletin linked below for specific remediation steps and any firmware updates that address this issue.\n- Restrict network access to the Waybox management interface so that only authorised devices and administrators can reach it, as a practical measure to reduce exposure.\n\n## Reference\n\nAdvisory documenting the vulnerability:\nEnel X Mobility security bulletin: https://support-emobility.enelx.com/content/dam/enelxmobility/italia/documenti/manuali-schede-tecniche/Waybox-3-Security-Bulletin-06-2024-V1.pdf",
+    "timestamp": "2026-07-27T16:47:06.530730+00:00"
+  },
+  {
+    "cve_id": "CVE-2023-29119",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2020-23763",
+      "CVE-2025-63947",
+      "CVE-2024-40741",
+      "CVE-2023-33787",
+      "CVE-2024-6263"
+    ],
+    "output_text": "What is vulnerable\n\n- This affects the Waybox Enel X, an electric vehicle charging station, specifically its web management application.\n- The flaw is in the /admin/dbstore.php endpoint, which can be used to send arbitrary requests to the internal database.\n- Because the application does not properly restrict what can be sent through this endpoint, an attacker could read, change, or delete data stored in the database.\n\nHow it can be exploited\n\n- The attack vector is ADJACENT_NETWORK, meaning the attacker needs to be on the same local network as the Waybox device rather than reaching it over the internet.\n- No login credentials and no user interaction are needed, so anyone with network proximity can attempt this without prior access or tricking a user.\n- Confidentiality, integrity, and availability are all rated HIGH, so the database could be fully read, altered, or made unavailable.\n- The CVSS score of 9.6 reflects the combination of no authentication requirement and full impact across all three areas, limited only by the need for adjacent network access.\n\nWhat action to take\n\n- Check whether any Waybox Enel X charging stations are deployed in your environment and whether their web management interfaces are reachable on the local network.\n- Review the vendor security bulletin linked below for remediation guidance and any available firmware or software updates.\n- Restrict network access to the Waybox management interface so that only authorised devices and administrators can reach it, as a practical measure while applying any vendor fix.\n\nReference\n\nAdvisory documenting the vulnerability:\nEnel X Mobility security bulletin: https://support-emobility.enelx.com/content/dam/enelxmobility/italia/documenti/manuali-schede-tecniche/Waybox-3-Security-Bulletin-06-2024-V1.pdf",
+    "timestamp": "2026-07-27T16:47:26.188201+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-23894",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2021-23896",
+      "CVE-2020-7325",
+      "CVE-2020-7331",
+      "CVE-2020-7264",
+      "CVE-2021-31842"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects McAfee Database Security (DBSec), a product that monitors and protects databases, in versions prior to 4.8.2.\n- The flaw is a deserialization of untrusted data vulnerability, which means the server accepts and processes specially crafted data objects from the network without properly checking whether they are safe.\n- In this case the server processes Java serialised objects, which are structured bundles of data that Java applications use to exchange information, and a malicious one can instruct the server to run arbitrary commands.\n\n## How it can be exploited\n\n- The attack vector is ADJACENT_NETWORK, meaning the attacker must be on the same local network segment or a directly connected network rather than attacking from the open internet.\n- No login credentials and no user interaction are needed, so anyone with adjacent network access can attempt the attack without prior privileges.\n- A successful exploit creates a reverse shell with administrator privileges on the DBSec server, which means the attacker gains full remote command-line control over the server.\n- Confidentiality, integrity and availability are all rated HIGH, so the attacker could read, modify or delete data and disrupt the service entirely.\n\n## What action to take\n\n- Check whether any McAfee Database Security installation is running a version earlier than 4.8.2.\n- Update to version 4.8.2 or later, as described in the vendor advisory linked below.\n- Restrict network access to the DBSec server so that only trusted systems on the local network can reach it, reducing the pool of potential attackers while the update is applied.\n\n## Reference\n\nAdvisory documenting the vulnerability:\nMcAfee, the affected software vendor: https://kc.mcafee.com/corporate/index?page=content&id=SB10359",
+    "timestamp": "2026-07-27T16:47:39.093219+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-23894",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2021-23896",
+      "CVE-2020-7325",
+      "CVE-2020-7331",
+      "CVE-2020-7264",
+      "CVE-2021-31842"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects McAfee Database Security (DBSec), a product that monitors and protects databases, in versions prior to 4.8.2.\n- The flaw is a deserialization of untrusted data vulnerability, which means the server accepts incoming data objects and converts them into live program objects without first checking whether they are safe.\n- In this case a specially crafted Java serialized object can be sent to the DBSec server, and the server will process it as trusted input.\n- Because the server runs with administrator privileges, successful exploitation gives the attacker full control over the DBSec server.\n\n## How it can be exploited\n\n- The attack vector is ADJACENT_NETWORK, which means the attacker needs to be on the same local network segment or a directly connected network rather than reaching the server over the open internet.\n- No login credentials and no user interaction are needed, so anyone with adjacent network access can attempt this without any prior account or action from a user.\n- Confidentiality, integrity and availability are all rated HIGH, so an attacker could read sensitive data, modify it, or disrupt the service entirely.\n- The description confirms that a successful attack creates a reverse shell with administrator privileges, meaning the attacker gets an interactive command-line session on the server with full control.\n\n## What action to take\n\n- Check whether any McAfee Database Security (DBSec) installation is running a version earlier than 4.8.2.\n- Update to version 4.8.2 or later, as described in the vendor advisory linked below.\n- Because the attack requires adjacent network access, also review network segmentation around the DBSec server to limit which systems can reach it directly.\n- Consult the McAfee security bulletin for full remediation details and any additional guidance.\n\n## Reference\n\nAdvisory documenting the vulnerability:\nMcAfee, the affected software vendor: https://kc.mcafee.com/corporate/index?page=content&id=SB10359",
+    "timestamp": "2026-07-27T16:47:51.073958+00:00"
+  },
+  {
+    "cve_id": "CVE-2024-21887",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2024-10644",
+      "CVE-2024-47905",
+      "CVE-2024-24994",
+      "CVE-2025-55146",
+      "CVE-2025-55148"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Ivanti Connect Secure (versions 9.x and 22.x) and Ivanti Policy Secure (versions 9.x and 22.x), which are network gateway appliances used to provide remote access and enforce access policies.\n- The flaw is a command injection vulnerability in the web components of these appliances, meaning an attacker can insert operating system commands into specially crafted web requests.\n- When those commands reach the appliance they are executed directly, giving the attacker full control over the device.\n- Confidentiality, integrity and availability are all rated HIGH, so the appliance's data, configuration and uptime can all be compromised.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach the vulnerable web interface remotely without physical access.\n- Privileges required are HIGH, meaning the attacker needs an authenticated administrator account on the appliance to send the crafted requests.\n- No user interaction is needed, so once an attacker has administrator credentials they can exploit this without anyone else clicking or approving anything.\n- In practice this vulnerability has been observed chained with a separate authentication bypass flaw (CVE-2023-46805), which would allow an unauthenticated attacker to reach it without valid credentials.\n\n## What action to take\n\n- Check whether any Ivanti Connect Secure or Ivanti Policy Secure appliances in your environment are running versions in the 9.x or 22.x range.\n- Consult the Ivanti advisory linked below for specific patch versions and mitigation guidance.\n- This vulnerability is listed in the CISA Known Exploited Vulnerabilities catalogue, which means it has been actively used in real attacks, so treat remediation as a priority.\n- Review the CISA advisory linked below for additional context on exploitation activity and recommended response steps.\n\n## Reference\n\nAdvisories and references documenting the vulnerability:\n\nIvanti, the affected software vendor: https://forums.ivanti.com/s/article/CVE-2023-46805-Authentication-Bypass-CVE-2024-21887-Command-Injection-for-Ivanti-Connect-Secure-and-Ivanti-Policy-Secure-Gateways?language=en_US\n\nCISA Known Exploited Vulnerabilities catalogue: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2024-21887\n\nPacket Storm Security, a third-party writeup: http://packetstormsecurity.com/files/176668/Ivanti-Connect-Secure-Unauthenticated-Remote-Code-Execution.html",
+    "timestamp": "2026-07-27T16:48:06.117368+00:00"
+  },
+  {
+    "cve_id": "CVE-2024-21887",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2024-10644",
+      "CVE-2024-47905",
+      "CVE-2024-24994",
+      "CVE-2025-55146",
+      "CVE-2025-55148"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Ivanti Connect Secure (versions 9.x and 22.x) and Ivanti Policy Secure (versions 9.x and 22.x), which are VPN and network access control appliances used to let remote users connect securely to an organisation's network.\n- The flaw is a command injection vulnerability in the web components of these appliances, meaning an attacker can insert operating system commands into specially crafted web requests and the appliance will run them.\n- Because confidentiality, integrity and availability are all rated HIGH, a successful attack could let someone read sensitive data, change configurations or disrupt the appliance entirely.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so it can be carried out remotely over the network without physical access to the appliance.\n- Privileges required is HIGH, meaning the attacker needs an authenticated administrator account on the appliance to send the crafted requests.\n- No user interaction is needed, so once an attacker has admin credentials they can exploit this without anyone else clicking or approving anything.\n- It is worth noting that a separate authentication bypass vulnerability (CVE-2023-46805) has been documented alongside this one, and the two have been chained together in real-world attacks to allow exploitation without valid credentials at all.\n\n## What action to take\n\n- Check whether any Ivanti Connect Secure or Ivanti Policy Secure appliances in your environment are running versions in the 9.x or 22.x range.\n- Consult the Ivanti advisory linked below for specific patch and mitigation guidance, as it covers both this vulnerability and the related authentication bypass.\n- This vulnerability is listed in the CISA Known Exploited Vulnerabilities catalogue, which means it has been actively exploited in the wild and should be treated as a priority for patching.\n- Review the CISA advisory linked below for any additional recommended actions or deadlines that may apply to your organisation.\n\n## Reference\n\nAdvisories documenting the vulnerability:\n\nIvanti, the affected software vendor: https://forums.ivanti.com/s/article/CVE-2023-46805-Authentication-Bypass-CVE-2024-21887-Command-Injection-for-Ivanti-Connect-Secure-and-Ivanti-Policy-Secure-Gateways?language=en_US\n\nCISA Known Exploited Vulnerabilities catalogue: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2024-21887\n\nThird-party writeup on Packet Storm Security: http://packetstormsecurity.com/files/176668/Ivanti-Connect-Secure-Unauthenticated-Remote-Code-Execution.html",
+    "timestamp": "2026-07-27T16:48:21.738675+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-26084",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2021-43940",
+      "CVE-2023-22512",
+      "CVE-2024-21672",
+      "CVE-2023-22518",
+      "CVE-2020-29450"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Atlassian Confluence Server and Data Center, a widely used team collaboration and wiki platform.\n- The flaw is an OGNL injection vulnerability, where OGNL is an expression language used internally by the application that can be manipulated to run commands on the server.\n- The affected versions are those before 6.13.23, from 6.14.0 before 7.4.11, from 7.5.0 before 7.11.6, and from 7.12.0 before 7.12.5.\n- A successful attack could allow someone to run arbitrary code on the server, meaning they could execute any command the server is capable of running.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach the vulnerable system remotely over the internet or an internal network.\n- No login credentials and no user interaction are needed, so anyone who can reach the Confluence instance can attempt the attack without any prior access.\n- Confidentiality, integrity and availability are all rated HIGH, so an attacker could read sensitive data, modify content, and disrupt the service entirely.\n- This vulnerability is listed in the CISA Known Exploited Vulnerabilities catalogue, which means it has been observed in use by attackers in real-world incidents.\n\n## What action to take\n\n- Check whether any Confluence Server or Data Center instance you run falls within the affected version ranges listed above.\n- Update to one of the fixed versions: 6.13.23, 7.4.11, 7.11.6, or 7.12.5, or any later release beyond those.\n- Consult the Atlassian issue tracker entry linked below for the vendor's own guidance and patch details.\n- If you cannot update immediately, review the CISA advisory for any interim mitigations and prioritise this fix given that the vulnerability is actively exploited.\n\n## Reference\n\nAtlassian issue tracker entry for this vulnerability:\nhttps://jira.atlassian.com/browse/CONFSERVER-67940\n\nCISA Known Exploited Vulnerabilities catalogue entry:\nhttps://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2021-26084\n\nThird-party technical writeup on Packet Storm Security:\nhttp://packetstormsecurity.com/files/167449/Atlassian-Confluence-Namespace-OGNL-Injection.html",
+    "timestamp": "2026-07-27T16:48:33.985731+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-26084",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2021-43940",
+      "CVE-2023-22512",
+      "CVE-2024-21672",
+      "CVE-2023-22518",
+      "CVE-2020-29450"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Atlassian Confluence Server and Confluence Data Center, which are widely used team collaboration and wiki platforms.\n- The affected versions are those before 6.13.23, from 6.14.0 before 7.4.11, from 7.5.0 before 7.11.6, and from 7.12.0 before 7.12.5.\n- The flaw is an OGNL injection vulnerability, where OGNL is an expression language used internally by the application to process certain inputs.\n- When the application fails to properly restrict what OGNL expressions it will evaluate, an attacker can inject their own expressions and the server will execute them as code.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach this remotely over the internet or an internal network wherever Confluence is exposed.\n- No login and no user interaction are needed, meaning anyone who can reach the Confluence instance can attempt this without credentials or any action from a legitimate user.\n- Confidentiality, integrity and availability are all rated HIGH, so a successful attack could let someone read sensitive data, modify content or configuration, and disrupt the service entirely.\n- Because the attacker can execute arbitrary code on the server, they could potentially take full control of the underlying system running Confluence.\n\n## What action to take\n\n- Check whether any Confluence Server or Data Center instance you run falls within the affected version ranges listed above.\n- Upgrade to one of the fixed versions: 6.13.23, 7.4.11, 7.11.6, or 7.12.5, or any later release beyond those.\n- The Atlassian Jira issue linked below contains the vendor's own guidance and details on the fix.\n- If your instance is internet-facing and not yet patched, treat this with priority, as the vulnerability requires no authentication and is listed in the CISA Known Exploited Vulnerabilities catalogue, confirming it has been used in real attacks.\n\n## Reference\n\nAdvisories and resources documenting the vulnerability:\nAtlassian, the affected software vendor: https://jira.atlassian.com/browse/CONFSERVER-67940\nCISA Known Exploited Vulnerabilities catalogue: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2021-26084\nPacket Storm Security, a third-party writeup: http://packetstormsecurity.com/files/167449/Atlassian-Confluence-Namespace-OGNL-Injection.html",
+    "timestamp": "2026-07-27T16:48:47.640277+00:00"
+  },
+  {
+    "cve_id": "CVE-2024-3400",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2021-3045",
+      "CVE-2025-0114",
+      "CVE-2024-5913",
+      "CVE-2020-2039",
+      "CVE-2025-4614"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Palo Alto Networks PAN-OS software, the operating system that runs on Palo Alto firewalls, in specific versions where the GlobalProtect feature is enabled with a particular configuration.\n- GlobalProtect is the VPN and remote access feature built into these firewalls.\n- The flaw allows an attacker to create arbitrary files on the system, which leads to command injection, meaning the attacker can make the firewall run commands of their choosing with root (full administrative) privileges.\n- Cloud NGFW, Panorama appliances, and Prisma Access are not affected by this vulnerability.\n\n## How it can be exploited\n\n- The attack vector is NETWORK and requires no login and no user interaction, so an attacker can reach and exploit a vulnerable firewall remotely without any credentials or help from a user.\n- Successful exploitation gives the attacker the ability to run arbitrary code with root privileges, which is the highest level of access on the device.\n- Confidentiality, integrity, and availability are all rated HIGH, meaning an attacker could read sensitive data, modify the firewall's configuration or behaviour, and disrupt its operation.\n- This vulnerability has been exploited in the wild and is listed in CISA's Known Exploited Vulnerabilities catalogue, confirming that real-world attacks have occurred.\n\n## What action to take\n\n- Check whether any Palo Alto firewall is running an affected version of PAN-OS with the GlobalProtect feature enabled, and consult the vendor advisory for the specific version and configuration combinations that are vulnerable.\n- Apply the patches or mitigations described in the Palo Alto Networks security advisory linked below as soon as possible.\n- Review the Volexity and Unit 42 write-ups linked below for indicators of compromise that can help determine whether a device has already been targeted.\n- If immediate patching is not possible, follow the vendor's recommended interim mitigations detailed in their advisory.\n\n## Reference\n\nAdvisories and write-ups documenting the vulnerability:\n- Palo Alto Networks security advisory (vendor): https://security.paloaltonetworks.com/CVE-2024-3400\n- Unit 42 threat research (vendor research team): https://unit42.paloaltonetworks.com/cve-2024-3400/\n- Palo Alto Networks blog post (vendor): https://www.paloaltonetworks.com/blog/2024/04/more-on-the-pan-os-cve/\n- Volexity blog post (independent researcher who discovered exploitation): https://www.volexity.com/blog/2024/04/12/zero-day-exploitation-of-unauthenticated-remote-code-execution-vulnerability-in-globalprotect-cve-2024-3400/\n- CISA Known Exploited Vulnerabilities catalogue: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2024-3400",
+    "timestamp": "2026-07-27T16:49:03.373586+00:00"
+  },
+  {
+    "cve_id": "CVE-2024-3400",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2021-3045",
+      "CVE-2025-0114",
+      "CVE-2024-5913",
+      "CVE-2020-2039",
+      "CVE-2025-4614"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Palo Alto Networks PAN-OS software, which is the operating system that runs on Palo Alto firewalls.\n- The flaw is specifically in the GlobalProtect feature, which is the VPN and remote access component of the firewall.\n- Only specific PAN-OS versions with distinct feature configurations are affected, so not every PAN-OS installation is vulnerable.\n- Cloud NGFW, Panorama appliances, and Prisma Access are not impacted by this vulnerability.\n\n## How it can be exploited\n\n- The vulnerability is a command injection through arbitrary file creation, meaning an attacker can create files on the firewall in a way that causes the system to run attacker-controlled commands.\n- The attack vector is NETWORK and requires no login and no user interaction, so an unauthenticated attacker can reach and exploit this remotely without anyone needing to click or approve anything.\n- Successful exploitation allows the attacker to execute arbitrary code with root privileges, which is the highest level of access on the firewall, giving full control over the device.\n- Confidentiality, integrity, and availability are all rated HIGH, meaning an attacker could read sensitive data, modify firewall configuration or traffic handling, and disrupt the device entirely.\n\n## What action to take\n\n- Check whether any Palo Alto firewalls in your environment are running affected PAN-OS versions with GlobalProtect enabled, since only that combination is vulnerable.\n- Consult the Palo Alto security advisory linked below for the exact affected versions and available patches or mitigations.\n- Review the Volexity and Unit 42 write-ups linked below, as this vulnerability has been exploited in the wild and those sources provide indicators of compromise to help determine whether your devices have already been targeted.\n- Apply the vendor-provided fix as soon as possible, following the guidance in the Palo Alto advisory.\n\n## Reference\n\nAdvisories and write-ups documenting the vulnerability:\nPalo Alto Networks, the affected software vendor: https://security.paloaltonetworks.com/CVE-2024-3400\nUnit 42, Palo Alto Networks threat research: https://unit42.paloaltonetworks.com/cve-2024-3400/\nPalo Alto Networks blog with additional context: https://www.paloaltonetworks.com/blog/2024/04/more-on-the-pan-os-cve/\nVolexity, the security firm that reported exploitation: https://www.volexity.com/blog/2024/04/12/zero-day-exploitation-of-unauthenticated-remote-code-execution-vulnerability-in-globalprotect-cve-2024-3400/\nCISA Known Exploited Vulnerabilities catalog: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2024-3400",
+    "timestamp": "2026-07-27T16:49:18.730086+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-42013",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2026-44417",
+      "CVE-2024-38476",
+      "CVE-2024-39884",
+      "CVE-2023-32679",
+      "CVE-2022-24969"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Apache HTTP Server, one of the most widely used web servers, in versions 2.4.49 and 2.4.50 only.\n- The vulnerability is a path traversal flaw, which means an attacker can craft a URL that tricks the server into accessing files outside the directories it is supposed to serve.\n- This issue exists because a previous fix for a related vulnerability (CVE-2021-41773) in version 2.4.50 was incomplete and did not fully close the path traversal route.\n- If CGI scripts (programs the server can run on behalf of a visitor) are enabled for the affected paths, the flaw can also allow an attacker to run arbitrary code on the server.\n\n## How it can be exploited\n\n- The attack vector is NETWORK and requires no login and no user interaction, so anyone who can reach the server over the internet can attempt it without credentials.\n- The attacker sends a specially crafted URL to the server that bypasses directory restrictions set by Alias-like directives, which are configuration rules that map URLs to specific folders on disk.\n- If the server's configuration does not explicitly deny access to files outside the intended directories (using the \"require all denied\" default), the attacker can read those files.\n- When CGI execution is also enabled on those paths, the attacker can go beyond reading files and execute commands on the server, giving full control over confidentiality, integrity and availability.\n\n## What action to take\n\n- Check whether any Apache HTTP Server instance is running version 2.4.49 or 2.4.50, as no other versions are affected.\n- Upgrade to a version later than 2.4.50 as described in the Apache HTTP Server security page listed in the references.\n- Review your server configuration to ensure that directories outside the intended document root have \"require all denied\" set, and that CGI execution is not enabled on paths that do not need it.\n- Consult the vendor advisory and the distribution-specific advisories from Fedora, Gentoo, Oracle, Cisco and NetApp listed below for platform-specific upgrade guidance.\n\n## Reference\n\nAdvisories and resources documenting the vulnerability:\n\nApache HTTP Server, the affected software vendor: https://httpd.apache.org/security/vulnerabilities_24.html\n\nCISA Known Exploited Vulnerabilities catalog: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2021-42013\n\nJVN (Japan Vulnerability Notes): http://jvn.jp/en/jp/JVN51106450/index.html\n\nGentoo: https://security.gentoo.org/glsa/202208-20\n\nNetApp: https://security.netapp.com/advisory/ntap-20211029-0009/\n\nCisco: https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-apache-httpd-pathtrv-LAzg68cZ\n\nOracle (January 2022): https://www.oracle.com/security-alerts/cpujan2022.html\n\nOracle (April 2022): https://www.oracle.com/security-alerts/cpuapr2022.html\n\nOpenwall mailing list discussion: http://www.openwall.com/lists/oss-security/2021/10/07/6\n\nPacket Storm exploit references: http://packetstormsecurity.com/files/164501/Apache-HTTP-Server-2.4.50-Path-Traversal-Code-Execution.html",
+    "timestamp": "2026-07-27T16:49:42.010604+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-42013",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2026-44417",
+      "CVE-2024-38476",
+      "CVE-2024-39884",
+      "CVE-2023-32679",
+      "CVE-2022-24969"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Apache HTTP Server, the widely used open-source web server, in versions 2.4.49 and 2.4.50 only.\n- The flaw is a path traversal vulnerability, which means an attacker can craft a URL that tricks the server into accessing files outside the directories it was configured to serve.\n- This vulnerability exists because an earlier fix for a related issue (CVE-2021-41773) in version 2.4.50 was incomplete, leaving the same type of attack still possible.\n- If CGI scripts are enabled for the affected directory paths, the flaw can also allow remote code execution, meaning an attacker could run commands on the server.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach this remotely over the internet or any network the server is exposed to.\n- No login and no user interaction are needed, so anyone who can send a request to the server can attempt this without any prior access.\n- Confidentiality, integrity and availability are all rated HIGH, so an attacker could read sensitive files, modify data, or disrupt the server entirely.\n- The attack succeeds when files outside the configured directories are not protected by the default \"require all denied\" setting, and the risk escalates further if CGI is enabled on those paths.\n\n## What action to take\n\n- Check whether any Apache HTTP Server instance is running version 2.4.49 or 2.4.50, since no other versions are affected.\n- Upgrade to a version later than 2.4.50 as described in the Apache HTTP Server security page listed in the references below.\n- As an immediate measure, confirm that directories outside those intended to be served have the \"require all denied\" configuration applied, and review whether CGI scripts are enabled where they are not needed.\n- Consult the vendor advisory and the distribution-specific advisories from Fedora, Gentoo, Oracle, Cisco and NetApp in the references for platform-specific upgrade guidance.\n\n## Reference\n\nAdvisories and resources documenting the vulnerability:\n\nApache HTTP Server, the affected software vendor: https://httpd.apache.org/security/vulnerabilities_24.html\n\nCISA Known Exploited Vulnerabilities catalog: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2021-42013\n\nJVN advisory: http://jvn.jp/en/jp/JVN51106450/index.html\n\nCisco advisory: https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-apache-httpd-pathtrv-LAzg68cZ\n\nNetApp advisory: https://security.netapp.com/advisory/ntap-20211029-0009/\n\nGentoo advisory: https://security.gentoo.org/glsa/202208-20\n\nOracle advisory (January 2022): https://www.oracle.com/security-alerts/cpujan2022.html\n\nOracle advisory (April 2022): https://www.oracle.com/security-alerts/cpuapr2022.html\n\noss-security mailing list discussion: http://www.openwall.com/lists/oss-security/2021/10/07/6\n\nPacket Storm exploit references: http://packetstormsecurity.com/files/164501/Apache-HTTP-Server-2.4.50-Path-Traversal-Code-Execution.html",
+    "timestamp": "2026-07-27T16:50:04.106107+00:00"
+  },
+  {
+    "cve_id": "CVE-2020-8958",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2021-30234",
+      "CVE-2022-45045",
+      "CVE-2021-20804",
+      "CVE-2021-20708",
+      "CVE-2022-30525"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Guangzhou 1GE ONU devices, specifically models V2801RW and V2804RGW, which are fibre broadband terminal units used to connect premises to a network provider.\n- The affected firmware versions range from 1.9.1-181203 through 2.9.0-181024 on both models.\n- The flaw is in the \"Dest IP Address\" field on the device's ping diagnostic page, found at the path boaform/admin/formPing.\n- The field does not properly filter special characters, so an attacker can inject operating system commands alongside what should be a simple IP address.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach the device remotely over the network without needing physical access.\n- Privileges required are HIGH, meaning the attacker needs an administrative or similarly elevated account on the device before they can use this flaw.\n- No user interaction is needed, so once the attacker has valid credentials they can exploit the vulnerability without anyone else doing anything.\n- Confidentiality, integrity and availability are all rated HIGH, so a successful attack could allow full control of the device, including reading its configuration, changing settings and disrupting its operation.\n\n## What action to take\n\n- Check whether any Guangzhou 1GE ONU V2801RW or V2804RGW devices on your network are running firmware versions in the affected range.\n- No vendor patch or updated firmware is mentioned in the provided references, so contact the device manufacturer (often branded as V-SOL) to ask whether a fix is available.\n- Because exploitation requires an administrative login, ensure that default or weak credentials on these devices have been changed to strong, unique passwords.\n- Review the researcher's writeup linked below for further technical detail on the vulnerability.\n\n## Reference\n\nResearcher writeup with proof of concept:\nhttps://github.com/qurbat/gpon\n\nResearcher blog post documenting the command injection:\nhttps://www.karansaini.com/os-command-injection-v-sol/\n\nVendor product page for V2801RW:\nhttps://www.gpononu.com/dual-mode-onu/1GE-Router-WiFi-ONU.html\n\nVendor product page for V2804RGW:\nhttps://www.gpononu.com/gpon-ont/4ge-epon-onu-v2804ew.html",
+    "timestamp": "2026-07-27T16:50:22.317049+00:00"
+  },
+  {
+    "cve_id": "CVE-2020-8958",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2021-30234",
+      "CVE-2022-45045",
+      "CVE-2021-20804",
+      "CVE-2021-20708",
+      "CVE-2022-30525"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Guangzhou 1GE ONU devices, specifically the V2801RW and V2804RGW models, which are fibre-optic network terminal units used to connect premises to a broadband provider's network.\n- The affected firmware versions range from 1.9.1-181203 through 2.9.0-181024 on both models.\n- The flaw is an OS command injection in the \"Dest IP Address\" field of the ping diagnostic form, found at the path boaform/admin/formPing.\n- OS command injection means that an attacker can insert extra operating system commands into an input field, and the device will run them as though they were legitimate system instructions.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach the vulnerable form remotely without needing physical access to the device.\n- Privileges required is HIGH, meaning the attacker needs an administrative or similarly elevated account on the device before they can use this flaw.\n- No user interaction is needed, so once an attacker has the required credentials they can exploit this without anyone else doing anything.\n- Confidentiality, integrity and availability are all rated HIGH, so a successful attack could let the attacker read data on the device, change its configuration, or disrupt its operation entirely.\n\n## What action to take\n\n- Check whether any Guangzhou 1GE ONU V2801RW or V2804RGW devices are running firmware in the affected range of 1.9.1-181203 through 2.9.0-181024.\n- No vendor patch or updated firmware is listed in the references provided, so contact the device manufacturer (often branded as V-SOL) to ask whether a fixed firmware version is available.\n- Because exploitation requires administrative credentials, ensure that default or weak admin passwords on these devices have been changed to strong, unique ones.\n- Review the researcher writeup linked below for further technical detail on how the vulnerability works.\n\n## Reference\n\nResearcher writeup with technical details:\nhttps://www.karansaini.com/os-command-injection-v-sol/\n\nThird-party repository documenting the vulnerability:\nhttps://github.com/qurbat/gpon\n\nProduct page for the V2801RW:\nhttps://www.gpononu.com/dual-mode-onu/1GE-Router-WiFi-ONU.html\n\nProduct page for the V2804RGW:\nhttps://www.gpononu.com/gpon-ont/4ge-epon-onu-v2804ew.html",
+    "timestamp": "2026-07-27T16:50:39.212310+00:00"
+  },
+  {
+    "cve_id": "CVE-2023-43661",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2024-38476",
+      "CVE-2022-49828",
+      "CVE-2024-39884",
+      "CVE-2024-5005",
+      "CVE-2023-32679"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Cachet, an open-source status page system used to communicate service availability to users.\n- Versions prior to the 2.4 branch are affected.\n- The flaw is in a template functionality that allows users to create templates, where insufficient input filtering combined with an old version of the Twig templating engine allows arbitrary code to run on the server.\n- This is a server-side template injection, meaning that user-supplied input is processed as code by the templating engine rather than being treated as plain text.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach this remotely over the internet.\n- Privileges required are LOW, meaning the attacker needs a basic authenticated account on the Cachet instance but does not need administrator access.\n- No user interaction is needed, so the attacker can trigger the vulnerability without anyone else clicking a link or performing an action.\n- Confidentiality, integrity and availability are all rated HIGH, meaning a successful exploit could allow the attacker to read sensitive data, modify information, or disrupt the service by executing arbitrary code on the server.\n\n## What action to take\n\n- Check whether your Cachet installation is running a version prior to the 2.4 branch.\n- The fix is contained in commit 6fb043e109d2a262ce3974e863c54e9e5f5e0587 on the 2.4 branch, so updating to that branch or later will address the issue.\n- Review the GitHub security advisory linked below for full details on the vulnerability and the patch.\n- If you cannot update immediately, consider restricting which users have the ability to create or edit templates.\n\n## Reference\n\nAdvisories and patches documenting the vulnerability:\nPatch commit on the Cachet repository: https://github.com/cachethq/cachet/commit/6fb043e109d2a262ce3974e863c54e9e5f5e0587\nGitHub security advisory for Cachet: https://github.com/cachethq/cachet/security/advisories/GHSA-hv79-p62r-wg3p",
+    "timestamp": "2026-07-27T16:51:01.382659+00:00"
+  },
+  {
+    "cve_id": "CVE-2023-43661",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2024-38476",
+      "CVE-2022-49828",
+      "CVE-2024-39884",
+      "CVE-2024-5005",
+      "CVE-2023-32679"
+    ],
+    "output_text": "What is vulnerable\n\n- This affects Cachet, an open-source status page system used to show service availability to users.\n- All versions prior to the 2.4 branch are affected.\n- The flaw is in a template functionality that lets users create templates, where the input is not properly filtered.\n- Cachet uses an old version of Twig, a templating engine that turns template markup into rendered pages, and the combination of poor filtering and the outdated engine allows code to run on the server.\n\nHow it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach this remotely over the internet.\n- Privileges required is LOW, meaning the attacker needs a valid user account on the Cachet instance but does not need administrator access.\n- No user interaction is needed, so once the attacker has a low-privilege account they can exploit this without anyone else doing anything.\n- Confidentiality, integrity and availability are all rated HIGH, which means a successful attack could let the attacker read data on the server, change it, or disrupt the service entirely.\n\nWhat action to take\n\n- Check whether your Cachet installation is running a version prior to the 2.4 branch.\n- The fix is contained in commit 6fb043e109d2a262ce3974e863c54e9e5f5e0587 on the 2.4 branch, so updating to that branch or later will address the issue.\n- Review the GitHub security advisory linked below for full details on the vulnerability and the patch.\n- If you cannot update immediately, consider restricting which users can create or edit templates as a temporary measure, though the references do not describe this as an official workaround.\n\nReference\n\nAdvisories and patch documenting the vulnerability:\nCachet patch commit on GitHub: https://github.com/cachethq/cachet/commit/6fb043e109d2a262ce3974e863c54e9e5f5e0587\nCachet GitHub security advisory: https://github.com/cachethq/cachet/security/advisories/GHSA-hv79-p62r-wg3p",
+    "timestamp": "2026-07-27T16:51:16.382140+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-21974",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2020-3971",
+      "CVE-2026-8121",
+      "CVE-2020-12861",
+      "CVE-2021-25479",
+      "CVE-2022-2329"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects VMware ESXi, a hypervisor used to run virtual machines on physical servers, in versions 7.0 before ESXi70U1c-17325551, 6.7 before ESXi670-202102401-SG, and 6.5 before ESXi650-202102101-SG.\n- The flaw is in OpenSLP, a service discovery protocol that ESXi uses and exposes on network port 427.\n- It is a heap overflow vulnerability, meaning the OpenSLP service writes data beyond the memory area it was given, which can corrupt nearby memory and allow an attacker to run their own code.\n- All three impact areas of confidentiality, integrity, and availability are rated HIGH, so a successful attack could expose data, alter the system, or take it offline.\n\n## How it can be exploited\n\n- The attack vector is ADJACENT_NETWORK, which means the attacker must be on the same local network segment as the ESXi host rather than attacking from the internet at large.\n- No login credentials and no user interaction are needed, so anyone with network access to port 427 on the same segment can attempt the attack.\n- A successful exploit results in remote code execution, meaning the attacker can run arbitrary commands on the ESXi host.\n- Because ESXi is a hypervisor managing multiple virtual machines, compromising it could affect every virtual machine running on that host.\n\n## What action to take\n\n- Check whether any ESXi hosts are running affected versions and update to at least ESXi70U1c-17325551 for version 7.0, ESXi670-202102401-SG for version 6.7, or ESXi650-202102101-SG for version 6.5.\n- The VMware security advisory listed in the references provides full details on the patches and affected builds.\n- If immediate patching is not possible, consider restricting network access to port 427 on ESXi hosts so that only trusted systems on the local segment can reach the OpenSLP service.\n- Review the vendor and researcher advisories below for further technical background.\n\n## Reference\n\nAdvisories documenting the vulnerability:\nVMware, the affected software vendor: https://www.vmware.com/security/advisories/VMSA-2021-0002.html\nZero Day Initiative, the disclosing researcher: https://www.zerodayinitiative.com/advisories/ZDI-21-250/\nPacket Storm Security, a third-party writeup: http://packetstormsecurity.com/files/162957/VMware-ESXi-OpenSLP-Heap-Overflow.html",
+    "timestamp": "2026-07-27T16:51:37.068157+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-21974",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2020-3971",
+      "CVE-2026-8121",
+      "CVE-2020-12861",
+      "CVE-2021-25479",
+      "CVE-2022-2329"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects VMware ESXi, a hypervisor used to run virtual machines on physical servers, in versions 7.0 before ESXi70U1c-17325551, 6.7 before ESXi670-202102401-SG, and 6.5 before ESXi650-202102101-SG.\n- The flaw is in OpenSLP, a service that ESXi uses for network service discovery, listening on port 427.\n- It is a heap overflow vulnerability, which means the OpenSLP service writes data beyond the memory area it was given, potentially overwriting other data or instructions in memory.\n- All three impact areas of confidentiality, integrity, and availability are rated HIGH, so a successful attack could allow full control over the ESXi host.\n\n## How it can be exploited\n\n- The attack vector is ADJACENT_NETWORK, which means the attacker must be on the same network segment as the ESXi host rather than reaching it from anywhere on the internet.\n- No login credentials and no user interaction are needed, so anyone with network access to port 427 on that local segment can attempt the attack.\n- A successful exploit triggers remote code execution, meaning the attacker can run their own commands on the ESXi host.\n- Because ESXi is a hypervisor managing virtual machines, compromising it could affect every virtual machine running on that host.\n\n## What action to take\n\n- Check whether any ESXi hosts are running affected versions and whether port 427 (OpenSLP) is reachable on the local network.\n- Update ESXi to the patched versions listed in the VMware security advisory: 7.0 ESXi70U1c-17325551, 6.7 ESXi670-202102401-SG, or 6.5 ESXi650-202102101-SG or later.\n- If patching is not immediately possible, consider disabling the OpenSLP service on ESXi hosts to remove the attack surface, and consult the VMware advisory for guidance on doing so.\n- Review the VMware and Zero Day Initiative advisories linked below for full remediation details.\n\n## Reference\n\nAdvisories and references documenting the vulnerability:\nVMware, the affected software vendor: https://www.vmware.com/security/advisories/VMSA-2021-0002.html\nZero Day Initiative, the disclosing researcher: https://www.zerodayinitiative.com/advisories/ZDI-21-250/\nPacket Storm Security, a third-party reference: http://packetstormsecurity.com/files/162957/VMware-ESXi-OpenSLP-Heap-Overflow.html",
+    "timestamp": "2026-07-27T16:51:52.421840+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-22717",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2022-23447",
+      "CVE-2025-62630",
+      "CVE-2024-3322",
+      "CVE-2025-52452",
+      "CVE-2025-48817"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects C-Bus Toolkit, a Schneider Electric tool used to configure C-Bus building automation systems, in version 1.15.7 and earlier.\n- The flaw is a path traversal vulnerability, which means the software does not properly restrict file paths, allowing access to files and directories outside the intended location.\n- When the toolkit processes configuration files, an attacker can exploit this weakness to run arbitrary code on the affected system.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach the vulnerable software remotely without needing physical access.\n- A low level of privilege is required, meaning the attacker needs some form of authenticated access but not full administrative rights.\n- No user interaction is needed, so the attack does not depend on someone clicking a link or opening a file.\n- Confidentiality, integrity and availability are all rated HIGH, so a successful attack could allow the attacker to read sensitive data, modify files and disrupt the system's operation through remote code execution.\n\n## What action to take\n\n- Check whether any installation of C-Bus Toolkit is running version 1.15.7 or earlier.\n- Consult the Schneider Electric security notification linked below for details on the fix and any updated version of the toolkit.\n- Review the Zero Day Initiative advisory linked below for additional technical background on the vulnerability.\n- If no updated version is available for your environment, contact Schneider Electric directly for guidance on mitigating the risk.\n\n## Reference\n\nAdvisories documenting the vulnerability:\nSchneider Electric, the affected software vendor: https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2021-103-01\nZero Day Initiative, the disclosing researcher: https://www.zerodayinitiative.com/advisories/ZDI-21-447/",
+    "timestamp": "2026-07-27T16:52:03.861069+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-22717",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2022-23447",
+      "CVE-2025-62630",
+      "CVE-2024-3322",
+      "CVE-2025-52452",
+      "CVE-2025-48817"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects C-Bus Toolkit, a Schneider Electric tool used to configure C-Bus building automation systems, in version 1.15.7 and earlier.\n- The flaw is a path traversal vulnerability, which means the software does not properly restrict file paths it receives, so an attacker can reference files or directories outside the intended location.\n- In this case the issue occurs when the toolkit processes configuration files.\n- Because confidentiality, integrity and availability are all rated HIGH, a successful attack could expose data, modify files and disrupt the system.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach the vulnerable component remotely without needing physical or local access.\n- A low level of privilege is required, meaning the attacker needs some form of authenticated access but not full administrative rights.\n- No user interaction is needed, so the attack does not depend on someone clicking a link or opening a file.\n- By supplying a crafted configuration file that manipulates file paths, an attacker can achieve remote code execution, which means running arbitrary commands on the machine hosting the toolkit.\n\n## What action to take\n\n- Check whether any installation of C-Bus Toolkit is running version 1.15.7 or earlier.\n- Consult the Schneider Electric security notification linked below for the recommended update or mitigation steps.\n- Review the Zero Day Initiative advisory for additional technical detail on the vulnerability.\n- If no patch is immediately available for your environment, consider restricting network access to the toolkit to trusted users only as an interim measure.\n\n## Reference\n\nAdvisories documenting the vulnerability:\nSchneider Electric, the affected software vendor: https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2021-103-01\nZero Day Initiative, the disclosing researcher: https://www.zerodayinitiative.com/advisories/ZDI-21-447/",
+    "timestamp": "2026-07-27T16:52:17.285196+00:00"
+  },
+  {
+    "cve_id": "CVE-2020-8260",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2020-8218",
+      "CVE-2020-8220",
+      "CVE-2024-23967",
+      "CVE-2020-17407",
+      "CVE-2022-43971"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Pulse Connect Secure, a widely used VPN gateway appliance, in versions earlier than 9.1R9.\n- The flaw is in the admin web interface, which is the management console used by administrators to configure the device.\n- The vulnerability involves uncontrolled gzip extraction, meaning the system unpacks compressed archive data without properly checking its contents, which allows an attacker to place or overwrite files in unintended locations.\n- Because confidentiality, integrity and availability are all rated HIGH, a successful attack could expose sensitive data, alter system files and disrupt the service entirely.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach the admin web interface remotely without needing physical access to the device.\n- Privileges required is HIGH, meaning the attacker must already hold a valid administrator account on the appliance before they can exploit this flaw.\n- No user interaction is needed, so once an attacker has admin credentials they can trigger the vulnerability on their own without anyone else clicking or approving anything.\n- This vulnerability is listed in the CISA Known Exploited Vulnerabilities catalogue, which means it has been observed in real-world attacks.\n\n## What action to take\n\n- Check whether any Pulse Connect Secure appliance in your environment is running a version earlier than 9.1R9.\n- Upgrade to version 9.1R9 or later, following the guidance in the vendor advisory linked below.\n- Review administrator account access to the appliance and ensure credentials have not been compromised, since exploitation requires an authenticated admin session.\n- Consult the CISA Known Exploited Vulnerabilities entry for any additional remediation deadlines or guidance that may apply to your organisation.\n\n## Reference\n\nAdvisories and resources documenting the vulnerability:\nPulse Secure, the affected software vendor: https://kb.pulsesecure.net/articles/Pulse_Security_Advisories/SA44601\nCISA Known Exploited Vulnerabilities catalogue: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2020-8260\nPacket Storm Security, a third-party writeup: http://packetstormsecurity.com/files/160619/Pulse-Secure-VPN-Remote-Code-Execution.html",
+    "timestamp": "2026-07-27T16:52:31.954972+00:00"
+  },
+  {
+    "cve_id": "CVE-2020-8260",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2020-8218",
+      "CVE-2020-8220",
+      "CVE-2024-23967",
+      "CVE-2020-17407",
+      "CVE-2022-43971"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Pulse Connect Secure, a VPN appliance used for remote access, in versions earlier than 9.1R9.\n- The flaw is in the admin web interface, which is the management console used by administrators to configure the appliance.\n- The issue involves uncontrolled gzip extraction, meaning the system unpacks compressed archive data without properly checking its contents, which allows an attacker to place or overwrite files in unintended locations.\n- Because confidentiality, integrity and availability are all rated HIGH, a successful attack could expose sensitive data, alter system files and disrupt the service entirely.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach the admin web interface remotely without needing physical access.\n- Privileges required is HIGH, meaning the attacker must already hold a valid administrator account on the appliance before they can attempt this.\n- No user interaction is needed, so once an attacker has admin credentials they can carry out the attack on their own without anyone else clicking or approving anything.\n- This vulnerability has been observed in real-world attacks and is listed in the CISA Known Exploited Vulnerabilities catalogue, which confirms it has been used against organisations in practice.\n\n## What action to take\n\n- Check whether any Pulse Connect Secure appliance in your environment is running a version earlier than 9.1R9.\n- Upgrade to version 9.1R9 or later, as described in the vendor security advisory linked below.\n- Review administrator accounts on the appliance for any unexpected or compromised credentials, since exploitation requires an authenticated admin session.\n- Consult the vendor advisory and the CISA catalogue entry in the references for full remediation guidance and indicators of compromise.\n\n## Reference\n\nVendor security advisory from Pulse Secure:\nhttps://kb.pulsesecure.net/articles/Pulse_Security_Advisories/SA44601\n\nCISA Known Exploited Vulnerabilities catalogue entry:\nhttps://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2020-8260\n\nThird-party technical writeup on Packet Storm Security:\nhttp://packetstormsecurity.com/files/160619/Pulse-Secure-VPN-Remote-Code-Execution.html",
+    "timestamp": "2026-07-27T16:52:45.342256+00:00"
+  },
+  {
+    "cve_id": "CVE-2023-44221",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2025-32820",
+      "CVE-2026-20103",
+      "CVE-2021-43928",
+      "CVE-2026-6644",
+      "CVE-2023-20247"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects the SonicWall SMA100 series, a secure remote access appliance, specifically its SSL-VPN management interface.\n- The flaw is an OS command injection vulnerability caused by improper neutralisation of special elements in user input within the management interface.\n- An attacker who already has administrative access to the management interface can inject arbitrary operating system commands that run as the \"nobody\" user, which is a low-privilege account on the underlying system.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach the management interface remotely without needing physical access.\n- The attacker must already hold a valid administrative account on the device, which is why privileges required is rated HIGH.\n- No separate user interaction is needed, so once an attacker has admin credentials they can exploit this without anyone else clicking or approving anything.\n- Confidentiality, integrity and availability are all rated HIGH, meaning a successful attack could expose sensitive data, alter system configuration or disrupt the appliance's operation.\n\n## What action to take\n\n- Check whether any SMA100 series appliances are in use and review the SonicWall advisory linked below for the specific affected firmware versions and available patches.\n- This vulnerability is listed in the CISA Known Exploited Vulnerabilities catalogue, which means it has been observed in real-world attacks and should be treated as a priority for patching.\n- Apply the firmware update described in the SonicWall advisory as soon as possible.\n- Restrict network access to the SSL-VPN management interface to trusted networks only, to reduce the exposure while patching is planned.\n\n## Reference\n\nSonicWall advisory for the affected product:\nhttps://psirt.global.sonicwall.com/vuln-detail/SNWLID-2023-0018\n\nCISA Known Exploited Vulnerabilities catalogue entry:\nhttps://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2023-44221",
+    "timestamp": "2026-07-27T16:52:59.120903+00:00"
+  },
+  {
+    "cve_id": "CVE-2023-44221",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2025-32820",
+      "CVE-2026-20103",
+      "CVE-2021-43928",
+      "CVE-2026-6644",
+      "CVE-2023-20247"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects the SonicWall SMA100 series, a secure remote access appliance, specifically its SSL-VPN management interface.\n- The flaw is an OS command injection vulnerability, which means the management interface does not properly clean special characters out of input before passing it to the operating system.\n- Because of this, an attacker can slip operating system commands into the input, and the system will run them under the \"nobody\" user account.\n- The \"nobody\" account is a low-privilege system account, but commands running under it can still affect confidentiality, integrity and availability of the appliance.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach the management interface remotely without needing physical access.\n- Privileges required are HIGH, meaning the attacker must already hold a valid administrative login on the SMA100 management interface before they can attempt this.\n- No user interaction is needed, so once an attacker has admin credentials they can exploit this without anyone else clicking or approving anything.\n- Confidentiality, integrity and availability are all rated HIGH, so a successful attack could let the attacker read sensitive data, modify the system, or disrupt its operation.\n\n## What action to take\n\n- Check whether any SMA100 appliances in your environment expose their SSL-VPN management interface to the network, and confirm the firmware version running on each.\n- Review the SonicWall advisory linked below for the specific firmware update that addresses this issue and apply it.\n- Because this vulnerability is listed in CISA's Known Exploited Vulnerabilities catalogue, it has been observed in real-world attacks, so treat remediation as a priority.\n- Restrict access to the management interface to trusted networks or IP ranges as an additional safeguard while patching is underway.\n\n## Reference\n\nSonicWall advisory from the affected vendor:\nhttps://psirt.global.sonicwall.com/vuln-detail/SNWLID-2023-0018\n\nCISA Known Exploited Vulnerabilities catalogue entry:\nhttps://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2023-44221",
+    "timestamp": "2026-07-27T16:53:15.596193+00:00"
+  },
+  {
+    "cve_id": "CVE-2020-8655",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2020-11920",
+      "CVE-2024-39347",
+      "CVE-2020-27872",
+      "CVE-2021-34979",
+      "CVE-2024-29228"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects EyesOfNetwork version 5.3, a network monitoring and management platform.\n- The flaw lies in the sudoers configuration, which is the file that controls which users are allowed to run commands with elevated (root) privileges on a Linux system.\n- Specifically, the apache user (the account under which the web server runs) is permitted to execute nmap 7 with root privileges.\n- Because nmap supports custom NSE scripts (small programs that extend its functionality), this permission can be abused to run arbitrary commands as root.\n\n## How it can be exploited\n\n- The attack vector is LOCAL, meaning an attacker needs some form of access to the system rather than being able to exploit it purely over the network.\n- User interaction is REQUIRED, so some action by a legitimate user or administrator is needed for the attack to succeed.\n- An attacker who can act as the apache user can craft a malicious NSE script and have nmap execute it with full root privileges, bypassing normal access controls.\n- Confidentiality, integrity and availability are all rated HIGH, meaning a successful exploit could allow an attacker to read, modify or destroy data and disrupt the system entirely.\n\n## What action to take\n\n- Check whether any instance of EyesOfNetwork 5.3 is deployed in your environment.\n- Review the GitHub issue filed against the EyesOfNetwork project for details on the misconfiguration and any proposed fix.\n- This vulnerability is listed in the CISA Known Exploited Vulnerabilities catalogue, which means it has been observed in real-world attacks, so addressing it should be treated as a priority.\n- Consult the vendor and the referenced sources below for remediation guidance, including how to correct the sudoers configuration.\n\n## Reference\n\nGitHub issue filed against the EyesOfNetwork project:\nhttps://github.com/EyesOfNetworkCommunity/eonconf/issues/8\n\nCISA Known Exploited Vulnerabilities catalogue entry:\nhttps://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2020-8655\n\nPacket Storm Security advisory (remote code execution):\nhttp://packetstormsecurity.com/files/156266/EyesOfNetwork-5.3-Remote-Code-Execution.html\n\nPacket Storm Security advisory (AutoDiscovery target command execution):\nhttp://packetstormsecurity.com/files/156605/EyesOfNetwork-AutoDiscovery-Target-Command-Execution.html",
+    "timestamp": "2026-07-27T16:53:29.948384+00:00"
+  },
+  {
+    "cve_id": "CVE-2020-8655",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2020-11920",
+      "CVE-2024-39347",
+      "CVE-2020-27872",
+      "CVE-2021-34979",
+      "CVE-2024-29228"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects EyesOfNetwork version 5.3, which is a network monitoring and management platform.\n- The flaw is in the sudoers configuration, which is the file that controls which users are allowed to run commands with elevated (root) privileges on a Linux system.\n- Specifically, the apache user (the account that runs the web server) is permitted to execute nmap 7 with root privileges.\n- Because nmap supports custom NSE scripts (small programs written in Lua that nmap can run during a scan), an attacker can craft a malicious script and have it executed as root.\n\n## How it can be exploited\n\n- The attack vector is LOCAL, meaning the attacker needs some form of access to the system rather than being able to reach it purely over the network.\n- User interaction is REQUIRED, so some action by a legitimate user or administrator is needed for the attack to succeed.\n- No prior privileges are listed as required, but the attacker does need to be able to supply a crafted NSE script that nmap will run under the apache user's sudo permissions.\n- Confidentiality, integrity and availability are all rated HIGH, meaning a successful exploit gives the attacker full root-level control over the system.\n\n## What action to take\n\n- Check whether any instance of EyesOfNetwork 5.3 is running in your environment.\n- Review the GitHub issue linked below, which discusses the sudoers misconfiguration and may contain guidance from the project maintainers.\n- If no patch is available from the vendor, consider restricting the sudoers entry so that the apache user cannot pass arbitrary NSE scripts to nmap.\n- This vulnerability is listed in the CISA Known Exploited Vulnerabilities catalogue, so treat remediation as a priority.\n\n## Reference\n\nAdvisories and references documenting the vulnerability:\n\nPacket Storm Security writeup on remote code execution in EyesOfNetwork 5.3: http://packetstormsecurity.com/files/156266/EyesOfNetwork-5.3-Remote-Code-Execution.html\n\nPacket Storm Security writeup on AutoDiscovery target command execution: http://packetstormsecurity.com/files/156605/EyesOfNetwork-AutoDiscovery-Target-Command-Execution.html\n\nGitHub issue discussing the sudoers configuration flaw: https://github.com/EyesOfNetworkCommunity/eonconf/issues/8\n\nCISA Known Exploited Vulnerabilities catalogue entry: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2020-8655",
+    "timestamp": "2026-07-27T16:53:44.779442+00:00"
+  },
+  {
+    "cve_id": "CVE-2023-21608",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2022-34216",
+      "CVE-2022-34230",
+      "CVE-2023-26420",
+      "CVE-2023-44336",
+      "CVE-2023-44372"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Adobe Acrobat Reader in versions 22.003.20282 and earlier, 22.003.20281 and earlier, and 20.005.30418 and earlier.\n- The flaw is a Use After Free vulnerability, which means the software continues to reference a block of memory after it has already been released, leaving that memory in an unpredictable state.\n- An attacker who triggers this flaw can run arbitrary code, meaning they can execute whatever instructions they choose on the victim's machine with the same permissions as the logged-in user.\n\n## How it can be exploited\n\n- The victim must open a malicious file, such as a specially crafted PDF, which is why user interaction is REQUIRED.\n- The attack vector is LOCAL, so the malicious file needs to reach the victim's machine first, for example through an email attachment or a download.\n- No special privileges are needed by the attacker beyond getting the victim to open the file.\n- Confidentiality, integrity and availability are all rated HIGH, so a successful attack could expose data, alter files, or disrupt the system.\n- This vulnerability has been added to the CISA Known Exploited Vulnerabilities catalogue, which means it has been observed in real-world attacks.\n\n## What action to take\n\n- Check whether any installation of Adobe Acrobat Reader is running one of the affected versions listed above.\n- Update to the patched version described in the Adobe security bulletin referenced below, which addresses this issue.\n- Review the CISA Known Exploited Vulnerabilities entry for any additional guidance or deadlines that may apply to your organisation.\n- As a general precaution, avoid opening PDF files from untrusted or unexpected sources until the update is applied.\n\n## Reference\n\nAdobe security bulletin for this vulnerability:\nhttps://helpx.adobe.com/security/products/acrobat/apsb23-01.html\n\nCISA Known Exploited Vulnerabilities catalogue entry:\nhttps://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2023-21608",
+    "timestamp": "2026-07-27T16:53:56.433226+00:00"
+  },
+  {
+    "cve_id": "CVE-2023-21608",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2022-34216",
+      "CVE-2022-34230",
+      "CVE-2023-26420",
+      "CVE-2023-44336",
+      "CVE-2023-44372"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Adobe Acrobat Reader in versions 22.003.20282 and earlier, 22.003.20281 and earlier, and 20.005.30418 and earlier.\n- The flaw is a Use After Free vulnerability, which means the software continues to use a block of memory after it has already been released, leaving it in an unpredictable state that an attacker can manipulate.\n- If exploited, an attacker can run arbitrary code in the context of the current user, meaning they can execute whatever commands that user's account is allowed to run.\n\n## How it can be exploited\n\n- The attack vector is LOCAL, so the attacker needs to get a malicious file onto the victim's machine rather than attacking over the network directly.\n- The victim must open a specially crafted malicious file for the exploit to trigger, which is why user interaction is REQUIRED.\n- No special privileges are needed beyond convincing the user to open the file, so a standard phishing email with an attachment could be enough.\n- Confidentiality, integrity and availability are all rated HIGH, so a successful exploit could let an attacker read sensitive data, modify files, or disrupt the system with the permissions of the logged-in user.\n\n## What action to take\n\n- Check whether any installation of Adobe Acrobat Reader is running one of the affected versions listed above.\n- Adobe has published a security bulletin (APSB23-01) with remediation guidance, linked in the references below.\n- Update to the patched version specified in that bulletin as soon as practical.\n- This vulnerability is listed in the CISA Known Exploited Vulnerabilities catalogue, which means it has been observed in real-world attacks, so it is worth prioritising the update.\n\n## Reference\n\nAdvisories documenting the vulnerability:\nAdobe security bulletin (vendor): https://helpx.adobe.com/security/products/acrobat/apsb23-01.html\nCISA Known Exploited Vulnerabilities catalogue: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2023-21608",
+    "timestamp": "2026-07-27T16:54:06.571164+00:00"
+  },
+  {
+    "cve_id": "CVE-2022-3062",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2021-24961",
+      "CVE-2022-1220",
+      "CVE-2022-2654",
+      "CVE-2022-0503",
+      "CVE-2022-0201"
+    ],
+    "output_text": "What is vulnerable\n\n- This affects the Simple File List plugin for WordPress in versions before 4.4.12.\n- The plugin fails to escape certain parameters before including them in HTML attributes on the page.\n- This creates a Reflected Cross-Site Scripting (XSS) vulnerability, which means an attacker can craft a link that, when clicked, causes the victim's browser to run attacker-supplied code within the context of the WordPress site.\n\nHow it can be exploited\n\n- The attack vector is NETWORK, so an attacker can deliver the malicious link remotely, for example by email or on another website.\n- User interaction is REQUIRED because the victim must click the crafted link for the attack to trigger.\n- No login or special privileges are needed on the attacker's side to construct and send the malicious link.\n- Confidentiality and integrity are both rated LOW while availability is NONE, so a successful attack could expose or alter a limited amount of information in the victim's browser session rather than taking the site down.\n\nWhat action to take\n\n- Update the Simple File List plugin to version 4.4.12 or later, which is the release that addresses this issue.\n- Check the WordPress plugin dashboard to confirm the installed version, as automatic updates may not always apply.\n- Review the linked WPScan advisory for further technical detail and confirmation of the fix.\n\nReference\n\nAdvisory documenting the vulnerability:\nWPScan: https://wpscan.com/vulnerability/2e829bbe-1843-496d-a852-4150fa6d1f7a",
+    "timestamp": "2026-07-27T16:54:14.502775+00:00"
+  },
+  {
+    "cve_id": "CVE-2022-3062",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2021-24961",
+      "CVE-2022-1220",
+      "CVE-2022-2654",
+      "CVE-2022-0503",
+      "CVE-2022-0201"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects the Simple File List plugin for WordPress in versions before 4.4.12.\n- The plugin fails to escape certain parameters before including them in HTML attributes on the page, meaning user-supplied input is reflected back into the page without being made safe.\n- This creates a Reflected Cross-Site Scripting (XSS) vulnerability, where an attacker can craft a link that, when clicked, causes the victim's browser to run attacker-controlled script on the affected site.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can attempt this remotely by sending a specially crafted link to a victim.\n- No login or special privileges are needed on the attacker's side, but the victim must click the malicious link or visit a page containing it, which is why user interaction is REQUIRED.\n- Confidentiality and integrity are both rated LOW while availability is NONE, so the practical impact is that an attacker could read limited information from the victim's session or make small changes on their behalf, such as stealing session cookies or performing actions as the logged-in user.\n\n## What action to take\n\n- Update the Simple File List plugin to version 4.4.12 or later, which is the version that addresses this issue.\n- Check the WordPress plugin dashboard to confirm the installed version and apply the update if it has not already been applied.\n- The linked WPScan advisory provides further technical detail and confirmation of the fix.\n\n## Reference\n\nAdvisory documenting the vulnerability:\nWPScan: https://wpscan.com/vulnerability/2e829bbe-1843-496d-a852-4150fa6d1f7a",
+    "timestamp": "2026-07-27T16:54:31.760094+00:00"
+  },
+  {
+    "cve_id": "CVE-2023-0157",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2024-1037",
+      "CVE-2024-3921",
+      "CVE-2023-2742",
+      "CVE-2024-6669",
+      "CVE-2023-5772"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects the All-In-One Security (AIOS) plugin for WordPress in versions before 5.1.5.\n- The plugin displays log file contents on its admin page but does not properly escape that content before rendering it in the browser.\n- Escaping means converting special characters so the browser treats them as plain text rather than executable code.\n- Because the log content is rendered without escaping, any JavaScript embedded in a log file will run when an administrator views the page.\n\n## How it can be exploited\n\n- An attacker with high-level privileges (administrator or above) can plant a crafted log file containing malicious JavaScript on the server.\n- When another administrator visits the plugin's admin page, the malicious JavaScript runs in their browser session, which is why user interaction is REQUIRED.\n- Confidentiality and integrity are both rated LOW, so the impact is limited to minor information disclosure or small changes rather than full system compromise.\n- Availability is unaffected, so this flaw does not cause downtime or denial of service.\n\n## What action to take\n\n- Update the All-In-One Security (AIOS) plugin to version 5.1.5 or later, which addresses this issue.\n- Review the referenced WPScan advisory for further technical detail and confirmation of the fix.\n- If you run a WordPress multisite environment, check whether any administrator accounts may have been compromised, since the attacker needs high-level access to plant the malicious log file.\n\n## Reference\n\nAdvisory documenting the vulnerability:\nWPScan: https://wpscan.com/vulnerability/8248b550-6485-4108-a701-8446ffa35f06",
+    "timestamp": "2026-07-27T16:54:43.537222+00:00"
+  },
+  {
+    "cve_id": "CVE-2023-0157",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2024-1037",
+      "CVE-2024-3921",
+      "CVE-2023-2742",
+      "CVE-2024-6669",
+      "CVE-2023-5772"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects the All-In-One Security (AIOS) plugin for WordPress in versions before 5.1.5.\n- The plugin has an admin page that displays the contents of log files, but it does not escape the content before rendering it in the browser.\n- Escaping means converting special characters like angle brackets so the browser treats them as plain text rather than executable code.\n- Because the log content is rendered without escaping, any malicious JavaScript placed into a log file will run when the page is viewed.\n\n## How it can be exploited\n\n- An attacker with a high-privilege account such as a WordPress administrator can plant a crafted log file containing malicious JavaScript code.\n- When another administrator visits the plugin's admin page, the JavaScript runs in their browser session, which is a type of attack called cross-site scripting (XSS).\n- User interaction is REQUIRED because a victim administrator must navigate to the affected page for the script to execute.\n- Confidentiality and integrity are both rated LOW and availability is unaffected, so the practical impact is limited to minor information exposure or small changes made through the victim's browser session.\n\n## What action to take\n\n- Update the All-In-One Security (AIOS) plugin to version 5.1.5 or later, which is the version that addresses this issue.\n- Review who holds administrator-level access on your WordPress installations, since only users at that privilege level can introduce the malicious log content.\n- Consult the WPScan advisory linked below for further technical detail and confirmation of the fix.\n\n## Reference\n\nAdvisory documenting the vulnerability:\nWPScan: https://wpscan.com/vulnerability/8248b550-6485-4108-a701-8446ffa35f06",
+    "timestamp": "2026-07-27T16:55:00.127104+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-30970",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2021-30965",
+      "CVE-2022-26746",
+      "CVE-2021-30678",
+      "CVE-2021-30990",
+      "CVE-2022-26776"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Apple macOS in two release lines: macOS Monterey before version 12.1 and macOS Big Sur before version 11.6.2.\n- The flaw is a logic issue in how the operating system manages internal state, meaning the software follows an incorrect decision path under certain conditions.\n- The result is that a malicious application can bypass Privacy preferences, which are the system controls that normally prevent apps from accessing sensitive data such as contacts, photos, or location without the user's explicit permission.\n\n## How it can be exploited\n\n- The attack vector is LOCAL, so the malicious application must already be running on the target Mac rather than being triggered remotely over a network.\n- User interaction is REQUIRED, meaning the user would need to take an action such as downloading and opening the malicious application.\n- No special privileges are needed to carry out the attack beyond what a normal user account provides.\n- Confidentiality is rated HIGH while integrity and availability are NONE, so the primary risk is that protected personal data could be read by the application without the user being aware.\n\n## What action to take\n\n- Update macOS Monterey to version 12.1 or later, or macOS Big Sur to version 11.6.2 or later, as these releases contain the fix.\n- Check the Apple support pages linked below for full details of what each update includes.\n- Be cautious about installing applications from untrusted sources, since the attack requires a malicious application to be running on the machine.\n\n## Reference\n\nAdvisories documenting the vulnerability:\nApple support page for macOS Monterey 12.1: https://support.apple.com/en-us/HT212978\nApple support page for macOS Big Sur 11.6.2: https://support.apple.com/en-us/HT212979",
+    "timestamp": "2026-07-27T16:55:10.877636+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-30970",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2021-30965",
+      "CVE-2022-26746",
+      "CVE-2021-30678",
+      "CVE-2021-30990",
+      "CVE-2022-26776"
+    ],
+    "output_text": "What is vulnerable\n\n- This affects macOS Monterey before version 12.1 and macOS Big Sur before version 11.6.2.\n- The flaw is a logic issue in how the operating system manages state, meaning the system does not correctly track or enforce certain conditions during its decision-making process.\n- A malicious application can use this flaw to bypass Privacy preferences, which are the macOS controls that restrict which apps can access sensitive data such as the camera, microphone, contacts or files.\n\nHow it can be exploited\n\n- The attack vector is LOCAL, so the malicious application needs to be running on the target Mac rather than reaching it over the network.\n- User interaction is REQUIRED, which in practice means the user would need to download and open the malicious application themselves.\n- No special privileges are needed beyond what a normal user already has.\n- Confidentiality is rated HIGH while integrity and availability are NONE, so the main risk is that the application could read data it should not have access to, rather than changing data or disrupting the system.\n\nWhat action to take\n\n- Update macOS Monterey to version 12.1 or later, or macOS Big Sur to version 11.6.2 or later, as these releases contain the fix.\n- The two Apple support pages listed below describe the security content of each update and confirm the fix.\n- If you are unsure whether your Mac is on the correct version, check System Preferences then Software Update to verify.\n\nReference\n\nAdvisories documenting the vulnerability:\nApple security update for macOS Monterey 12.1: https://support.apple.com/en-us/HT212978\nApple security update for macOS Big Sur 11.6.2: https://support.apple.com/en-us/HT212979",
+    "timestamp": "2026-07-27T16:55:21.628337+00:00"
+  },
+  {
+    "cve_id": "CVE-2024-1781",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2024-7185",
+      "CVE-2025-3665",
+      "CVE-2025-9934",
+      "CVE-2025-3663",
+      "CVE-2025-4850"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects the Totolink X6000R AX3000 wireless router running firmware version 9.4.0cu.852_20230719.\n- The flaw is in the function called setWizardCfg within the file /cgi-bin/cstecgi.cgi, which is part of the router's built-in web server component called shttpd.\n- It is a command injection vulnerability, meaning an attacker can insert operating system commands into input that the router then executes as though they were legitimate instructions.\n- The vendor was contacted about this issue but did not respond, so no official fix has been confirmed.\n\n## How it can be exploited\n\n- The attack vector is ADJACENT_NETWORK, which means the attacker needs to be on the same local network as the router, for example connected to the same Wi-Fi or wired network segment.\n- No login credentials and no user interaction are needed, so anyone with network adjacency can attempt the attack without any prior access or action from the router's owner.\n- Confidentiality, integrity and availability are all rated LOW, meaning an attacker could read some data, make limited changes, and partially disrupt the router's operation.\n- A public exploit has been disclosed, which means working attack code is already available for others to use.\n\n## What action to take\n\n- Check whether any Totolink X6000R AX3000 routers on your network are running firmware version 9.4.0cu.852_20230719.\n- The vendor has not responded or provided a patch, so there is currently no confirmed fix available.\n- As a precaution, restrict who can connect to the network where the router operates and monitor for any unusual behaviour.\n- Consult the references below and the Totolink support channels for any future firmware updates that may address this issue.\n\n## Reference\n\nThird-party writeup documenting the vulnerability:\nhttps://github.com/Icycu123/X6000R-AX3000-Wifi-6-Giga/blob/main/2/X6000R%20AX3000%20WiFi%206%20Giga%E7%84%A1%E7%B7%9A%E8%B7%AF%E7%94%B1%E5%99%A8%E6%9C%AA%E6%8E%88%E6%9D%83rce.md\n\nVulDB entry with additional context:\nhttps://vuldb.com/?ctiid.254573\n\nVulDB entry for this vulnerability:\nhttps://vuldb.com/?id.254573",
+    "timestamp": "2026-07-27T16:55:36.269783+00:00"
+  },
+  {
+    "cve_id": "CVE-2024-1781",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2024-7185",
+      "CVE-2025-3665",
+      "CVE-2025-9934",
+      "CVE-2025-3663",
+      "CVE-2025-4850"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects the Totolink X6000R AX3000 wireless router running firmware version 9.4.0cu.852_20230719.\n- The flaw is in a function called setWizardCfg, which is part of the file /cgi-bin/cstecgi.cgi served by the router's built-in web server component called shttpd.\n- It is a command injection vulnerability, meaning an attacker can insert operating system commands into input that the router then executes as though they were legitimate instructions.\n- The vendor was contacted about this issue but did not respond, so there is no indication of a fix from Totolink.\n\n## How it can be exploited\n\n- The attack vector is ADJACENT_NETWORK, which means the attacker needs to be on the same local network segment as the router, for example connected to the same Wi-Fi or LAN.\n- No login credentials and no user interaction are needed, so anyone with adjacent network access can attempt the attack without authentication.\n- Confidentiality, integrity and availability are all rated LOW, meaning the attacker gains limited ability to read data, make changes and disrupt the device rather than full control.\n- A public exploit already exists, which lowers the effort required for someone to attempt this.\n\n## What action to take\n\n- Check whether any Totolink X6000R AX3000 routers on your network are running firmware version 9.4.0cu.852_20230719.\n- No vendor fix is available at this time because Totolink did not respond to the disclosure.\n- Restrict access to the router's management interface so that only trusted devices on the local network can reach it, and consider whether network segmentation can limit exposure.\n- Monitor the vendor's support pages and the references below for any future firmware update that addresses this issue.\n\n## Reference\n\nThird-party writeup documenting the vulnerability:\nhttps://github.com/Icycu123/X6000R-AX3000-Wifi-6-Giga/blob/main/2/X6000R%20AX3000%20WiFi%206%20Giga%E7%84%A1%E7%B7%9A%E8%B7%AF%E7%94%B1%E5%99%A8%E6%9C%AA%E6%8E%88%E6%9D%83rce.md\n\nVulDB entry (CTI details):\nhttps://vuldb.com/?ctiid.254573\n\nVulDB entry (general):\nhttps://vuldb.com/?id.254573",
+    "timestamp": "2026-07-27T16:55:51.217612+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-37976",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2021-21225",
+      "CVE-2024-6101",
+      "CVE-2026-10994",
+      "CVE-2020-16009",
+      "CVE-2020-15979"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Google Chrome, the web browser, in versions before 94.0.4606.71.\n- The flaw is an inappropriate implementation in the browser's memory handling.\n- It allows an attacker to read potentially sensitive information from the browser's process memory, which is the working data the browser holds while it runs.\n\n## How it can be exploited\n\n- The attack works through a crafted HTML page, so the user must be led to visit a malicious webpage for the flaw to trigger, which is why user interaction is REQUIRED.\n- No login or prior access is needed because the attack vector is NETWORK and privileges required is NONE.\n- Confidentiality is rated HIGH while integrity and availability are both NONE, so the flaw can expose significant information but does not allow an attacker to change data or disrupt the browser.\n- This vulnerability has been confirmed as exploited in the wild and is listed in the CISA Known Exploited Vulnerabilities catalogue.\n\n## What action to take\n\n- Update Google Chrome to version 94.0.4606.71 or later, which is the release that addresses this flaw.\n- Chrome usually updates itself automatically, but you should confirm the installed version is current rather than assuming the update has already been applied.\n- Consult the vendor advisory and the distribution advisories listed below for further guidance, particularly if you use Chromium-based packages on Fedora or Debian.\n\n## Reference\n\nAdvisories documenting the vulnerability:\n\nGoogle Chrome, the affected software vendor: https://chromereleases.googleblog.com/2021/09/stable-channel-update-for-desktop_30.html\n\nChromium bug tracker: https://crbug.com/1251787\n\nFedora package announcements:\nhttps://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/D63JZ3ROXCUHP4CFWDHCPZNTGET7T34R/\nhttps://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/FRFXUDH46PFVE75VQVWY6PYY5DK3S2XT/\nhttps://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/RNARCF5HEZK7GJXZRN5TQ45AQDCRM2WO/\n\nDebian security advisory: https://www.debian.org/security/2022/dsa-5046\n\nCISA Known Exploited Vulnerabilities catalogue: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2021-37976",
+    "timestamp": "2026-07-27T16:56:05.773150+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-37976",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2021-21225",
+      "CVE-2024-6101",
+      "CVE-2026-10994",
+      "CVE-2020-16009",
+      "CVE-2020-15979"
+    ],
+    "output_text": "What is vulnerable\n\n- This affects Google Chrome in versions before 94.0.4606.71, specifically in the browser's memory handling.\n- The flaw is described as an inappropriate implementation in Memory, meaning the browser does not correctly manage how it accesses or exposes data held in its own process memory.\n- An attacker can use this to read potentially sensitive information from the browser's process memory, which could include data the user is working with or internal browser state.\n\nHow it can be exploited\n\n- The attack works through a crafted HTML page, so the user has to be led to visit a malicious website or open a malicious page for the flaw to trigger, which is why user interaction is REQUIRED.\n- No login or prior access to the target system is needed, and the attack is carried out over the network.\n- Confidentiality is rated HIGH while integrity and availability are both NONE, so the risk is information disclosure rather than data modification or service disruption.\n- This vulnerability has been observed in active exploitation in the wild and is listed in the CISA Known Exploited Vulnerabilities catalogue.\n\nWhat action to take\n\n- Update Google Chrome to version 94.0.4606.71 or later, which is the release that addresses this issue.\n- Chrome usually updates itself, but confirm the browser is on the current stable version rather than assuming the update has already been applied.\n- If you use a Linux distribution such as Fedora or Debian, check the distribution-specific advisories listed in the references for the relevant package update.\n- Consult the vendor advisory from Google for full details on the fix.\n\nReference\n\nGoogle Chrome stable channel update, the affected software vendor:\nhttps://chromereleases.googleblog.com/2021/09/stable-channel-update-for-desktop_30.html\n\nChromium bug tracker entry:\nhttps://crbug.com/1251787\n\nFedora package announcements:\nhttps://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/D63JZ3ROXCUHP4CFWDHCPZNTGET7T34R/\nhttps://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/FRFXUDH46PFVE75VQVWY6PYY5DK3S2XT/\nhttps://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/RNARCF5HEZK7GJXZRN5TQ45AQDCRM2WO/\n\nDebian security advisory:\nhttps://www.debian.org/security/2022/dsa-5046\n\nCISA Known Exploited Vulnerabilities catalogue entry:\nhttps://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2021-37976",
+    "timestamp": "2026-07-27T16:56:21.374112+00:00"
+  },
+  {
+    "cve_id": "CVE-2022-28810",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2023-35854",
+      "CVE-2021-37918",
+      "CVE-2021-37924",
+      "CVE-2020-35682",
+      "CVE-2021-42002"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Zoho ManageEngine ADSelfService Plus, a self-service password management tool, in builds before 6122.\n- The flaw is in the policy custom script feature, which allows an administrator to run scripts as part of password policy enforcement.\n- The software ships with a default administrator password, which means attackers may not need to discover credentials to log in.\n- A partially authenticated attacker can also inject commands through an unsanitised password field, meaning the software does not properly clean user input before passing it to the operating system.\n\n## How it can be exploited\n\n- The attack vector is NETWORK, so an attacker can reach the vulnerable feature remotely without needing local access to the server.\n- Privileges required are rated HIGH, meaning an administrator-level account is needed, but the default administrator password significantly lowers that barrier.\n- User interaction is REQUIRED, so some action by another user or administrator is needed for the attack to succeed.\n- Confidentiality, integrity and availability are all rated HIGH, meaning a successful exploit can let an attacker read data, change data and disrupt the service by running arbitrary operating system commands as the SYSTEM account, which is the highest-privilege account on Windows.\n\n## What action to take\n\n- Update ManageEngine ADSelfService Plus to build 6122 or later, which addresses this vulnerability.\n- Change the default administrator password immediately if it has not already been changed, since the default credentials make exploitation much easier.\n- Review the vendor advisory and the Rapid7 blog post listed in the references for detailed remediation guidance.\n- This vulnerability is listed in the CISA Known Exploited Vulnerabilities catalogue, so it has been confirmed as actively exploited in the wild and should be prioritised accordingly.\n\n## Reference\n\nVendor advisory from ManageEngine:\nhttps://www.manageengine.com/products/self-service-password/kb/cve-2022-28810.html\n\nRapid7 blog post with technical analysis and fix details:\nhttps://www.rapid7.com/blog/post/2022/04/14/cve-2022-28810-manageengine-adselfservice-plus-authenticated-command-execution-fixed/\n\nPacket Storm Security write-up:\nhttp://packetstormsecurity.com/files/166816/ManageEngine-ADSelfService-Plus-Custom-Script-Execution.html\n\nMetasploit module pull request:\nhttps://github.com/rapid7/metasploit-framework/pull/16475\n\nCISA Known Exploited Vulnerabilities catalogue entry:\nhttps://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2022-28810",
+    "timestamp": "2026-07-27T16:56:37.389034+00:00"
+  },
+  {
+    "cve_id": "CVE-2022-28810",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2023-35854",
+      "CVE-2021-37918",
+      "CVE-2021-37924",
+      "CVE-2020-35682",
+      "CVE-2021-42002"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Zoho ManageEngine ADSelfService Plus, a self-service password management tool, in builds before 6122.\n- The flaw is in the policy custom script feature, which allows administrators to define scripts that run as part of password policy enforcement.\n- Those scripts execute at the SYSTEM level, meaning they run with the highest privileges available on the operating system.\n- The product ships with a default administrator password, which means an attacker may not need to discover credentials to log in as an admin.\n\n## How it can be exploited\n\n- A remote authenticated administrator can use the custom script feature to run arbitrary operating system commands as SYSTEM, giving full control over the server.\n- The attack vector is NETWORK and privileges required are HIGH, meaning the attacker needs network access and an administrator-level account, but the default admin password makes obtaining that account straightforward.\n- A partially authenticated attacker (someone who has logged in but may not have full admin rights) can also inject commands through an unsanitised password field in the custom script, because the application does not properly clean that input before passing it to the system.\n- Confidentiality, integrity and availability are all rated HIGH, so a successful attack could expose data, modify the system, or disrupt the service entirely.\n\n## What action to take\n\n- Check whether any instance of ManageEngine ADSelfService Plus is running a build earlier than 6122 and upgrade to build 6122 or later.\n- Change the default administrator password immediately if it has not already been changed, since the default credential is a key part of how this flaw is exploited.\n- Review the vendor's advisory for full remediation guidance and any additional hardening steps.\n- The Rapid7 blog post in the references provides a detailed technical explanation that may help assess whether your environment has been affected.\n\n## Reference\n\nVendor advisory from ManageEngine:\nhttps://www.manageengine.com/products/self-service-password/kb/cve-2022-28810.html\n\nRapid7 blog post with technical analysis:\nhttps://www.rapid7.com/blog/post/2022/04/14/cve-2022-28810-manageengine-adselfservice-plus-authenticated-command-execution-fixed/\n\nPacket Storm Security write-up:\nhttp://packetstormsecurity.com/files/166816/ManageEngine-ADSelfService-Plus-Custom-Script-Execution.html\n\nMetasploit module pull request:\nhttps://github.com/rapid7/metasploit-framework/pull/16475\n\nCISA Known Exploited Vulnerabilities catalog entry:\nhttps://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2022-28810",
+    "timestamp": "2026-07-27T16:56:53.283450+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-22204",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2023-47996",
+      "CVE-2021-3482",
+      "CVE-2020-21483",
+      "CVE-2022-48008",
+      "CVE-2024-49551"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects ExifTool, a widely used command-line utility for reading and writing metadata in image and other media files, from version 7.44 onwards.\n- The flaw is in how ExifTool processes DjVu files, a file format commonly used for scanned documents and images.\n- User-supplied data within a DjVu file is not properly sanitised, which means a specially crafted file can cause ExifTool to run arbitrary code on the machine processing it.\n- ExifTool is often embedded in larger systems such as GitLab, so the reach of this vulnerability extends beyond direct command-line use.\n\n## How it can be exploited\n\n- The attack vector is LOCAL, meaning the malicious DjVu file needs to be present on the target system and processed by ExifTool, for example when a server automatically strips metadata from uploaded images.\n- No login or user interaction is required, so any workflow that automatically passes files through ExifTool can trigger the flaw without a person actively choosing to open the file.\n- Confidentiality, integrity and availability are all rated LOW, but the description confirms that arbitrary code execution is possible, meaning an attacker could run their own commands on the affected machine.\n- This vulnerability is listed in the CISA Known Exploited Vulnerabilities catalogue, which means it has been observed in real-world attacks.\n\n## What action to take\n\n- Check whether any system or pipeline uses ExifTool version 7.44 or later and has not been updated to a version that includes the fix.\n- The ExifTool maintainer has published a commit that addresses the issue, linked in the references below.\n- Debian and Fedora have issued their own advisories with patched packages, so consult the relevant distribution advisory for upgrade instructions.\n- Review any application that automatically processes uploaded images with ExifTool, such as GitLab, and ensure it is also updated to a version that mitigates this flaw.\n\n## Reference\n\nExifTool fix commit on GitHub:\nhttps://github.com/exiftool/exiftool/commit/cf0f4e7dcd024ca99615bfd1102a841a25dde031#diff-fa0d652d10dbcd246e6b1df16c1e992931d3bb717a7e36157596b76bdadb3800\n\nGitLab CVE record:\nhttps://gitlab.com/gitlab-org/cves/-/blob/master/2021/CVE-2021-22204.json\n\nHackerOne report:\nhttps://hackerone.com/reports/1154542\n\nDebian security advisory:\nhttps://www.debian.org/security/2021/dsa-4910\n\nDebian LTS announcement:\nhttps://lists.debian.org/debian-lts-announce/2021/05/msg00018.html\n\nFedora package announcements:\nhttps://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/DDKDLJLBTBBR66OOPXSXCG2PQRM5KCZL/\nhttps://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/F6UOBPU3LSHAPRRJNISNVXZ5DSUIALLV/\nhttps://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/U4RF6PJCJ6NQOVJJJF6HN6BORUQVIXY6/\n\nCISA Known Exploited Vulnerabilities catalogue entry:\nhttps://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2021-22204\n\nPacket Storm exploit and analysis references:\nhttp://packetstormsecurity.com/files/162558/ExifTool-DjVu-ANT-Perl-Injection.html\nhttp://packetstormsecurity.com/files/164768/GitLab-Unauthenticated-Remote-ExifTool-Command-Injection.html\nhttp://packetstormsecurity.com/files/164994/GitLab-13.10.2-Remote-Code-Execution.html\nhttp://packetstormsecurity.com/files/167038/ExifTool-12.23-Arbitrary-Code-Execution.html\n\nOpenwall mailing list discussions:\nhttp://www.openwall.com/lists/oss-security/2021/05/09/1\nhttp://www.openwall.com/lists/oss-security/2021/05/10/5",
+    "timestamp": "2026-07-27T16:57:15.394921+00:00"
+  },
+  {
+    "cve_id": "CVE-2021-22204",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2023-47996",
+      "CVE-2021-3482",
+      "CVE-2020-21483",
+      "CVE-2022-48008",
+      "CVE-2024-49551"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects ExifTool, a widely used command-line utility for reading and writing metadata in image and other media files, from version 7.44 onwards.\n- The flaw is in how ExifTool processes the DjVu file format, which is a format designed for scanned documents and images.\n- User-supplied data inside a DjVu file is not properly sanitised before being processed, which means crafted content in the file can be treated as executable instructions.\n- This allows arbitrary code execution, meaning an attacker can run whatever commands they choose on the system that parses the malicious file.\n\n## How it can be exploited\n\n- The attack vector is LOCAL, so the attacker needs to get a malicious DjVu file onto the target system or into a pipeline where ExifTool will process it.\n- No privileges and no user interaction are required, so any automated workflow that passes uploaded files through ExifTool could trigger the flaw without anyone clicking or approving anything.\n- Public exploit code and write-ups exist showing this vulnerability being used against GitLab servers, where ExifTool was called automatically on uploaded images.\n- Confidentiality, integrity and availability are all rated LOW in the CVSS score, but the description confirms arbitrary code execution is possible, so the practical impact on a given system could be significant depending on the permissions ExifTool runs with.\n\n## What action to take\n\n- Check whether any system or pipeline uses ExifTool version 7.44 or later and has not been updated to a version that includes the fix.\n- The ExifTool maintainer published a commit that addresses the issue, linked in the references below.\n- Debian and Fedora have issued their own advisories with patched packages, so if you run ExifTool from a distribution package manager you should update through that channel.\n- Pay particular attention to any service that automatically processes uploaded files with ExifTool, since those can be reached without user interaction.\n\n## Reference\n\nExifTool maintainer fix commit on GitHub:\nhttps://github.com/exiftool/exiftool/commit/cf0f4e7dcd024ca99615bfd1102a841a25dde031#diff-fa0d652d10dbcd246e6b1df16c1e992931d3bb717a7e36157596b76bdadb3800\n\nGitLab CVE record:\nhttps://gitlab.com/gitlab-org/cves/-/blob/master/2021/CVE-2021-22204.json\n\nHackerOne report:\nhttps://hackerone.com/reports/1154542\n\nDebian security advisory:\nhttps://www.debian.org/security/2021/dsa-4910\n\nDebian LTS announcement:\nhttps://lists.debian.org/debian-lts-announce/2021/05/msg00018.html\n\nFedora package announcements:\nhttps://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/DDKDLJLBTBBR66OOPXSXCG2PQRM5KCZL/\nhttps://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/F6UOBPU3LSHAPRRJNISNVXZ5DSUIALLV/\nhttps://lists.fedoraproject.org/archives/list/package-announce%40lists.fedoraproject.org/message/U4RF6PJCJ6NQOVJJJF6HN6BORUQVIXY6/\n\nCISA Known Exploited Vulnerabilities catalogue entry:\nhttps://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2021-22204\n\nOpenwall security mailing list discussions:\nhttp://www.openwall.com/lists/oss-security/2021/05/09/1\nhttp://www.openwall.com/lists/oss-security/2021/05/10/5\n\nPacket Storm exploit and write-up references:\nhttp://packetstormsecurity.com/files/162558/ExifTool-DjVu-ANT-Perl-Injection.html\nhttp://packetstormsecurity.com/files/164768/GitLab-Unauthenticated-Remote-ExifTool-Command-Injection.html\nhttp://packetstormsecurity.com/files/164994/GitLab-13.10.2-Remote-Code-Execution.html\nhttp://packetstormsecurity.com/files/167038/ExifTool-12.23-Arbitrary-Code-Execution.html",
+    "timestamp": "2026-07-27T16:57:37.616840+00:00"
+  },
+  {
+    "cve_id": "CVE-2022-40765",
+    "prompt_version": "baseline",
+    "persona": false,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "4c7e91f352255208649f2a9720a4b538f89d504dfd3c7daf33bf058ed229ce5a",
+    "neighbours_used": [
+      "CVE-2024-22443",
+      "CVE-2020-12679",
+      "CVE-2023-37438",
+      "CVE-2024-20450",
+      "CVE-2025-20184"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Mitel MiVoice Connect, a business communications platform, through version 19.3 (build 22.22.6100.0).\n- The flaw is specifically in the Edge Gateway component, which handles network traffic at the boundary of the system.\n- The vulnerability is a command-injection issue, meaning an attacker can insert operating system commands into URL parameters that the system then executes.\n- This happens because the software does not sufficiently restrict or validate the parameters passed through URLs.\n\n## How it can be exploited\n\n- The attack vector is ADJACENT_NETWORK, meaning the attacker must have access to the same internal or local network segment as the affected system rather than being able to reach it from the open internet.\n- The attacker must be authenticated with high-level privileges, so a valid account with elevated access on the system is needed before the attack can be carried out.\n- No user interaction is required, so once the attacker has network access and credentials they can exploit the flaw without anyone else needing to click or approve anything.\n- Confidentiality, integrity and availability are all rated HIGH, so a successful attack could allow reading sensitive data, altering system behaviour, and disrupting the service.\n\n## What action to take\n\n- Check whether any Mitel MiVoice Connect deployment is running version 19.3 (22.22.6100.0) or earlier, as those versions are affected.\n- This vulnerability is listed in the CISA Known Exploited Vulnerabilities catalogue, which means it has been observed in real-world attacks and should be treated as a priority for remediation.\n- Consult the Mitel security advisory linked below for specific patch or upgrade guidance from the vendor.\n- Restrict network access to the Edge Gateway component where possible, limiting who can reach it from the internal network.\n\n## Reference\n\nAdvisories documenting the vulnerability:\nMitel, the affected software vendor (general security advisories page): https://www.mitel.com/support/security-advisories\nMitel, the specific advisory for this vulnerability: https://www.mitel.com/support/security-advisories/mitel-product-security-advisory-22-0007\nCISA Known Exploited Vulnerabilities catalogue entry: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2022-40765",
+    "timestamp": "2026-07-27T16:57:52.852657+00:00"
+  },
+  {
+    "cve_id": "CVE-2022-40765",
+    "prompt_version": "persona",
+    "persona": true,
+    "model": "claude-opus-4-6",
+    "temperature": 0,
+    "prompt_file_hash": "ffa21e43ddac83bba2f23e284d10c09515591d05b9dfebe269be29081a3e4761",
+    "neighbours_used": [
+      "CVE-2024-22443",
+      "CVE-2020-12679",
+      "CVE-2023-37438",
+      "CVE-2024-20450",
+      "CVE-2025-20184"
+    ],
+    "output_text": "## What is vulnerable\n\n- This affects Mitel MiVoice Connect, a business communications platform, in versions through 19.3 (build 22.22.6100.0).\n- The flaw is specifically in the Edge Gateway component, which handles network traffic at the boundary of the system.\n- The issue is a command-injection vulnerability, meaning an attacker can insert operating system commands into URL parameters that the application does not properly filter or restrict.\n- Because all three impact areas (confidentiality, integrity and availability) are rated HIGH, a successful attack could expose sensitive data, alter system configuration and disrupt service.\n\n## How it can be exploited\n\n- The attack vector is ADJACENT_NETWORK, which means the attacker needs access to the same local or internal network segment as the target system rather than being able to reach it from the open internet.\n- Privileges required are HIGH, so the attacker must already hold an authenticated account with elevated permissions on the system before they can attempt this.\n- No user interaction is needed, so once an attacker with the right access and credentials is in position they can trigger the flaw without anyone else doing anything.\n- The root cause is insufficient restriction of URL parameters, so crafted input in a URL is enough to inject commands that the underlying system will execute.\n\n## What action to take\n\n- Check whether any Mitel MiVoice Connect deployment is running version 19.3 (build 22.22.6100.0) or earlier, since those versions are affected.\n- This vulnerability is listed in the CISA Known Exploited Vulnerabilities catalogue, which means it has been observed in real-world attacks and warrants prompt attention.\n- Consult the Mitel security advisory linked below for specific patch or upgrade guidance.\n- If the Edge Gateway component is reachable from parts of the network where it does not need to be, consider restricting that access as an interim measure while applying the vendor fix.\n\n## Reference\n\nAdvisories documenting the vulnerability:\nMitel, the affected software vendor (general security advisories page): https://www.mitel.com/support/security-advisories\nMitel, the specific advisory for this vulnerability: https://www.mitel.com/support/security-advisories/mitel-product-security-advisory-22-0007\nCISA Known Exploited Vulnerabilities catalogue entry: https://www.cisa.gov/known-exploited-vulnerabilities-catalog?field_cve=CVE-2022-40765",
+    "timestamp": "2026-07-27T16:58:08.439021+00:00"
+  }
+]

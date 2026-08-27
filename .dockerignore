@@ -1,0 +1,41 @@
+venv/
+__pycache__/
+*.pyc
+.git/
+.ipynb_checkpoints/
+.env
+notebooks/
+mock-ups/
+figures/
+v2_bullet/screenshots/
+v2_bullet/metrics/
+v2_bullet/judge/
+v2_bullet/summaries/
+tests/
+*.pdf
+*.md
+
+# Raw/intermediate data not read by the dashboard at runtime (only
+# rag_corpus_final.jsonl, chroma_db/, and dashboard_summary_cache.json are --
+# see the Dockerfile's explicit COPY lines and src/dashboard_*.py). Named
+# individually rather than ignoring data/ wholesale, since Docker's ignore
+# negation (!pattern) for files inside an excluded parent directory is
+# unreliable across engine versions.
+data/cves_all_medium.jsonl
+data/cves_all_high.jsonl
+data/cves_all_critical.jsonl
+data/cves_all_low.jsonl
+data/cves_critical.jsonl
+data/cves_high.jsonl
+data/rag_corpus_final.jsonl.bak
+data/rag_corpus_final.jsonl.bak2
+data/rag_corpus_final.jsonl.bak3
+data/rag_corpus_enriched.jsonl
+data/rag_corpus.jsonl
+data/epss_scores.csv
+data/known_exploited_vulnerabilities.csv
+data/human_study/
+data/cwe_names.json
+data/eval_sample.jsonl
+data/retrieval_validation.json
+data/progress_json_all.json

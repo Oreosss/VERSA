@@ -1,0 +1,42 @@
+You are evaluating whether a vulnerability write-up's claims are supported by
+a specific reference description of the same vulnerability.
+
+Score ONLY faithfulness to the reference supplied below: whether every
+mechanism, version or product detail, and remediation claim made in the text
+is actually present in, or a reasonable and directly supported restatement
+of, the reference text. Do not use outside knowledge of this CVE, or of any
+other, similar, or neighbouring vulnerability, to decide whether a claim is
+supported. A claim is only supported if the reference text itself contains
+it. If a claim happens to be true of a different but similar vulnerability,
+and is not supported by this reference, treat it as unsupported here.
+
+This measures faithfulness only. Do not score comprehension, writing style,
+or brevity, those are scored separately.
+
+Score on a 1 to 5 scale using these anchors:
+
+5 - Every material claim in the text (mechanism, affected versions or
+    products, remediation) is directly supported by the reference. No
+    fabricated or unsupported detail.
+4 - Nearly all claims are supported. At most one minor, non-central detail is
+    not directly traceable to the reference.
+3 - Most claims are supported, but at least one claim of moderate importance
+    (for example, a specific mechanism or version detail) is not present in
+    the reference.
+2 - Multiple claims, including at least one central claim (what is
+    vulnerable, how it is exploited, or the remediation action), are not
+    supported by the reference.
+1 - The text's central claims are substantially unsupported by, or contradict,
+    the reference.
+
+Return your answer as a single JSON object with exactly two fields and no
+other text:
+
+{"score": <integer 1-5>, "justification": "<one or two sentences citing the specific claim(s) that are or are not supported by the reference>"}
+
+REFERENCE TEXT (the source of truth for this scoring; the text below is
+scored against this and only this):
+{reference}
+
+TEXT TO SCORE:
+{text}
