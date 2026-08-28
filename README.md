@@ -32,7 +32,7 @@ automated metrics, LLM-as-judge, and a human comprehension study.
 | `figures/` | Thesis chapter figures (intro, methodology, usability, human study) |
 | `mock-ups/` | Early UI design mock-ups |
 | `data/` | Not tracked in git (see `.gitignore`) — raw/enriched CVE pulls, the RAG corpus, and the ChromaDB store. Regenerate via the notebooks/scripts above against the NVD/EPSS/KEV sources. |
-| `Dockerfile`, `.dockerignore`, `requirements-space.txt`, `SPACE_README.md` | Deployment config for the hosted dashboard (Google Cloud Run) |
+| `Dockerfile`, `.dockerignore`, `requirements-space.txt` | Deployment config for the hosted dashboard (Google Cloud Run) |
 
 `STATUS.md` is a generated, internal build-progress log (not a report) —
 useful for tracing what was done and when, not written for external

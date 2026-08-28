@@ -97,7 +97,8 @@ SUMMARY_GENERATOR = SummaryGenerator(
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP],
                  suppress_callback_exceptions=True)
-app.title = "CVETranslate"
+APP_NAME = "VERSA"
+app.title = APP_NAME
 
 # The "shield + swap arrows" mark: a single SVG reused as-is for both the
 # header logo (build_logo(), rendered via html.Img since this Dash version
@@ -386,15 +387,19 @@ def build_logo():
     html.Img from the shared LOGO_DATA_URI (this Dash version's html module
     has no native Svg/Rect/Path tags) -- the exact same asset used for the
     browser-tab favicon (see LOGO_DATA_URI, near app.index_string)."""
-    return html.Img(src=LOGO_DATA_URI, className="app-logo-badge", alt="CVETranslate logo")
+    return html.Img(src=LOGO_DATA_URI, className="app-logo-badge", alt=f"{APP_NAME} logo")
 
 
 def build_header():
     return html.Div([
         html.Div([
             build_logo(),
-            html.Div("CVETranslate", className="app-title"),
+            html.Div(APP_NAME, className="app-title"),
         ], className="app-title-row"),
+        html.Div(
+            "Vulnerability Explanation with RAG-Summarised Analysis",
+            className="app-expansion",
+        ),
         html.Div(
             "Plain-language CVE summaries for developers — what's vulnerable, "
             "how it's exploited, and what to do, without wading through raw "

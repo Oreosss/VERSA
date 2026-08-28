@@ -55,6 +55,7 @@ body {
   font-weight: 700;
   color: var(--accent);
 }
+.app-expansion { margin: 6px 0 0 58px; color: var(--text-grey-light); font-size: 0.8rem; }
 .app-tagline { margin: 8px 0 0 58px; color: var(--text-grey); font-size: 0.95rem; max-width: 640px; }
 
 .cve-card {

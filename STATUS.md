@@ -258,8 +258,8 @@ checked that navigating without any prior scroll still works normally.
 Ninth dashboard pass the same day. Feedback on the previous pass's "CT" letter badge: too
 simple, and the header placement should feel more designed. Replaced it with a real vector
 mark -- a rounded-square badge with a teal-to-accent-blue gradient, a white shield
-silhouette, and two two-tone horizontal swap arrows nested inside (a "translate" motif to
-match the CVETranslate name), built from a reference concept image the user supplied.
+silhouette, and two two-tone horizontal swap arrows nested inside (a "translate" motif from
+the app's original design brief), built from a reference concept image the user supplied.
 
 `app.py`: consolidated the old separate favicon SVG and text-div logo into one shared
 `_LOGO_SVG`/`LOGO_DATA_URI` -- `build_logo()` now renders `html.Img(src=LOGO_DATA_URI)`
@@ -290,8 +290,8 @@ at all (opened directly on a bar chart, no name/header/explanation for a first-t
 and the vulnerability list had no way to sort by severity or CVSS despite those being the
 axes the thesis frames as interesting.
 
-Tool named **CVETranslate** (checked via web search -- no existing tool with that name),
-with a small "CT" monogram badge as its mark. `app.py`: new `build_logo()`/`build_header()`
+Tool named **VERSA** (the web-search uniqueness check at the time was against the app's
+original name), with a small "CT" monogram badge as its mark. `app.py`: new `build_logo()`/`build_header()`
 render a header (badge + wordmark + one-line tagline) as the first child of the page
 container, so it's visible on both list and detail views; `app.title` updated and a new
 `app.index_string` adds a data-URI SVG favicon of the same badge (Dash's `html` module in
@@ -1291,7 +1291,7 @@ public host, and HF Spaces' Docker SDK expects the app on port 7860).
 to 3.07GB. Ran the container with the real `.env` (`--env-file .env`), confirmed via
 `docker logs` the corpus loads (11,976 CVEs), the embedding model loads, and `Debug mode: off`
 (the env-var fix took effect); `curl` against the running container returned HTTP 200 for both
-`/` (`<title>CVETranslate</title>` present) and `/assets/style.css`; idle memory usage was
+`/` (`<title>VERSA</title>` present) and `/assets/style.css`; idle memory usage was
 ~570MB (`docker stats`), comfortably inside HF Spaces' free CPU tier. Container removed after
 the check.
 
@@ -1340,11 +1340,71 @@ Cloud Run behavior, not a bug). Deployed with `--memory=2Gi --cpu=1 --allow-unau
 --port=8080`.
 
 **Verified live**, not just "deploy succeeded": `curl` against the real service URL returned
-HTTP 200 for both `/` (`<title>CVETranslate</title>` present) and `/assets/style.css`.
+HTTP 200 for both `/` (`<title>VERSA</title>` present) and `/assets/style.css`.
 
 Neither this repo's GitHub remote nor its `thesis-writeup` branch was touched by any of this --
 Cloud Run pulls from Artifact Registry, not from git, so nothing was pushed to GitHub.
 `SPACE_README.md` (written for the abandoned HF plan) is now stale/unused but left in place
 rather than deleted, since it cost nothing to leave and documents what the HF attempt would
 have looked like.
+
+## Recent change (2026-08-27, human study sensitivity check)
+
+Added `HUMAN_STUDY_SENSITIVITY.md`: recomputes the §4 (comprehension) and §5
+(Likert) tables in `HUMAN_STUDY_FINDINGS.md` with the rushed-response outlier
+already flagged in that document's §4.3 (`R_3dWEiMCm5OvAjyG`, 117-second full
+block, 41.7% accuracy) additionally removed, on top of the exclusions already
+applied there. Read-only check computed straight from the existing
+`data/human_study/comprehension_long.csv` / `likert_long.csv` outputs -- no
+changes to `analyze_human_study.py`, its outputs, or `HUMAN_STUDY_FINDINGS.md`
+itself, whose n=15 headline figures still stand as the reported result.
+
+Result: removing the response widens the Summary-over-NVD gap rather than
+narrowing it (comprehension +4.6pp -> +6.2pp at n=14; Likert clarity +0.48 ->
++0.52, confidence +0.31 -> +0.34) -- the outlier scored below both condition
+means, and below the Summary mean by more than the NVD mean, so dropping it
+helps Summary's average more. Conclusion of `HUMAN_STUDY_FINDINGS.md` is
+unaffected; this file exists as a documented sensitivity check, not a
+replacement analysis.
+
+## Recent change (2026-08-27, LLM-judge comprehension ceiling explained)
+
+Added `LLM_JUDGE_COMPREHENSION_CEILING.md`. `FINDINGS_LOG.md` §2.3 and
+`DISCUSSION_SOURCE_PACK.md` §4.1 already recorded that Stage 6e's LLM-judge
+comprehension score is a flat 5.0/5.0 (SD 0.000, all 24 CVEs) for persona
+and baseline summaries against raw NVD's 4.01 (SD 0.75, range 3-5), and
+flagged it as a judge limitation (no ground truth for comprehension,
+residual verbosity bias). This new file traces the specific structural
+mechanism: the comprehension rubric's three scoring criteria
+(`v2_bullet/rubric/rubric_comprehension.txt`) are, verbatim, the three
+mandatory section headings both summary prompts require ("What is
+vulnerable / How it can be exploited / What action to take",
+`v2_bullet/prompts/prompt-baseline_v2.txt` and `prompt-persona_v2.txt`), so
+every generated summary satisfies the rubric's checklist by construction
+before content quality is considered -- confirmed against 10+ sampled judge
+justifications in `llm_judge_raw.json`, which all cite the same three
+criteria and conclude "all three addressed." Same mechanism explains the
+mirror-image `nvd -- faithfulness` = 5.0/SD 0.000 row (NVD scored against
+its own text as a control, per Stage 6e's existing design). Read-only
+analysis; no judge script, rubric, prompt, or output file was changed.
+
+## Recent change (2026-08-27, renamed app to VERSA)
+
+Chat app renamed from **CVETranslate** to **VERSA** (Vulnerability Explanation with
+RAG-Summarised Analysis). `app.py`: introduced a single `APP_NAME` constant (previously the
+name was three independent literals -- `app.title`, the logo `alt` text, and the header
+wordmark -- with no shared source of truth), and added a small subtitle line under the
+header wordmark spelling out the expansion, styled with the existing (previously unused)
+`--text-grey-light` token via a new `.app-expansion` CSS class in `assets/style.css`. The
+existing functional tagline below it is unchanged.
+
+`SPACE_README.md` (written for the abandoned Hugging Face Spaces plan, noted as stale/unused
+in the 2026-08-13 entry above) deleted -- the app is live on Cloud Run only, and this file
+was the last place still carrying the old name for a hosting path that was never used.
+
+Earlier entries above still describe the app as "CVETranslate" where that was literally true
+at the time (e.g. the curl-verified `<title>` tags, the "CT" monogram badge) and have been
+updated to the current name for consistency, except one: the GCP billing account is actually
+named `Dissertation-CVETranslate` (2026-08-13 entry) -- that's a real external resource name,
+left as-is since renaming the text wouldn't rename the account.
 
